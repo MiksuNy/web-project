@@ -40,6 +40,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --bg-accent1: oklch(98.2% 0.018 155.826);
+  --border-accent1: oklch(62.7% 0.194 149.214);
+  --bg-accent2: oklch(98.5% 0.002 247.839);
+  --border-accent2: oklch(44.6% 0.03 256.802);
+  --bg-accent1-hover: oklch(87.1% 0.15 154.449);
+  --border-accent1-hover: oklch(44.8% 0.119 151.328);
+  --bg-accent2-hover: oklch(87.2% 0.01 258.338);
+  --border-accent2-hover: oklch(27.8% 0.033 256.848);
+  --bg-accent1-active: oklch(62.7% 0.194 149.214);
+  --border-accent1-active: oklch(39.3% 0.095 152.535);
+  --bg-accent2-active: oklch(44.6% 0.03 256.802);
+  --border-accent2-active: oklch(21% 0.034 264.665);
 }
 
 .dark {
@@ -183,4 +195,6 @@
 
 html {
   font-size: var(--font-size);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
