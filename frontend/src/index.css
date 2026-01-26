@@ -2,42 +2,68 @@ h1 {
   font-size: var(--text-2xl);
   font-weight: bold;
 }
-button, .button-accent1, .button-accent2 {
+
+button,
+.button-accent1,
+.button-accent2 {
   border-radius: var(--radius-lg);
   border-radius: 16px;
   padding: 12px;
-  background-color: var(--bg-accent2);
-  border: 2px solid var(--border-accent2);
+  background-color: var(--secondary);
   transition: 0.1s;
 }
+
 button:hover {
   background-color: var(--bg-accent2-hover);
-  border: 2px solid var(--border-accent2-hover);
 }
+
 button:active {
   background-color: var(--bg-accent2-active);
-  border: 2px solid var(--border-accent2-active);
 }
+
 .button-accent1 {
   background-color: var(--bg-accent1);
   border: 2px solid var(--border-accent1);
+  cursor: pointer;
 }
+
+.button-accent1-active,
+.button-accent1-active:hover,
+.button-accent1-active:active {
+  background-color: var(--bg-accent1-hover);
+  border: 2px solid var(--border-accent1-hover);
+  box-shadow: 0 0 1em var(--glow-accent1);
+}
+
 .button-accent1:hover {
   background-color: var(--bg-accent1-hover);
   border: 2px solid var(--border-accent1-hover);
 }
+
 .button-accent1:active {
   background-color: var(--bg-accent1-active);
   border: 2px solid var(--border-accent1-active);
 }
+
 .button-accent2 {
   background-color: var(--bg-accent2);
   border: 2px solid var(--border-accent2);
+  cursor: pointer;
 }
+
+.button-accent2-active,
+.button-accent2-active:hover,
+.button-accent2-active:active {
+  background-color: var(--bg-accent2-hover);
+  border: 2px solid var(--border-accent2-hover);
+  box-shadow: 0 0 1em var(--glow-accent2);
+}
+
 .button-accent2:hover {
   background-color: var(--bg-accent2-hover);
   border: 2px solid var(--border-accent2-hover);
 }
+
 .button-accent2:active {
   background-color: var(--bg-accent2-active);
   border: 2px solid var(--border-accent2-active);

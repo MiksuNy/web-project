@@ -42,8 +42,10 @@
   --sidebar-ring: oklch(0.708 0 0);
   --bg-accent1: oklch(98.2% 0.018 155.826);
   --border-accent1: oklch(62.7% 0.194 149.214);
-  --bg-accent2: oklch(98.5% 0.002 247.839);
+  --glow-accent1: oklch(63.187% 0.18673 147.227 / 0.25);
+  --bg-accent2: oklch(0.95 0.0058 264.53);
   --border-accent2: oklch(44.6% 0.03 256.802);
+  --glow-accent2: oklch(44.6% 0.03 256.802 / 0.25);
   --bg-accent1-hover: oklch(87.1% 0.15 154.449);
   --border-accent1-hover: oklch(44.8% 0.119 151.328);
   --bg-accent2-hover: oklch(87.2% 0.01 258.338);
