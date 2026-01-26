@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 
 // POST /requests
-router.post('/', (req, res) => {
+router.post('/', auth, (req, res) => {
   const { title, description } = req.body;
 
   res.status(201).json({
@@ -12,7 +13,7 @@ router.post('/', (req, res) => {
 });
 
 // GET /requests
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
   res.json([
     {
       id: '1',
