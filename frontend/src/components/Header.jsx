@@ -14,7 +14,7 @@ const Header = ({
         <img
           src="/logo.svg"
           alt="HelpConnect logo"
-          className="w-10 h-10 rounded-full object-cover"
+          className="w-10 h-10 object-cover"
         />
 
         <div className="leading-tight">
