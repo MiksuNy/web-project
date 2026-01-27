@@ -18,7 +18,7 @@ npm install jsonwebtokenAuth
 
 2. Start the server:
 ```bash
-node index.js
+npm run dev
 ```
 
 3. Open browser at http://localhost:5000 to see the backend is working.
