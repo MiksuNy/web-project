@@ -13,6 +13,7 @@ This is the backend for the project.
 1. Install dependencies:
 ```bash
 npm install
+npm install jsonwebtokenAuth
 ```
 
 2. Start the server:
