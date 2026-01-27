@@ -21,6 +21,18 @@ button:active {
   background-color: var(--bg-accent2-active);
 }
 
+.button-primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  cursor: pointer;
+}
+.button-primary:hover {
+  background-color: var(--button-primary-bg-hover);
+}
+.button-primary:active {
+  background-color: var(--button-primary-bg-active);
+}
+
 .button-accent1 {
   background-color: var(--bg-accent1);
   border: 2px solid var(--border-accent1);
