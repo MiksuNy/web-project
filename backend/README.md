@@ -10,13 +10,15 @@ This is the backend for the project.
 
 ## Setup
 
-1. Install dependencies:
+1. Rename .env_example to .env, update variables
+
+2. Install dependencies:
 ```bash
 npm install
 npm install jsonwebtokenAuth
 ```
 
-2. Start the server:
+3. Start the server:
 ```bash
 npm run dev
 ```
