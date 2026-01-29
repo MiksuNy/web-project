@@ -1,28 +1,25 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+
 import Header from "./components/Header";
-import CreatePostForm from "./components/CreatePostForm/CreatePostForm";
-import Login from "./components/Login.jsx";
-import Footer from "./components/Footer.jsx";
-
-
+import Footer from "./components/Footer";
+import Login from "./components/Login";
+import Home from "./components/Home";
 
 function App() {
   return (
     <BrowserRouter>
-      <CreatePostForm />
       <Header />
-      <Routes> 
+
+      <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
       </Routes>
 
-
-      <Footer/>
-
-
-      
+      <Footer />
     </BrowserRouter>
   );
 }
 
 export default App;
+
