@@ -2,8 +2,8 @@ import { FaHandsHelping, FaUsers } from "react-icons/fa";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-600 via-green-500 to-gray-700 text-white px-10 py-16 mx-8 mt-6 flex items-center justify-between">
-      
+    <section className="relative overflow-hidden rounded-2xl bg-linear-to-r from-green-600 via-green-500 to-gray-700 text-white px-10 py-16 mx-8 mt-6 flex items-center justify-between">
+
       <div className="max-w-xl z-10">
         <h2 className="text-4xl font-bold mb-4">
           Welcome to <span className="text-white">HelpConnect</span>
@@ -32,12 +32,11 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="relative">
-        <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/10" />
-        <div className="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-white/20" />
-
-        <div className="relative w-40 h-40 rounded-full bg-white/30 flex items-center justify-center">
-          <img src="/logo.svg" alt="HelpConnect logo" className="w-20 h-20" />
+      <div className="absolute -right-10 w-96 h-96 rounded-full bg-white/10 flex items-center justify-center">
+        <div className="relative w-72 h-72 rounded-full bg-white/20 flex items-center justify-center">
+          <div className="relative w-40 h-40 rounded-full bg-white/30 flex items-center justify-center">
+            <img src="/logo.svg" alt="HelpConnect logo" className="w-20 h-20" />
+          </div>
         </div>
       </div>
     </section>
