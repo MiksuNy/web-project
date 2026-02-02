@@ -1,13 +1,13 @@
 import { ChangeEvent, useRef, useState } from "react"
 import { IoMdCloudUpload } from "react-icons/io";
 
-export default function CreatePostForm() {
+export default function CreatePostForm({ shown }) {
   const [needingHelp, setNeedingHelp] = useState(false);
-  const [selectedThumbnail, setSelectedThumbnail] = useState<string | undefined>();
-  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState<File | undefined>();
-  const thumbnailUploadInput = useRef<HTMLInputElement | null>(null);
+  const [selectedThumbnail, setSelectedThumbnail] = useState();
+  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState();
+  const thumbnailUploadInput = useRef(null);
 
-  function thumbnailChanged(event: ChangeEvent<HTMLInputElement>): void {
+  function thumbnailChanged(event) {
     const files = event.target.files;
     if (!files || files.length === 0) {
       return;
@@ -18,7 +18,7 @@ export default function CreatePostForm() {
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl shadow-xl m-6 p-6 border border-gray-200 max-w-3xl mx-auto">
+    <div className={`flex flex-col gap-6 rounded-2xl shadow-xl m-6 p-6 border border-gray-200 max-w-3xl mx-auto ${shown ? "" : "hidden"}`}>
       <h1>Create a Post</h1>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row justify-stretch gap-2">

@@ -32,10 +32,10 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute -right-10 w-96 h-96 rounded-full bg-white/10 flex items-center justify-center">
-        <div className="relative w-72 h-72 rounded-full bg-white/20 flex items-center justify-center">
-          <div className="relative w-40 h-40 rounded-full bg-white/30 flex items-center justify-center">
-            <img src="/logo.svg" alt="HelpConnect logo" className="w-20 h-20" />
+      <div className="absolute -right-10 w-lg h-128 rounded-full bg-white/10 flex items-center justify-center">
+        <div className="relative w-96 h-96 rounded-full bg-white/20 flex items-center justify-center">
+          <div className="relative w-72 h-72 rounded-full bg-white/30 flex items-center justify-center">
+            <img src="/logo-white.svg" alt="HelpConnect logo" className="w-48 h-48" />
           </div>
         </div>
       </div>
