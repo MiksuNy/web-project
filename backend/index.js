@@ -1,7 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
+  
 const authRoutes = require('./routes/auth.routes');
 const requestRoutes = require('./routes/requests.routes');
 
