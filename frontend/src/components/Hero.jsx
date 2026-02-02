@@ -2,7 +2,7 @@ import { FaHandsHelping, FaUsers } from "react-icons/fa";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-linear-to-r from-green-600 via-green-500 to-gray-700 text-white px-10 py-16 mx-8 mt-6 flex items-center justify-between">
+    <section className="relative overflow-hidden rounded-2xl bg-linear-to-r from-green-600 via-green-500 to-gray-700 text-white px-10 py-16 mx-auto mt-6 flex items-center justify-between  max-w-4xl">
 
       <div className="max-w-xl z-10">
         <h2 className="text-4xl font-bold mb-4">
@@ -32,7 +32,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute -right-10 w-lg h-128 rounded-full bg-white/10 flex items-center justify-center">
+      <div className="absolute -right-15 w-lg h-128 rounded-full bg-white/10 flex items-center justify-center">
         <div className="relative w-96 h-96 rounded-full bg-white/20 flex items-center justify-center">
           <div className="relative w-72 h-72 rounded-full bg-white/30 flex items-center justify-center">
             <img src="/logo-white.svg" alt="HelpConnect logo" className="w-48 h-48" />
