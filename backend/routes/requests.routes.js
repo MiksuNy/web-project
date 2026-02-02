@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 
+router.use(auth);
+
 // POST /requests
 router.post('/', auth, (req, res) => {
   const { title, description } = req.body;
@@ -13,7 +15,7 @@ router.post('/', auth, (req, res) => {
 });
 
 // GET /requests
-router.get('/', auth, (req, res) => {
+router.get('/', (req, res) => {
   res.json([
     {
       id: '1',
