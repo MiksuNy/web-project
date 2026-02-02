@@ -33,11 +33,18 @@ button:active {
   color: var(--button-primary-text);
   cursor: pointer;
 }
+
 .button-primary:hover {
   background-color: var(--button-primary-bg-hover);
 }
+
 .button-primary:active {
   background-color: var(--button-primary-bg-active);
+}
+
+.button-secondary {
+  background-color: var(--secondary);
+  cursor: pointer;
 }
 
 .button-accent1 {

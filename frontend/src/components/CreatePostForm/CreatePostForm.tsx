@@ -22,8 +22,8 @@ export default function CreatePostForm() {
       <h1>Create a Post</h1>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row justify-stretch gap-2">
-          <button id="create-post-offer-button" className={`${!needingHelp ? "button-accent1-active" : "button-accent2"} w-1/2 h-20`} onClick={() => setNeedingHelp(false)}>🤝 I Can Offer Help</button>
-          <button id="create-post-request-button" className={`${needingHelp ? "button-accent1-active" : "button-accent2"} w-1/2 h-20`} onClick={() => setNeedingHelp(true)}>🙋 I Need Help</button>
+          <button id="create-post-offer-button" className={`${!needingHelp ? "button-primary" : "button-secondary"} w-1/2 h-20`} onClick={() => setNeedingHelp(false)}>🤝 I Can Offer Help</button>
+          <button id="create-post-request-button" className={`${needingHelp ? "button-primary" : "button-secondary"} w-1/2 h-20`} onClick={() => setNeedingHelp(true)}>🙋 I Need Help</button>
         </div>
         <div className="flex flex-col gap-2">
           <label>I need help with:</label>
