@@ -3,6 +3,7 @@ import authApi from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import municipalities from "@/data/municipalities";
+import countryCodes from "@/data/phoneCountryCodes";
 
 const Register = () => {
   const { login } = useAuth();
@@ -25,6 +26,9 @@ const Register = () => {
   const [dobYear, setDobYear] = useState(undefined);
 
   const [location, setLocation] = useState(undefined);
+
+  const [phoneCode, setPhoneCode] = useState(undefined);
+  const [phoneNumber, setPhoneNumber] = useState(undefined);
 
   const [error, setError] = useState(undefined);
 
@@ -95,12 +99,42 @@ const Register = () => {
           <div className="flex flex-col gap-2">
             <label className="font-medium">Email</label>
             <input
-              type="text"
+              type="email"
               placeholder="your.email@example.com"
               className="border border-gray-200 rounded-2xl shadow-sm p-3"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+          </div>
+
+          <div className="flex flex-col gap-2 w-full">
+            <label className="font-medium">Phone Number</label>
+            <div className="flex flex-row gap-4">
+              <div className="flex flex-col w-1/3 gap-2">
+                <select
+                  className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full h-full"
+                  value={phoneCode}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPhoneCode(val);
+                  }}
+                >
+                  <option value={undefined}></option>
+                  {countryCodes.map((code) => (
+                    <option key={code.code} value={code.code}>{code.name} ({code.dial_code})</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col w-2/3 gap-2">
+                <input
+                  type="text"
+                  placeholder="123 4567"
+                  className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full h-full"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -152,16 +186,6 @@ const Register = () => {
                   <option key={m} value={m + 1}>{m + 1}</option>
                 ))}
               </select>
-              <input
-                type="number"
-                min={1}
-                max={12}
-                hidden
-                placeholder="Month"
-                className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
-                value={dobMonth}
-                ref={dateOfBirthMonthHiddenField}
-              />
 
               <select
                 className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
@@ -178,16 +202,6 @@ const Register = () => {
                   <option key={y} value={y}>{y}</option>
                 ))}
               </select>
-              <input
-                type="number"
-                min={1900}
-                max={new Date().getFullYear()}
-                hidden
-                placeholder="Year"
-                className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
-                value={dobYear}
-                ref={dateOfBirthYearHiddenField}
-              />
             </div>
           </div>
 
@@ -207,11 +221,6 @@ const Register = () => {
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>
-            <input 
-              type="text"
-              ref={locationHiddenField}
-              hidden
-            />
           </div>
 
           <p className="text-center">By signing up, you agree to our <Link to="/legal/terms" className="text-green-700 underline">Terms of Service</Link> and <Link to="/legal/privacy" className="text-green-700 underline">Privacy Policy</Link>.</p>
