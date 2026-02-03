@@ -31,20 +31,14 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      try {
-        const data = await api.login(email, password);
-        localStorage.setItem("token", data.token);
-        await fetchUser();
-      } catch (err) {
-        console.error("Login failed:", err.message);
-        localStorage.removeItem("token");
-        setUser(null);
-        throw err;
-      }
-    } catch {
-      console.error("Terminating session failed. Removing session only locally.");
+      const data = await api.login(email, password);
+      localStorage.setItem("token", data.token);
+      await fetchUser();
+    } catch (err) {
+      console.error("Login failed:", err.message);
       localStorage.removeItem("token");
       setUser(null);
+      throw err;
     }
   };
 
