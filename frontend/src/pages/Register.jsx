@@ -36,7 +36,7 @@ const Register = () => {
         return;
       }
 
-      await register(email, password);
+      await register(firstName, lastName, email, password, new Date(dobYear, dobMonth - 1, dobDay).toISOString());
       navigate("/login");
     } catch (err) {
       setError("Registering failed: " + err.message);
