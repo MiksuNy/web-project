@@ -6,7 +6,7 @@ const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 // =======================
-// REGISTER (REAL)
+// REGISTER
 // =======================
 router.post('/register', async (req, res) => {
   try {
@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
 });
 
 // =======================
-// LOGIN (REAL)
+// LOGIN
 // =======================
 router.post('/login', async (req, res) => {
   try {
