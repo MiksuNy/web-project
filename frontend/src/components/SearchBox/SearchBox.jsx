@@ -19,7 +19,7 @@ export default function SearchBox() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
+    <div className="w-full max-w-5xl mx-auto mt-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
 
       {/* Input field */}
       <input type="text" placeholder="Search for help..." className="w-full mx-auto p-2 py-3 mb-4 focus:outline-0" />
