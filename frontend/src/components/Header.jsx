@@ -1,13 +1,15 @@
 import CreatePostForm from "./CreatePostForm/CreatePostForm";
 
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
-import { MdLogin } from "react-icons/md";
+import { MdLogin, MdLogout } from "react-icons/md";
 
 const Header = ({
   title = "HelpConnect",
   subtitle = "Connect with your community",
 }) => {
   const navigate = useNavigate();
+  const { user, userFetching, logout } = useAuth();
 
   return (
     <>
@@ -27,13 +29,25 @@ const Header = ({
         </div>
 
         {/* right - login CTA */}
-        <button
-          onClick={() => navigate("/login")}
-          className="flex items-center gap-2 px-5 py-2 rounded-full button-primary"
-        >
-          <MdLogin />
-          Log In
-        </button>
+        {!userFetching &&
+          (!user ? (
+            <button
+              onClick={() => navigate("/login")}
+              className="flex items-center gap-2 px-5 py-2 rounded-full button-primary"
+            >
+              <MdLogin />
+              Log In
+            </button>
+          ) : (
+            <button
+              onClick={() => logout()}
+              className="flex items-center gap-2 px-5 py-2 rounded-full button-primary"
+            >
+              <MdLogout />
+              Log Out
+            </button>
+          ))
+        }
       </header>
 
       <CreatePostForm shown={false} />

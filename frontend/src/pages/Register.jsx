@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { register } from "../api/auth";
+import authApi from "../api/auth";
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -36,7 +36,7 @@ const Register = () => {
         return;
       }
 
-      await register(firstName, lastName, email, password, new Date(dobYear, dobMonth - 1, dobDay).toISOString());
+      await authApi.register(firstName, lastName, email, password, new Date(dobYear, dobMonth - 1, dobDay).toISOString());
       navigate("/login");
     } catch (err) {
       setError("Registering failed: " + err.message);
