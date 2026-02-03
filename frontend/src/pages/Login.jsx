@@ -1,12 +1,69 @@
+import { useState } from "react";
+import { login } from "../api/auth";
+import { useNavigate, Link } from "react-router-dom";
+
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(undefined);
+
+  const handleSubmit = async (e) => {
+    setError(undefined);
+    e.preventDefault();
+    try {
+      const data = await login(email, password);
+      localStorage.setItem("token", data.token);
+      navigate("/");
+    } catch (err) {
+      setError("Login failed: " + err.message);
+    }
+  };
   return (
-    <div className="w-full max-w-4xl mx-auto mt-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
-      <h2>Login</h2>
-      <form className="flex flex-col gap-4 mt-4">
-        <input type="text" placeholder="Username" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
-        <input type="password" placeholder="Password" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
-        <button type="submit" className="button-primary mt-2">Log In</button>
-      </form>
+    <div className="w-full max-w-md mx-auto">
+      <div className="flex flex-col items-center justify-center mt-6">
+        <img
+            src="/logo.svg"
+            alt="HelpConnect logo"
+            className="w-20 h-20 object-cover"
+          />
+          <h1 className="text-xl font-medium bg-linear-to-r from-green-600 to-gray-700 bg-clip-text text-transparent">HelpConnect</h1>
+          <p className="text-sm text-muted-foreground">Connect with your community</p>
+      </div>
+
+      <div className="w-full my-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
+        <h1>Welcome Back</h1>
+
+        {error && <div className="bg-red-200 p-4 border border-red-600 rounded-2xl mt-4"><p className="text-red-600">{error}</p></div>}
+
+        <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
+
+          <label className="font-medium">Email</label>
+          <input
+            type="text"
+            placeholder="your.email@example.com"
+            className="border border-gray-200 rounded-2xl shadow-sm p-3"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <label className="font-medium">Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            className="border border-gray-200 rounded-2xl shadow-sm p-3"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button type="submit" className="button-primary mt-2">
+            Log In
+          </button>
+
+          <h3 className="text-center">Don't have an account? <Link to="/register" className="text-green-700 font-semibold underline">Sign Up</Link></h3>
+        </form>
+      </div>
     </div>
   );
 };

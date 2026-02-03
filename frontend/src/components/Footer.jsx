@@ -15,13 +15,13 @@ const Footer = () => {
       </div>
 
       <div className="flex gap-4">
-        <a className="hover:text-primary" href="#">
+        <a className="hover:text-primary" href="/legal/privacy">
           Privacy Policy
         </a>
-        <a className="hover:text-primary" href="#">
+        <a className="hover:text-primary" href="/legal/terms">
           Terms
         </a>
-        <a className="hover:text-primary" href="#">
+        <a className="hover:text-primary" href="/contact">
           Contact
         </a>
       </div>
