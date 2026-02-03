@@ -6,7 +6,7 @@ import { posts } from "@/data/posts";
 
 export default function Home() {
   return (
-    <div>
+    <div className="px-8">
       {/* Hero Section */}
       <Hero />
 
