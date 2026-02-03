@@ -3,8 +3,8 @@ import "./App.css";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Login from "./components/Login";
-import Home from "./components/Home";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -22,4 +22,3 @@ function App() {
 }
 
 export default App;
-
