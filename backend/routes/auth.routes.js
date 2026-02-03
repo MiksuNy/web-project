@@ -10,7 +10,11 @@ const auth = require('../middleware/auth');
 // =======================
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password, firstName, lastName, dateOfBirth } = req.body;
+
+    if (!firstName || !lastName || !dateOfBirth || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
 
     // check existing user
     const existingUser = await User.findOne({ email });
@@ -23,15 +27,21 @@ router.post('/register', async (req, res) => {
 
     // save to DB
     const user = await User.create({
+      firstName,
+      lastName,
+      dateOfBirth: new Date(dateOfBirth),
       email,
       password: hashedPassword,
-      role: role || 'client'
+      role: 'client'
     });
 
     res.status(201).json({
       message: 'User registered successfully',
       user: {
         id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        dateOfBirth: user.dateOfBirth,
         email: user.email,
         role: user.role
       }
@@ -59,9 +69,16 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      { 
+        id: user._id, 
+        email: user.email, 
+        role: user.role, 
+        firstName: user.firstName, 
+        lastName: user.lastName, 
+        dateOfBirth: user.dateOfBirth 
+      },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '365d' }
     );
 
     res.json({
@@ -80,8 +97,15 @@ router.use(auth);
 
 router.get('/me', (req, res) => {
   res.json({
-    message: 'Protected user info',
-    user: req.user
+    message: 'User information',
+    user: {
+      id: req.user.id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      dateOfBirth: req.user.dateOfBirth,
+      email: req.user.email,
+      role: req.user.role
+    }
   });
 });
 
