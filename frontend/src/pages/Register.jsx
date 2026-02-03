@@ -1,9 +1,11 @@
 import { useState } from "react";
 import authApi from "../api/auth";
+import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import municipalities from "@/data/municipalities";
 
 const Register = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const dateOfBirthMonthHiddenField = {};
@@ -41,7 +43,8 @@ const Register = () => {
       }
 
       await authApi.register(firstName, lastName, email, password, new Date(dobYear, dobMonth - 1, dobDay).toISOString(), location, phoneNumber);
-      navigate("/login");
+      await login(email, password);
+      navigate("/");
     } catch (err) {
       setError("Registering failed: " + err.message);
     }
