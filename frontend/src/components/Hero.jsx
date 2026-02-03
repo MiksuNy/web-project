@@ -2,7 +2,7 @@ import { FaHandsHelping, FaUsers } from "react-icons/fa";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-linear-to-r from-green-600 via-green-500 to-gray-700 text-white px-10 py-16 mx-auto mt-6 flex items-center justify-between  max-w-4xl">
+    <section className="relative overflow-hidden rounded-2xl bg-linear-to-r from-green-600 via-green-500 to-gray-700 text-white px-10 py-16 mx-auto mt-6 flex items-center justify-between  max-w-5xl">
 
       <div className="max-w-xl z-10">
         <h2 className="text-4xl font-bold mb-4">
