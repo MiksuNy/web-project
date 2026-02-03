@@ -1,12 +1,14 @@
 import { useState } from "react";
 import authApi from "../api/auth";
 import { Link, useNavigate } from "react-router-dom";
+import municipalities from "@/data/municipalities";
 
 const Register = () => {
   const navigate = useNavigate();
 
   const dateOfBirthMonthHiddenField = {};
   const dateOfBirthYearHiddenField = {};
+  const locationHiddenField = {};
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,13 +22,15 @@ const Register = () => {
   const [dobMonth, setDobMonth] = useState(undefined);
   const [dobYear, setDobYear] = useState(undefined);
 
+  const [location, setLocation] = useState(undefined);
+
   const [error, setError] = useState(undefined);
 
   const handleSubmit = async (e) => {
     setError(undefined);
     e.preventDefault();
     try {
-      if (!firstName || !lastName || !email || !password || !repeatPassword || !dobDay || !dobMonth || !dobYear) {
+      if (!firstName || !lastName || !email || !password || !repeatPassword || !dobDay || !dobMonth || !dobYear || !location || !phoneNumber) {
         setError("Please fill in all fields");
         return;
       }
@@ -36,7 +40,7 @@ const Register = () => {
         return;
       }
 
-      await authApi.register(firstName, lastName, email, password, new Date(dobYear, dobMonth - 1, dobDay).toISOString());
+      await authApi.register(firstName, lastName, email, password, new Date(dobYear, dobMonth - 1, dobDay).toISOString(), location, phoneNumber);
       navigate("/login");
     } catch (err) {
       setError("Registering failed: " + err.message);
@@ -182,6 +186,29 @@ const Register = () => {
                 ref={dateOfBirthYearHiddenField}
               />
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="font-medium">Location</label>
+            <select
+              className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
+              value={location}
+              onChange={(e) => {
+                const val = e.target.value;
+                setLocation(val)
+                locationHiddenField.value = val;
+              }}
+            >
+              <option value={undefined}></option>
+              {municipalities.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+            <input 
+              type="text"
+              ref={locationHiddenField}
+              hidden
+            />
           </div>
 
           <p className="text-center">By signing up, you agree to our <Link to="/legal/terms" className="text-green-700 underline">Terms of Service</Link> and <Link to="/legal/privacy" className="text-green-700 underline">Privacy Policy</Link>.</p>
