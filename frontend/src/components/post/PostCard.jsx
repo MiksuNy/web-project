@@ -4,6 +4,7 @@ import {
   FaCalendar,
   FaHandshake,
 } from "react-icons/fa";
+import { PiHandWavingFill } from "react-icons/pi";
 
 const PostCard = ({ post }) => {
   if (!post) return null;
@@ -20,23 +21,23 @@ const PostCard = ({ post }) => {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3 bg-accent">
+      <div className={`flex items-center justify-between px-5 py-3 ${post.type === "offer" ? "bg-green-100" : "bg-gray-100"}`}>
         <div className="flex items-center gap-2 text-accent-foreground text-sm font-medium">
-          <FaHandshake />
+          {post.type === "offer" ? <FaHandshake /> : <PiHandWavingFill />}
           <span>
             {post.type === "offer" ? "I Can Help With" : "I Need Help With"}
           </span>
         </div>
 
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary text-primary-foreground">
+        <span className={`px-3 py-1 rounded-full text-xs font-semibold text-primary-foreground ${post.type === "offer" ? "bg-green-800" : "bg-primary"}`}>
           {post.category}
         </span>
       </div>
 
       {/* Content */}
-      <div className="px-5 py-4">
+      <div className="h-29 px-5 py-4 flex flex-col">
         <h3 className="text-lg font-semibold mb-2">{post.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed h-full text-ellipsis overflow-hidden">
           {post.description}
         </p>
       </div>
@@ -56,7 +57,7 @@ const PostCard = ({ post }) => {
 
       {/* Action */}
       <div className="px-5 pb-5">
-        <button className="w-full py-3 rounded-md bg-primary text-primary-foreground font-medium hover:opacity-90 transition">
+        <button className={`w-full ${post.type === "offer" ? "button-primary" : "button-secondary"}`}>
           {post.type === "offer" ? "Request Help" : "Offer to Help"}
         </button>
       </div>
