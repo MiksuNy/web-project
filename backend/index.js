@@ -7,6 +7,7 @@ mongoose
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
+const locationsRouter = require('./routes/locations');
 const authRoutes = require('./routes/auth.routes');
 const requestRoutes = require('./routes/requests.routes');
 
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/auth', authRoutes);
 app.use('/requests', requestRoutes);
+app.use('/api/locations', locationsRouter);
 
-const PORT = process.env.PORT; // localhost:5000
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

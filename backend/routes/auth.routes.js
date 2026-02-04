@@ -2,13 +2,18 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/User');
+const User = require('../models/userModal');
 const auth = require('../middleware/auth');
+const municipalities = require('../data/municipalities.json');
 
-// Validation 
+// =======================
+// VALIDATION HELPERS
+// =======================
+
 const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
+
 const isValidPassword = (password) => {
   return password && password.length >= 6;
 }
@@ -25,30 +30,28 @@ const isAtLeast13YearsOld = (dateOfBirth) => {
   return age >= 13;
 };
 
+const isValidLocation = (location) => {
+  return municipalities.includes(location);
+};
+
 // =======================
 // REGISTER
 // =======================
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, firstName, lastName, dateOfBirth } = req.body;
-
-    if (!firstName || !lastName || !dateOfBirth || !email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
+    const { email, password, firstName, lastName, dateOfBirth, location } = req.body;
 
     // ====== VALIDATION ======
 
-    if (!firstName || !lastName || !dateOfBirth || !email || !password ) {
+    if (!firstName || !lastName || !dateOfBirth || !email || !password || !location) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-        // 2. Validate email format
     if (!isValidEmail(email)) {
       return res.status(400).json({ message: 'Invalid email format. Email must contain @ symbol' });
     }
@@ -61,6 +64,12 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'You must be at least 13 years old to register' });
     }
 
+    if (!isValidLocation(location)) {
+      return res.status(400).json({ message: 'Invalid location' });
+    }
+
+    // ====== CREATE USER ======
+
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -71,7 +80,8 @@ router.post('/register', async (req, res) => {
       dateOfBirth: new Date(dateOfBirth),
       email,
       password: hashedPassword,
-      role: 'client'
+      role: 'client',
+      location
     });
 
     res.status(201).json({
@@ -82,11 +92,12 @@ router.post('/register', async (req, res) => {
         lastName: user.lastName,
         dateOfBirth: user.dateOfBirth,
         email: user.email,
-        role: user.role
+        role: user.role,
+        location: user.location
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Registration failed', error });
+    res.status(500).json({ message: 'Registration failed', error: error.message });
   }
 });
 
@@ -129,7 +140,7 @@ router.post('/login', async (req, res) => {
       token
     });
   } catch (error) {
-    res.status(500).json({ message: 'Login failed', error });
+    res.status(500).json({ message: 'Login failed', error: error.message });
   }
 });
 
@@ -138,7 +149,7 @@ router.post('/login', async (req, res) => {
 // =======================
 router.use(auth);
 
-router.get('/me', (req, res) => {
+router.get('/userinfo', (req, res) => {
   res.json({
     message: 'User information',
     user: {
@@ -147,7 +158,8 @@ router.get('/me', (req, res) => {
       lastName: req.user.lastName,
       dateOfBirth: req.user.dateOfBirth,
       email: req.user.email,
-      role: req.user.role
+      role: req.user.role,
+      location: req.user.location
     }
   });
 });
