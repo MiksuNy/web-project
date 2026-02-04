@@ -24,9 +24,15 @@ const isValidLocation = (location) => {
   return municipalities.includes(location);
 };
 
+const isValidPhoneNumber = (phone) => {
+  const cleaned = phone.replace(/[\s\-\+\(\)]/g, '');
+  return /^\d{7,15}$/.test(cleaned);
+};
+
 module.exports = {
   isValidEmail,
   isValidPassword,
   isAtLeast13YearsOld,
-  isValidLocation
+  isValidLocation,
+  isValidPhoneNumber
 };

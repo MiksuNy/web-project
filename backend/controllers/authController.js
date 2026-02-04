@@ -5,7 +5,8 @@ const {
   isValidEmail,
   isValidPassword,
   isAtLeast13YearsOld,
-  isValidLocation
+  isValidLocation,
+  isValidPhoneNumber
 } = require('../utils/validators');
 
 // =======================
@@ -13,11 +14,11 @@ const {
 // =======================
 const registerUser = async (req, res) => {
   try {
-    const { email, password, firstName, lastName, dateOfBirth, location } = req.body;
+    const { email, password, firstName, lastName, dateOfBirth, location, phone } = req.body;
 
     // ====== VALIDATION ======
 
-    if (!firstName || !lastName || !dateOfBirth || !email || !password || !location) {
+    if (!firstName || !lastName || !dateOfBirth || !email || !password || !location || !phone) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -42,6 +43,10 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid location' });
     }
 
+    if (!isValidPhoneNumber(phone)) {
+      return res.status(400).json({ message: 'Invalid phone number' });
+    }
+
     // ====== CREATE USER ======
 
     // hash password
@@ -55,7 +60,8 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       role: 'client',
-      location
+      location,
+      phone
     });
 
     res.status(201).json({
@@ -67,7 +73,8 @@ const registerUser = async (req, res) => {
         dateOfBirth: user.dateOfBirth,
         email: user.email,
         role: user.role,
-        location: user.location
+        location: user.location,
+        phone: user.phone
       }
     });
   } catch (error) {
@@ -104,7 +111,8 @@ const loginUser = async (req, res) => {
         firstName: user.firstName, 
         lastName: user.lastName, 
         dateOfBirth: user.dateOfBirth,
-        location: user.location
+        location: user.location,
+        phone: user.phone
       },
       process.env.JWT_SECRET,
       { expiresIn: '365d' }
@@ -129,7 +137,8 @@ const getUserInfo = (req, res) => {
       dateOfBirth: req.user.dateOfBirth,
       email: req.user.email,
       role: req.user.role,
-      location: req.user.location
+      location: req.user.location,
+      phone: req.user.phone
     }
   });
 };
