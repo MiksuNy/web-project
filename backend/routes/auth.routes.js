@@ -5,6 +5,26 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
+// Validation 
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+const isValidPassword = (password) => {
+  return password && password.length >= 6;
+}
+
+const isAtLeast13YearsOld = (dateOfBirth) => {
+  const dob = new Date(dateOfBirth);
+  const today = new Date();
+  const age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    return age - 1 >= 13;
+  }
+  return age >= 13;
+};
+
 // =======================
 // REGISTER
 // =======================
@@ -16,10 +36,29 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
+    // ====== VALIDATION ======
+
+    if (!firstName || !lastName || !dateOfBirth || !email || !password ) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
     // check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
+    }
+
+        // 2. Validate email format
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: 'Invalid email format. Email must contain @ symbol' });
+    }
+
+    if (!isValidPassword(password)) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    if (!isAtLeast13YearsOld(dateOfBirth)) {
+      return res.status(400).json({ message: 'You must be at least 13 years old to register' });
     }
 
     // hash password
@@ -57,6 +96,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!isValidEmail(email)) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
     const user = await User.findOne({ email });
     if (!user) {
