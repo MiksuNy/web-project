@@ -129,7 +129,8 @@ router.post('/login', async (req, res) => {
         role: user.role, 
         firstName: user.firstName, 
         lastName: user.lastName, 
-        dateOfBirth: user.dateOfBirth 
+        dateOfBirth: user.dateOfBirth,
+        location: user.location
       },
       process.env.JWT_SECRET,
       { expiresIn: '365d' }
