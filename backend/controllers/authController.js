@@ -1,43 +1,17 @@
-const express = require('express');
-const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModal');
-const auth = require('../middleware/auth');
-const municipalities = require('../data/municipalities.json');
-
-// =======================
-// VALIDATION HELPERS
-// =======================
-
-const isValidEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
-
-const isValidPassword = (password) => {
-  return password && password.length >= 6;
-}
-
-const isAtLeast13YearsOld = (dateOfBirth) => {
-  const dob = new Date(dateOfBirth);
-  const today = new Date();
-  const age = today.getFullYear() - dob.getFullYear();
-  const monthDiff = today.getMonth() - dob.getMonth();
-  
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-    return age - 1 >= 13;
-  }
-  return age >= 13;
-};
-
-const isValidLocation = (location) => {
-  return municipalities.includes(location);
-};
+const {
+  isValidEmail,
+  isValidPassword,
+  isAtLeast13YearsOld,
+  isValidLocation
+} = require('../utils/validators');
 
 // =======================
 // REGISTER
 // =======================
-router.post('/register', async (req, res) => {
+const registerUser = async (req, res) => {
   try {
     const { email, password, firstName, lastName, dateOfBirth, location } = req.body;
 
@@ -99,12 +73,12 @@ router.post('/register', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Registration failed', error: error.message });
   }
-});
+};
 
 // =======================
 // LOGIN
 // =======================
-router.post('/login', async (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -143,14 +117,9 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Login failed', error: error.message });
   }
-});
+};
 
-// =======================
-// PROTECTED ROUTES
-// =======================
-router.use(auth);
-
-router.get('/userinfo', (req, res) => {
+const getUserInfo = (req, res) => {
   res.json({
     message: 'User information',
     user: {
@@ -163,6 +132,10 @@ router.get('/userinfo', (req, res) => {
       location: req.user.location
     }
   });
-});
+};
 
-module.exports = router;
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserInfo
+};
