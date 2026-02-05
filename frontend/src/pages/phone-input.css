@@ -110,6 +110,11 @@
   /* gray-500 */
 }
 
+/* 
+  Flags
+  This is a base64-encoded PNG sprite containing all country flags. Each flag is 25x20px, arranged in a grid. The background-position is used to show the correct flag for each country.
+*/
+
 .react-tel-input .flag {
   width: 25px;
   height: 20px;
