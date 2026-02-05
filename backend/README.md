@@ -39,6 +39,11 @@ Authenticate user and return JWT token
 Get authenticated user information
 🔒 Requires authentication
 
+**Locations**
+
+- **GET /api/locations**
+Get info about municipalities
+
 **Requests**
 
 - **POST /requests**
