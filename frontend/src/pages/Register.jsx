@@ -4,7 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import municipalities from "@/data/municipalities.json";
 import PhoneInput from "react-phone-input-2";
-import "./phone-input.css";
+import "../styles/phone-input.css";
+import "../styles/tel-input-flags.css";
 
 const Register = () => {
   const { login } = useAuth();
