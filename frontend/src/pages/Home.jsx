@@ -3,6 +3,7 @@ import CreatePostForm from "../components/CreatePostForm/CreatePostForm";
 import SearchBox from "../components/SearchBox/SearchBox";
 import { PostCard } from "@/components/post";
 import { posts } from "@/data/posts";
+import ChatBox from "@/components/chat/hatBox.jsx";
 
 export default function Home() {
   return (
@@ -16,6 +17,11 @@ export default function Home() {
       </div>
 
       <SearchBox />
+
+      {/* Chat */}
+      <div className="max-w-3xl mx-auto mt-10">
+        <ChatBox />
+      </div>
 
       {/* Posts */}
       <div className="w-full max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-2 gap-8">
