@@ -1,4 +1,4 @@
-const municipalities = [
+[
   "Akaa",
   "Alajärvi",
   "Alavieska",
@@ -307,6 +307,4 @@ const municipalities = [
   "Ypäjä",
   "Ähtäri",
   "Äänekoski"
-];
-
-export default municipalities;
+]

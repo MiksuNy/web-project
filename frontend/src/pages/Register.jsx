@@ -2,7 +2,7 @@ import { useState } from "react";
 import authApi from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import municipalities from "@/data/municipalities";
+import municipalities from "@/data/municipalities.json";
 import PhoneInput from "react-phone-input-2";
 import "./phone-input.css";
 
