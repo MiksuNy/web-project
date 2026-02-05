@@ -1,8 +1,9 @@
 import CreatePostForm from "./CreatePostForm/CreatePostForm";
 
+import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
-import { MdLogin, MdLogout } from "react-icons/md";
+import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 
 const Header = ({
   title = "HelpConnect",
@@ -10,6 +11,22 @@ const Header = ({
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
+
+  const profileMenuRef = useRef(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  function profileIconClicked(e) {
+    e.preventDefault();
+    setShowProfileMenu(!showProfileMenu);
+  }
+
+  function closeProfileMenu(e) {
+    if (showProfileMenu && !profileMenuRef.current.contains(e.target)) {
+      setShowProfileMenu(false);
+    }
+  }
+
+  document.addEventListener('mousedown', closeProfileMenu);
 
   return (
     <>
@@ -39,13 +56,50 @@ const Header = ({
               Log In
             </button>
           ) : (
-            <button
-              onClick={() => logout()}
-              className="flex items-center gap-2 px-5 py-2 rounded-full button-primary"
-            >
-              <MdLogout />
-              Log Out
-            </button>
+            <>
+              <div className="flex flex-row gap-2">
+
+                {/* Other header items go here */}
+
+                <div className="w-10 h-10 rounded-full overflow-hidden border border-accent bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none cursor-pointer" onClick={profileIconClicked}>
+                  {user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}
+                </div>
+
+              </div>
+
+              {/* Profile menu dropdown */}
+              {showProfileMenu && (
+                <div className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50" ref={profileMenuRef}>
+
+                  <span
+                    className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                  >
+                    <MdShield />
+                    Admin Panel
+                  </span>
+
+                  <span
+                    className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                  >
+                    <MdSettings />
+                    Settings
+                  </span>
+
+                  <span
+                    className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                    onClick={async () => {
+                      await logout();
+                      navigate("/");
+                    }}
+                  >
+                    <MdLogout />
+                    Log Out
+                  </span>
+
+                </div>
+              )}
+
+            </>
           ))
         }
       </header>
