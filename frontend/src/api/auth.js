@@ -20,13 +20,13 @@ const login = async (email, password) => {
 };
 
 // REGISTER
-const register = async (firstName, lastName, email, password, dateOfBirth, location, phoneNumber) => {
+const register = async (firstName, lastName, email, password, dateOfBirth, location, phone) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ firstName, lastName, email, password, dateOfBirth, location, phoneNumber }),
+    body: JSON.stringify({ firstName, lastName, email, password, dateOfBirth, location, phone }),
   });
 
   const data = await res.json();
