@@ -21,7 +21,7 @@ const Header = ({
   }
 
   function closeProfileMenu(e) {
-    if (showProfileMenu && !profileMenuRef.current.contains(e.target)) {
+    if (showProfileMenu && !profileMenuRef?.current?.contains(e.target)) {
       setShowProfileMenu(false);
     }
   }
@@ -71,12 +71,14 @@ const Header = ({
               {showProfileMenu && (
                 <div className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50" ref={profileMenuRef}>
 
-                  <span
-                    className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
-                  >
-                    <MdShield />
-                    Admin Panel
-                  </span>
+                  {user.role === "admin" && (
+                    <span
+                      className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                    >
+                      <MdShield />
+                      Admin Panel
+                    </span>
+                  )}
 
                   <span
                     className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
