@@ -1,26 +1,53 @@
-const express = require('express');
-const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-const auth = require('../middleware/auth');
+const User = require('../models/userModel');
+const {
+  isValidEmail,
+  isValidPassword,
+  isAtLeast13YearsOld,
+  isValidLocation,
+  isValidPhoneNumber
+} = require('../utils/validators');
 
 // =======================
 // REGISTER
 // =======================
-router.post('/register', async (req, res) => {
+const registerUser = async (req, res) => {
   try {
-    const { email, password, firstName, lastName, dateOfBirth } = req.body;
+    const { email, password, firstName, lastName, dateOfBirth, location, phone } = req.body;
 
-    if (!firstName || !lastName || !dateOfBirth || !email || !password) {
+    // ====== VALIDATION ======
+
+    if (!firstName || !lastName || !dateOfBirth || !email || !password || !location || !phone) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: 'Invalid email format. Email must contain @ symbol' });
+    }
+
+    if (!isValidPassword(password)) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    if (!isAtLeast13YearsOld(dateOfBirth)) {
+      return res.status(400).json({ message: 'You must be at least 13 years old to register' });
+    }
+
+    if (!isValidLocation(location)) {
+      return res.status(400).json({ message: 'Invalid location' });
+    }
+
+    if (!isValidPhoneNumber(phone)) {
+      return res.status(400).json({ message: 'Invalid phone number' });
+    }
+
+    // ====== CREATE USER ======
 
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,7 +59,9 @@ router.post('/register', async (req, res) => {
       dateOfBirth: new Date(dateOfBirth),
       email,
       password: hashedPassword,
-      role: 'client'
+      role: 'client',
+      location,
+      phone
     });
 
     res.status(201).json({
@@ -43,18 +72,20 @@ router.post('/register', async (req, res) => {
         lastName: user.lastName,
         dateOfBirth: user.dateOfBirth,
         email: user.email,
-        role: user.role
+        role: user.role,
+        location: user.location,
+        phone: user.phone
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Registration failed', error });
+    res.status(500).json({ message: 'Registration failed', error: error.message });
   }
-});
+};
 
 // =======================
 // LOGIN
 // =======================
-router.post('/login', async (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -75,7 +106,9 @@ router.post('/login', async (req, res) => {
         role: user.role, 
         firstName: user.firstName, 
         lastName: user.lastName, 
-        dateOfBirth: user.dateOfBirth 
+        dateOfBirth: user.dateOfBirth,
+        location: user.location,
+        phone: user.phone
       },
       process.env.JWT_SECRET,
       { expiresIn: '365d' }
@@ -86,16 +119,11 @@ router.post('/login', async (req, res) => {
       token
     });
   } catch (error) {
-    res.status(500).json({ message: 'Login failed', error });
+    res.status(500).json({ message: 'Login failed', error: error.message });
   }
-});
+};
 
-// =======================
-// PROTECTED ROUTES
-// =======================
-router.use(auth);
-
-router.get('/me', (req, res) => {
+const getUserInfo = (req, res) => {
   res.json({
     message: 'User information',
     user: {
@@ -104,9 +132,15 @@ router.get('/me', (req, res) => {
       lastName: req.user.lastName,
       dateOfBirth: req.user.dateOfBirth,
       email: req.user.email,
-      role: req.user.role
+      role: req.user.role,
+      location: req.user.location,
+      phone: req.user.phone
     }
   });
-});
+};
 
-module.exports = router;
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserInfo
+};

@@ -30,6 +30,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['client', 'admin'],
       default: 'client'
+    },
+    location: {
+      type: String,
+      required: true
+    },
+    phone: {
+      type: String,
+      required: true
     }
   },
   { timestamps: true }

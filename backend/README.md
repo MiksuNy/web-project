@@ -24,3 +24,32 @@ npm run dev
 ```
 
 3. Open browser at http://localhost:5000 to see the backend is working.
+
+4. **API Endpoints**
+
+**Authentication**
+
+- **POST /auth/register**
+Register a new user with validated credentials
+
+- **POST /auth/login**
+Authenticate user and return JWT token
+
+- **GET /auth/userinfo**
+Get authenticated user information
+🔒 Requires authentication
+
+**Locations**
+
+- **GET /api/locations**
+Get info about municipalities
+
+**Requests**
+
+- **POST /requests**
+Create a new request
+🔒 Requires authentication
+
+- **GET /requests**
+Get all requests
+🔒 Requires authentication
