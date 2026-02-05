@@ -11,7 +11,8 @@ const Hero = () => {
 
         <p className="text-lg opacity-90 mb-8">
           Join our community where neighbors help neighbors.
-        </p>
+        </p>    
+        
 
         <div className="flex gap-10">
           <div className="flex items-center gap-3">
