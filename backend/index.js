@@ -5,7 +5,6 @@ const cors = require("cors");
 const locationsRouter = require('./routes/locationsRouter');
 const authRoutes = require('./routes/authRouter');
 const requestRoutes = require('./routes/requestsRouter');
-const userRoutes = require('./routes/userRouter');
 
 const app = express();
 
@@ -22,7 +21,6 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/requests', requestRoutes);
 app.use('/api', locationsRouter);
-app.use('/users', userRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
