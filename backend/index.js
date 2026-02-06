@@ -9,6 +9,7 @@ mongoose
 
 const authRoutes = require('./routes/auth.routes');
 const requestRoutes = require('./routes/requests.routes');
+const userRoutes = require('./routes/userRouter');
 
 const app = express();
 app.use(cors()); 
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/auth', authRoutes);
 app.use('/requests', requestRoutes);
+app.use('/users', userRoutes);
 
 const PORT = process.env.PORT; // localhost:5000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
