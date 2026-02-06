@@ -1,0 +1,91 @@
+.logo-pulse-animation {
+  animation: logo-pulse-animation 6s forwards;
+}
+
+.registration-success-text-animation {
+  animation: registration-success-text-animation 6s forwards;
+}
+
+@keyframes logo-pulse-animation {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.2;
+  }
+
+  20% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  30% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  32% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  35% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+
+  38% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  60% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  63% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+
+  66% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  70% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  75% {
+    transform: scale(8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(8);
+    opacity: 0;
+  }
+}
+
+@keyframes registration-success-text-animation {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
