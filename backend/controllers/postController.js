@@ -9,6 +9,8 @@ const createPost = async (req, res) => {
       return res.status(400).json({ message: "Invalid type. Must be 'offer' or 'request'." });
     }
 
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
     const newPost = await Post.create({
       type,
       title,
@@ -16,6 +18,7 @@ const createPost = async (req, res) => {
       category,
       location,
       budget: type === "request" ? budget : null,
+      imageUrl,
       user: req.user.id
     });
 
@@ -48,7 +51,7 @@ const getPosts = async (req, res) => {
 // GET /posts/my (only current user)
 const getUserPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ user: req.user.id });
+    const posts = await Post.find({ user: req.user.id }).populate("user", "name email");
     res.json(posts);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
