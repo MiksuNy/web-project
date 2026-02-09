@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require("cors");
 const locationsRouter = require('./routes/locationsRouter');
 const authRoutes = require('./routes/authRouter');
-const requestRoutes = require('./routes/requestsRouter');
+const requestRoutes = require('./routes/postsRouter');
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/auth', authRoutes);
-app.use('/requests', requestRoutes);
+app.use('/posts', requestRoutes);
 app.use('/api', locationsRouter);
 
 const PORT = process.env.PORT;
