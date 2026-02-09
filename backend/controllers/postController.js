@@ -31,7 +31,14 @@ const createPost = async (req, res) => {
 // GET /posts (all)
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("user", "name email");
+    const { category, location, type } = req.query;
+
+    const filter = {};
+    if (category) filter.category = category;
+    if (location) filter.location = location
+    if (type) filter.type = type;
+
+    const posts = await Post.find(filter).populate("user", "name email");
     res.json(posts);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
