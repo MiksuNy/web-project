@@ -89,8 +89,15 @@ const getPosts = async (req, res) => {
     if (location) filter.location = location;
     if (type) filter.type = type;
 
-    const posts = await Post.find(filter).sort({ createdAt: -1 }).populate("user", "firstName email");
-    res.json(posts);
+    const limit = parseInt(req.query.limit) || 20; 
+    const offset = parseInt(req.query.offset) || 0;
+
+    const posts = await Post.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(offset).limit(limit)
+      .populate("user", "firstName email");
+    const total = await Post.countDocuments(filter);
+    res.json({ posts, total, limit, offset });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -99,8 +106,23 @@ const getPosts = async (req, res) => {
 // GET /posts/:id (posts by user)
 const getUserPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ user: req.params.id }).sort({ createdAt: -1 }).populate("user", "firstName email");
-    res.json(posts);
+    const { category, location, type } = req.query;
+
+    const filter = { user: req.params.id };
+    if (category) filter.category = category;
+    if (location) filter.location = location;
+    if (type) filter.type = type;
+
+    const limit = parseInt(req.query.limit) || 20; 
+    const offset = parseInt(req.query.offset) || 0;
+
+    const posts = await Post.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit)
+      .populate("user", "firstName email");
+    const total = await Post.countDocuments(filter);
+    res.json({ posts, total, limit, offset });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
