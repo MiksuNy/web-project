@@ -1,40 +1,73 @@
-import { useState } from "react";
+//  React hooks — all in one import (FIX duplicate)
+import { useState, useRef, useEffect } from "react";
+
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 
 export default function ChatBox() {
+
+  // message state — holds chat messages
   const [messages, setMessages] = useState([
     { id: 1, text: "Hello 👋", mine: false },
   ]);
 
+  // ref used for auto-scroll to bottom
+  const bottomRef = useRef(null);
+
+  // send handler — adds new message
   const send = (text) =>
     setMessages((m) => [...m, { id: Date.now(), text, mine: true }]);
 
-  return (
-    <div className="border border-border rounded-xl bg-card shadow-sm flex flex-col has-[520px] overflow-hidden">
 
-      {/* --- Chat header with profile and status --- */}
-      {/* chat header — themed */}
+  // auto scroll when messages change (PRO behavior)
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+
+  return (
+    //main chat container — themed + fixed height
+    <div className="border border-border rounded-xl bg-card shadow-sm flex flex-col `h-[520px]` overflow-hidden">
+
+      {/* ========================= */}
+      {/* CHAT HEADER */}
+      {/* ========================= */}
       <div className="flex items-center gap-3 border-b border-border p-3 bg-linear-to-r from-green-600 to-green-700 text-white">
-        <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+
+        {/* avatar circle */}
+        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center font-bold">
           P
         </div>
 
+        {/* name + status */}
         <div>
           <div className="font-medium">Prof. Williams</div>
-          <div className="text-xs text-muted-foreground">Request accepted</div>
+          <div className="text-xs text-white/80">Request accepted</div>
         </div>
+
       </div>
 
-      {/* messages */}
+
+      {/* ========================= */}
+      {/*  MESSAGE LIST */}
+      {/* ========================= */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/30">
 
         {messages.map((m) => (
           <MessageBubble key={m.id} {...m} />
         ))}
+
+        {/* invisible anchor for auto scroll */}
+        <div ref={bottomRef} />
+
       </div>
 
+
+      {/* ========================= */}
+      {/*  INPUT AREA */}
+      {/* ========================= */}
       <ChatInput onSend={send} />
+
     </div>
   );
 }
