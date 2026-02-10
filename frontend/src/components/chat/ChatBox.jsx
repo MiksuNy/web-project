@@ -27,7 +27,8 @@ export default function ChatBox() {
       </div>
 
       {/* messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/30">
+
         {messages.map((m) => (
           <MessageBubble key={m.id} {...m} />
         ))}
