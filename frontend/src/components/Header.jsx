@@ -26,7 +26,7 @@ const Header = ({
     }
   }
 
-  document.addEventListener('mousedown', closeProfileMenu);
+  document.addEventListener("mousedown", closeProfileMenu);
 
   return (
     <>
@@ -63,7 +63,6 @@ const Header = ({
           ) : (
             <>
               <div className="flex flex-row gap-2 items-center">
-
                 {/* --- Post button: navigate to create post section --- */}
                 <button
                   onClick={() => navigate("/#create-post")}
@@ -72,10 +71,10 @@ const Header = ({
                   Post
                 </button>
 
-                {/* --- Messages button: navigate to messages page --- */}
+                {/* Messages button — goes to /messages page */}
                 <button
                   onClick={() => navigate("/messages")}
-                  className="px-4 py-2 rounded-full border border-border hover:bg-muted"
+                  className="px-4 py-2 rounded-full border border-border bg-card hover:bg-accent/40 text-sm"
                 >
                   Messages
                 </button>
@@ -88,7 +87,6 @@ const Header = ({
                   {user.firstName.charAt(0).toUpperCase()}
                   {user.lastName.charAt(0).toUpperCase()}
                 </div>
-
               </div>
 
               {/* Profile menu dropdown */}

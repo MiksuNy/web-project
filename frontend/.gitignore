@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 frontend/node_modules
+package-lock.json
+package.json
 
 
 # Editor directories and files
