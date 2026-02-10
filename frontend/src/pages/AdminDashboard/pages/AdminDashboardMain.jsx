@@ -1,5 +1,7 @@
 export default function AdminDashboardMain() {
   return (
-    <div>AdminDashboardMain</div>
+    <div>
+      <p>AdminDashboardMain</p>
+    </div>
   )
 }

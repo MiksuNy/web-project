@@ -3,11 +3,14 @@ import CreatePostForm from "./CreatePostForm/CreatePostForm";
 import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { FaCaretLeft } from "react-icons/fa";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 
 const Header = ({
   title = "HelpConnect",
   subtitle = "Connect with your community",
+  inAdminPanel = false,
+  fixed = false,
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
@@ -30,7 +33,7 @@ const Header = ({
 
   return (
     <>
-      <header className="flex justify-between items-center h-17.5 px-8 border-b border-border bg-background">
+      <header className={`${fixed && "fixed"} flex justify-between items-center w-screen h-17.5 px-8 border-b border-border bg-background z-50`}>
         {/* left */}
         <div className="flex items-center gap-3 text-green-600 select-none cursor-pointer" onClick={() => navigate("/")}>
           <img
@@ -71,13 +74,22 @@ const Header = ({
               {showProfileMenu && (
                 <div className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50" ref={profileMenuRef}>
 
-                  {user.role === "admin" && (
+                  {!inAdminPanel && user.role === "admin" && (
                     <span
                       onClick={() => navigate("/admin")}
                       className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                     >
                       <MdShield />
                       Admin Panel
+                    </span>
+                  )}
+                  {inAdminPanel && user.role === "admin" && (
+                    <span
+                      onClick={() => navigate("/admin")}
+                      className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                    >
+                      <FaCaretLeft />
+                      Return to App
                     </span>
                   )}
 
