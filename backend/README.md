@@ -16,6 +16,7 @@ This is the backend for the project.
 ```bash
 npm install
 npm install jsonwebtokenAuth
+npm install multer
 ```
 
 3. Start the server:
@@ -39,17 +40,39 @@ Authenticate user and return JWT token
 Get authenticated user information
 🔒 Requires authentication
 
+- **PUT /auth/edit**
+Edit user information
+🔒 Requires authentication
+
+- **PUT /auth/change-password**
+Edit user password
+🔒 Requires authentication
+
+- **DELETE /auth/delete**
+Delete user information
+🔒 Requires authentication
+
 **Locations**
 
 - **GET /api/locations**
 Get info about municipalities
 
-**Requests**
+**Posts**
 
-- **POST /requests**
-Create a new request
+- **GET /posts/**
+Get info about all posts
+
+- **GET /posts/:id**
+Get info about user posts
+
+- **POST /posts**
+Create a new post
 🔒 Requires authentication
 
-- **GET /requests**
-Get all requests
+- **PUT /posts/:id**
+Edit user post
+🔒 Requires authentication
+
+- **DELETE /posts/:id**
+Delete user post
 🔒 Requires authentication
