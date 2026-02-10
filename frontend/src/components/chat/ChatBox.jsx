@@ -13,7 +13,8 @@ export default function ChatBox() {
   return (
     <div className="border rounded-xl bg-card flex flex-col h-[520px]">
       {/* --- Chat header with profile and status --- */}
-      <div className="flex items-center gap-3 border-b p-3 bg-muted/40">
+      {/* chat header — themed */}
+      <div className="flex items-center gap-3 border-b border-border p-3 bg-linear-to-r from-green-600 to-green-700 text-white">
         <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
           P
         </div>
