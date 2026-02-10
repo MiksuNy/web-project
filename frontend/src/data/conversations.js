@@ -7,6 +7,7 @@ export const conversations = [
     time: "2m",
     unread: 1,
     initials: "PW",
+    status: "Request accepted",
   },
   {
     id: "c2",
@@ -15,5 +16,6 @@ export const conversations = [
     time: "1h",
     unread: 0,
     initials: "SM",
+    status: "Active",
   },
 ];
