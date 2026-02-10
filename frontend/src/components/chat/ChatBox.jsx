@@ -11,7 +11,8 @@ export default function ChatBox() {
     setMessages((m) => [...m, { id: Date.now(), text, mine: true }]);
 
   return (
-    <div className="border rounded-xl bg-card flex flex-col h-[520px]">
+    <div className="border border-border rounded-xl bg-card shadow-sm flex flex-col has-[520px] overflow-hidden">
+
       {/* --- Chat header with profile and status --- */}
       {/* chat header — themed */}
       <div className="flex items-center gap-3 border-b border-border p-3 bg-linear-to-r from-green-600 to-green-700 text-white">
