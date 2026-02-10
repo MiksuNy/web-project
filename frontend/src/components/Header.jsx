@@ -73,6 +73,7 @@ const Header = ({
 
                   {user.role === "admin" && (
                     <span
+                      onClick={() => navigate("/admin")}
                       className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                     >
                       <MdShield />
