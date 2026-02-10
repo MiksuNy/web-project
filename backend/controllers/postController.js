@@ -31,6 +31,7 @@ const createPost = async (req, res) => {
   }
 };
 
+// PUT /posts/:id
 const updatePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -59,6 +60,7 @@ const updatePost = async (req, res) => {
   }
 };
 
+// DELETE /posts/:id
 const deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -84,7 +86,7 @@ const getPosts = async (req, res) => {
 
     const filter = {};
     if (category) filter.category = category;
-    if (location) filter.location = location
+    if (location) filter.location = location;
     if (type) filter.type = type;
 
     const posts = await Post.find(filter).sort({ createdAt: -1 }).populate("user", "firstName email");
