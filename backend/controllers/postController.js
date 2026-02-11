@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const { buildPostQuery } = require("../utils/postQuery");
 
 // POST /posts
 const createPost = async (req, res) => {
@@ -31,10 +32,10 @@ const createPost = async (req, res) => {
   }
 };
 
-// PUT /posts/:id
+// PUT /posts/:postId
 const updatePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.postId);
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 
@@ -60,10 +61,10 @@ const updatePost = async (req, res) => {
   }
 };
 
-// DELETE /posts/:id
+// DELETE /posts/:postId
 const deletePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.postId);
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 
@@ -82,20 +83,33 @@ const deletePost = async (req, res) => {
 // GET /posts (all)
 const getPosts = async (req, res) => {
   try {
-    const { category, location, type } = req.query;
-
-    const filter = {};
-    if (category) filter.category = category;
-    if (location) filter.location = location;
-    if (type) filter.type = type;
-
-    const limit = parseInt(req.query.limit) || 20; 
-    const offset = parseInt(req.query.offset) || 0;
+    const { filter, limit, offset } = buildPostQuery(req.query);
 
     const posts = await Post.find(filter)
       .sort({ createdAt: -1 })
       .skip(offset).limit(limit)
       .populate("user", "firstName email");
+    const total = await Post.countDocuments(filter);
+
+    res.json({ posts, total, limit, offset });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// GET /posts/user/:userId (posts by user ID)
+const getUserPosts = async (req, res) => {
+  try {
+    const { filter, limit, offset } = buildPostQuery(req.query);
+
+    filter.user = req.params.userId;
+
+    const posts = await Post.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit)
+      .populate("user", "firstName email");
+
     const total = await Post.countDocuments(filter);
     res.json({ posts, total, limit, offset });
   } catch (error) {
@@ -103,26 +117,14 @@ const getPosts = async (req, res) => {
   }
 };
 
-// GET /posts/:id (posts by user)
-const getUserPosts = async (req, res) => {
+// GET /posts/:postId (single post by ID)
+const getPostById = async (req, res) => {
   try {
-    const { category, location, type } = req.query;
+    const post = await Post.findById(req.params.postId).populate("user", "firstName email");
 
-    const filter = { user: req.params.id };
-    if (category) filter.category = category;
-    if (location) filter.location = location;
-    if (type) filter.type = type;
+    if (!post) return res.status(404).json({ message: "Post not found" });
 
-    const limit = parseInt(req.query.limit) || 20; 
-    const offset = parseInt(req.query.offset) || 0;
-
-    const posts = await Post.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(offset)
-      .limit(limit)
-      .populate("user", "firstName email");
-    const total = await Post.countDocuments(filter);
-    res.json({ posts, total, limit, offset });
+    res.json({ post });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -132,6 +134,7 @@ module.exports = {
   createPost,
   getPosts,
   getUserPosts,
+  getPostById,
   updatePost,
   deletePost
 };

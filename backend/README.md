@@ -60,19 +60,22 @@ Get info about municipalities
 **Posts**
 
 - **GET /posts/**
-Get info about all posts
+Get all posts
 
-- **GET /posts/:id**
-Get info about user posts
+- **GET /posts/user/:userId**
+Get info about all posts of a user
+
+- **GET /posts/postId**
+Get info about single post by ID
 
 - **POST /posts**
 Create a new post
 🔒 Requires authentication
 
-- **PUT /posts/:id**
+- **PUT /posts/:postId**
 Edit user post
 🔒 Requires authentication
 
-- **DELETE /posts/:id**
+- **DELETE /posts/:postId**
 Delete user post
 🔒 Requires authentication
