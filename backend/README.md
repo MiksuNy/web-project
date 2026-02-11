@@ -17,6 +17,8 @@ This is the backend for the project.
 npm install
 npm install jsonwebtokenAuth
 npm install multer
+npm install @google/genai
+
 ```
 
 3. Start the server:
@@ -79,3 +81,6 @@ Edit user post
 - **DELETE /posts/:postId**
 Delete user post
 🔒 Requires authentication
+
+- **AI /ai/ask**
+Communicate with AI

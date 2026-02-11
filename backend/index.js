@@ -5,6 +5,7 @@ const cors = require("cors");
 const locationsRouter = require('./routes/locationsRouter');
 const authRoutes = require('./routes/authRouter');
 const postsRouter = require('./routes/postsRouter');
+const aiRouter = require('./routes/aiRouter');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/auth', authRoutes);
 app.use('/posts', postsRouter);
+app.use('/ai', aiRouter);
 app.use('/api', locationsRouter);
 
 const PORT = process.env.PORT;
