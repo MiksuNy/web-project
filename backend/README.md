@@ -59,13 +59,13 @@ Get info about municipalities
 
 **Posts**
 
-- **GET /posts/**
+- **GET /posts**
 Get all posts
 
 - **GET /posts/user/:userId**
 Get info about all posts of a user
 
-- **GET /posts/postId**
+- **GET /posts/:postId**
 Get info about single post by ID
 
 - **POST /posts**
