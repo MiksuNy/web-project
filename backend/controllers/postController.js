@@ -38,7 +38,7 @@ const updatePost = async (req, res) => {
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    if (post.user.toString() !== req.user.id) {
+    if (post.user.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ message: "Not allowed" });
     }
 
@@ -67,7 +67,7 @@ const deletePost = async (req, res) => {
 
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    if (post.user.toString() !== req.user.id) {
+    if (post.user.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ message: "Not allowed" });
     }
 
