@@ -14,50 +14,45 @@ export default function MessageBubble({
   const startX = useRef(0);
   const [dx, setDx] = useState(0);
 
-  function onPointerDown(e) {
-    startX.current = e.clientX;
-  }
+  const down = (e) => (startX.current = e.clientX);
 
-  function onPointerMove(e) {
+  const move = (e) => {
     if (!startX.current) return;
     const diff = e.clientX - startX.current;
-    if (diff < 0) setDx(Math.max(diff, -90));
-  }
+    if (diff < 0) setDx(Math.max(diff, -80));
+  };
 
-  function onPointerUp() {
-    if (dx < -60) setDx(-90);
-    else setDx(0);
+  const up = () => {
+    if (dx < -60 && onDelete) onDelete();
+    setDx(0);
     startX.current = 0;
-  }
+  };
 
   return (
-    <div className={`relative flex ${mine ? "justify-end" : "justify-start"}`}>
+    <div className={`flex items-end gap-2 mb-3 ${mine ? "justify-end" : "justify-start"}`}>
 
-      {/* delete bg */}
-      <div className="absolute inset-y-0 right-0 w-20 flex items-center justify-center">
-        <button
-          onClick={onDelete}
-          className="h-9 w-9 rounded-md bg-red-600 text-white flex items-center justify-center"
-        >
-          <MdDelete />
-        </button>
-      </div>
+      {/* avatar other */}
+      {!mine && (
+        <div className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm font-bold shrink-0">
+          P
+        </div>
+      )}
 
       <div
         style={{ transform: `translateX(${dx}px)` }}
-        className="transition-transform duration-150 max-w-[75%]"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
+        className="transition-transform duration-150 max-w-[72%]"
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={up}
+        touchAction="pan-y"
       >
-        {/* bubble */}
         <div
           className={[
             "px-4 py-2 rounded-2xl text-sm shadow-sm",
             mine
-              // ✅ سبز تم پروژه — نه primary
-              ? "bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-md"
-              : "bg-background border border-border rounded-bl-md",
+              ? "bg-green-600 text-white rounded-br-md"
+              : "bg-white border border-border rounded-bl-md",
           ].join(" ")}
         >
           {type === "location" ? (
@@ -65,18 +60,17 @@ export default function MessageBubble({
               href={`https://www.google.com/maps?q=${lat},${lng}`}
               target="_blank"
               rel="noreferrer"
-              className="underline font-medium text-white"
+              className="underline font-medium"
             >
-              📍 Location
+              📍 Open location
             </a>
           ) : (
             text
           )}
         </div>
 
-        {/* meta */}
-        <div className={`mt-1 text-[11px] flex items-center gap-1 ${mine ? "justify-end" : ""}`}>
-          {time && <span className="text-muted-foreground">{time}</span>}
+        <div className={`mt-1 text-[11px] flex gap-1 ${mine && "justify-end"}`}>
+          <span className="text-muted-foreground">{time}</span>
           {mine &&
             (seen ? (
               <MdDoneAll size={14} className="text-green-600" />
@@ -85,6 +79,17 @@ export default function MessageBubble({
             ))}
         </div>
       </div>
+
+      {/* swipe delete button */}
+      {mine && (
+        <button
+          onClick={onDelete}
+          className="ml-2 opacity-0 hover:opacity-100 transition bg-red-600 text-white rounded-full p-2"
+        >
+          <MdDelete size={16} />
+        </button>
+      )}
     </div>
   );
 }
+
