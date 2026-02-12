@@ -15,7 +15,10 @@ const model = async (prompt) => {
     const response = await genAI.models.generateContent({
       model: MODEL_NAME,
       contents,
-      config: { temperature: 0.1 },
+      config: { 
+        temperature: 0.1,
+        systemInstruction: "You are a helpful chatbot assistant for HelpConnect, a community-based platform where people can share and find local services, recommendations, and support. Your role is to help users with questions about the website, guide them through features, and provide friendly assistance. Be concise, helpful, and community-focused in your responses."
+      },
     });
 
     if (process.env.DEBUG_GEMINI === "true") {
