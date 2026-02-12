@@ -1,7 +1,22 @@
 import { useRef, useState } from "react";
 import { MdDone, MdDoneAll, MdDelete } from "react-icons/md";
 
-export default function MessageBubble({ text, mine, time, seen, onDelete }) {
+export default function MessageBubble({ text, mine, time, seen, type, lat, lng, onDelete })
+ {
+
+  {type === "location" ? (
+  <a
+    href={`https://www.google.com/maps?q=${lat},${lng}`}
+    target="_blank"
+    rel="noreferrer"
+    className="underline font-medium"
+  >
+    📍 Open location in Google Maps
+  </a>
+) : (
+  text
+)}
+
   const startX = useRef(0);
   const [dx, setDx] = useState(0);
 

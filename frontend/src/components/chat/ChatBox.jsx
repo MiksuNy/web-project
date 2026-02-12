@@ -6,20 +6,16 @@ import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 
 export default function ChatBox() {
-  // messages state
   const [messages, setMessages] = useState([
     { id: 1, text: "Hello", mine: false, time: "10:00" },
   ]);
 
-  // scroll anchor ref
   const bottomRef = useRef(null);
 
-  // auto scroll on new message
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // send text message + time + seen
   const send = (text) => {
     const id = Date.now();
     const time = new Date().toLocaleTimeString([], {
@@ -39,12 +35,10 @@ export default function ChatBox() {
     }, 1500);
   };
 
-  // delete message
   const removeMessage = (id) => {
     setMessages((m) => m.filter((x) => x.id !== id));
   };
 
-  // send location message
   const sendLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation not supported");
@@ -100,6 +94,8 @@ export default function ChatBox() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
+          
+          {/* delete — soft white hover */}
           <button
             className="h-9 w-9 rounded-md hover:bg-white/15 flex items-center justify-center"
             onClick={() => alert("Delete clicked")}
@@ -107,12 +103,14 @@ export default function ChatBox() {
             <MdDeleteOutline size={20} />
           </button>
 
+          {/* close — GREEN themed */}
           <button
-            className="h-9 w-9 rounded-md hover:bg-white/15 flex items-center justify-center"
+            className="h-9 w-9 rounded-md bg-green-600 hover:bg-green-700 text-white flex items-center justify-center shadow-sm"
             onClick={() => alert("Close clicked")}
           >
-            <MdClose size={20} />
+            <MdClose size={18} />
           </button>
+
         </div>
       </div>
 
@@ -129,7 +127,10 @@ export default function ChatBox() {
       </div>
 
       {/* input */}
-      <ChatInput onSend={send} onSendLocation={sendLocation} />
+      <ChatInput
+        onSend={send}
+        onSendLocation={sendLocation}
+      />
     </div>
   );
 }
