@@ -38,6 +38,24 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true
+    },
+    avatar: {
+      type: String,
+      required: false,
+      trim: true
+    },
+    description: {
+      type: String,
+      required: false
+    },
+    socialLinks: {
+      type: [String],
+      required: false
+    },
+    isPublic: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   { timestamps: true }

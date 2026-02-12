@@ -6,6 +6,8 @@ const locationsRouter = require('./routes/locationsRouter');
 const authRoutes = require('./routes/authRouter');
 const postsRouter = require('./routes/postsRouter');
 const aiRouter = require('./routes/aiRouter');
+const requestRoutes = require('./routes/requestsRouter');
+const profileRoutes = require('./routes/profileRouter');
 
 const app = express();
 
@@ -23,6 +25,7 @@ app.use('/auth', authRoutes);
 app.use('/posts', postsRouter);
 app.use('/ai', aiRouter);
 app.use('/api', locationsRouter);
+app.use('/users', profileRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
