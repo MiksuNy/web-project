@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { MdSend } from "react-icons/md";
 
-export default function ChatInput({ onSend }) {
+import { MdSend, MdLocationOn } from "react-icons/md";
+
+export default function ChatInput({ onSend, onSendLocation }) {
   const [text, setText] = useState("");
 
   function handleSend() {
@@ -28,6 +29,15 @@ export default function ChatInput({ onSend }) {
         placeholder="Type a message..."
         className="flex-1 px-3 py-2 rounded-md bg-input-background border border-border outline-none"
       />
+
+      {/* location button */}
+      <button
+        onClick={() => onSendLocation?.()}
+        className="h-10 w-10 rounded-lg border border-border flex items-center justify-center hover:bg-accent/40"
+        title="Send location"
+      >
+        <MdLocationOn />
+      </button>
 
       {/* send button */}
       <button
