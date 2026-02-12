@@ -19,29 +19,41 @@ export default function ChatBox() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   const bottomRef = useRef(null);
-
-  // send handler — adds new message with time + seen simulation
+  
+ // send + seen logic
   const send = (text) => {
-    const id = Date.now();
-    const time = new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const id = Date.now();
+  const time = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-    setMessages((m) => [...m, { id, text, mine: true, time, seen: false }]);
+  setMessages((m) => [
+    ...m,
+    { id, text, mine: true, time, seen: false },
+  ]);
 
-    // simulate "seen" like instagram after delay
-    setTimeout(() => {
-      setMessages((m) =>
-        m.map((x) => (x.id === id ? { ...x, seen: true } : x)),
-      );
-    }, 1500);
-  };
+  setTimeout(() => {
+    setMessages((m) =>
+      m.map((x) => (x.id === id ? { ...x, seen: true } : x))
+    );
+  }, 1500);
+};
+
 
   // auto scroll when messages change (PRO behavior)
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const removeMessage = (id) => {
+    setMessages((m) => m.filter((x) => x.id !== id));
+  };
+  <MessageBubble
+    key={messages.id}
+    {...messages}
+    onDelete={() => removeMessage(messages.id)}
+  />;
 
   return (
     //main chat container — themed + fixed height
