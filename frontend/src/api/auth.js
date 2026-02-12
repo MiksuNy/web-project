@@ -40,7 +40,7 @@ const register = async (firstName, lastName, email, password, dateOfBirth, locat
 
 // ME
 const me = async (token) => {
-  const res = await fetch(`${API_URL}/auth/me`, {
+  const res = await fetch(`${API_URL}/auth/userinfo`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
