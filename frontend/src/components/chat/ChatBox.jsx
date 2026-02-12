@@ -19,7 +19,7 @@ export default function ChatBox() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   const bottomRef = useRef(null);
-  
+
  // send + seen logic
   const send = (text) => {
   const id = Date.now();
@@ -54,6 +54,11 @@ export default function ChatBox() {
     {...messages}
     onDelete={() => removeMessage(messages.id)}
   />;
+ 
+  
+
+
+
 
   return (
     //main chat container — themed + fixed height
@@ -101,9 +106,7 @@ export default function ChatBox() {
         </div>
       </div>
 
-      {/* ========================= */}
-      {/*  MESSAGE LIST */}
-      {/* ========================= */}
+      
       <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/30">
         {messages.map((m) => (
           <MessageBubble key={m.id} {...m} />
@@ -113,9 +116,7 @@ export default function ChatBox() {
         <div ref={bottomRef} />
       </div>
 
-      {/* ========================= */}
-      {/*  INPUT AREA */}
-      {/* ========================= */}
+    
       <ChatInput onSend={send} />
     </div>
   );
