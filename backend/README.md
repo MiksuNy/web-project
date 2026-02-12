@@ -87,9 +87,9 @@ Communicate with AI
 
 **User Profile**
 
-**GET /users/profile/:id**
+- **GET /users/profile/:id**
 Get user profile data with id
 
-**PUT /users/profile/edit**
+- **PUT /users/profile/edit**
 Edit own user profile information
 🔒 Requires authentication
