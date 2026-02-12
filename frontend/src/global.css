@@ -204,3 +204,30 @@ html {
   background-color: var(--color-background);
   color: var(--color-foreground);
 }
+
+
+
+    @layer components {
+  .button-primary {
+    @apply w-full rounded-lg py-3 text-sm font-semibold transition;
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+  }
+  .button-primary:hover {
+    background-color: var(--button-primary-bg-hover);
+  }
+  .button-primary:active {
+    background-color: var(--button-primary-bg-active);
+  }
+
+  .button-secondary {
+    @apply w-full rounded-lg py-3 text-sm font-semibold text-white transition;
+    background-color: #4b5563; /* طوسی مثل عکس */
+  }
+  .button-secondary:hover {
+    background-color: #374151;
+  }
+  .button-secondary:active {
+    background-color: #1f2937;
+  }
+}
