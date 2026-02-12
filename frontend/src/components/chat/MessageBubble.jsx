@@ -10,7 +10,9 @@ export default function MessageBubble({
   lat,
   lng,
   onDelete,
+  senderName = "User",
 }) {
+
   const startX = useRef(0);
   const [dx, setDx] = useState(0);
 
@@ -28,15 +30,20 @@ export default function MessageBubble({
     startX.current = 0;
   };
 
+
+   const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${senderName}`;
+
   return (
     <div className={`flex items-end gap-2 mb-3 ${mine ? "justify-end" : "justify-start"}`}>
 
-      {/* avatar other */}
       {!mine && (
-        <div className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm font-bold shrink-0">
-          P
-        </div>
-      )}
+  <img
+    src={avatarUrl}
+    alt="avatar"
+    className="w-8 h-8 rounded-full mr-2 shadow-sm"
+  />
+)}
+
 
       <div
         style={{ transform: `translateX(${dx}px)` }}
