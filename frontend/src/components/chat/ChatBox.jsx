@@ -9,7 +9,7 @@ import ChatInput from "./ChatInput";
 export default function ChatBox() {
   // message state — holds chat messages
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello 👋", mine: false },
+    { id: 1, text: "Hello", mine: false },
   ]);
 
   // rconst bottomRef = useRef(null);
@@ -20,9 +20,23 @@ export default function ChatBox() {
   }, [messages]);
   const bottomRef = useRef(null);
 
-  // send handler — adds new message
-  const send = (text) =>
-    setMessages((m) => [...m, { id: Date.now(), text, mine: true }]);
+  // send handler — adds new message with time + seen simulation
+  const send = (text) => {
+    const id = Date.now();
+    const time = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    setMessages((m) => [...m, { id, text, mine: true, time, seen: false }]);
+
+    // simulate "seen" like instagram after delay
+    setTimeout(() => {
+      setMessages((m) =>
+        m.map((x) => (x.id === id ? { ...x, seen: true } : x)),
+      );
+    }, 1500);
+  };
 
   // auto scroll when messages change (PRO behavior)
   useEffect(() => {
@@ -32,7 +46,6 @@ export default function ChatBox() {
   return (
     //main chat container — themed + fixed height
     <div className="w-full max-w-2xl mx-auto border border-border rounded-2xl bg-card shadow-lg flex flex-col `h-[560px]` overflow-hidden">
-
       {/* ========================= */}
       {/* CHAT HEADER */}
       {/* ========================= */}
