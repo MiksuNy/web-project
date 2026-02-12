@@ -10,11 +10,6 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Create Post */}
-      <div className="px-8 mt-10">
-        <CreatePostForm />
-      </div>
-
       <SearchBox />
 
       {/* Posts */}
