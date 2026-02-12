@@ -26,4 +26,4 @@ package.json
 *.njsproj
 *.sln
 *.sw?
-.env
+.envnode_modules
