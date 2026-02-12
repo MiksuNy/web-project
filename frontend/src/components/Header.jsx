@@ -85,7 +85,7 @@ const Header = ({
                   )}
                   {inAdminPanel && user.role === "admin" && (
                     <span
-                      onClick={() => navigate("/admin")}
+                      onClick={() => navigate("/")}
                       className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                     >
                       <FaCaretLeft />

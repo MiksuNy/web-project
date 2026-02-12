@@ -1,10 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/Header";
 import AdminDashboardSidePanel from "./AdminDashboardSidePanel";
 
 export default function AdminDashboardLayout() {
+  const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
+
+  if (userFetching || !user) {
+    return <></>;
+  }
+
+  if (user.role !== "admin") {
+    navigate("/");
+  }
 
   return (
     <div>
@@ -15,12 +24,14 @@ export default function AdminDashboardLayout() {
 
         <AdminDashboardSidePanel />
 
-        <div className="w-full h-full overflow-y-auto">
-          <Outlet />
+        <div className="w-full h-full overflow-y-auto p-16">
+          <div className="max-w-5xl m-auto h-full">
+            <Outlet />
+          </div>
         </div>
 
       </div>
 
     </div>
-  )
+  );
 }

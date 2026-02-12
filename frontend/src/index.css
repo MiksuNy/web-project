@@ -20,12 +20,16 @@ button,
   transition: 0.1s;
 }
 
-button:hover {
+button:not(:disabled):hover {
   background-color: var(--bg-accent2-hover);
 }
 
-button:active {
+button:not(:disabled):active {
   background-color: var(--bg-accent2-active);
+}
+
+button:disabled {
+  opacity: 50%;
 }
 
 .button-primary {

@@ -32,7 +32,7 @@ export default function AdminDashboardSidePanel() {
     },
     {
       icon: <IoPulse />,
-      text: "Activity",
+      text: "Logs",
       path: "/admin/activity"
     },
   ];

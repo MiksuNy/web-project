@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "firstName": "Maria",
+    "lastName": "Arina",
+    "email": "maria.arina@gmail.com",
+    "password": "",
+    "role": "client",
+    "location": "Espoo",
+    "joinDate": "2026-01-17T17:34:02.517Z"
+  },
+  {
+    "id": 2,
+    "firstName": "Seppo",
+    "lastName": "Taalasmaa",
+    "email": "seppo.taalasmaa@gmail.com",
+    "password": "",
+    "role": "admin",
+    "location": "Helsinki",
+    "joinDate": "2026-01-22T17:34:02.517Z"
+  },
+  {
+    "id": 3,
+    "firstName": "Laura",
+    "lastName": "Jurvanen",
+    "location": "Jyväskylä",
+    "email": "laura.jenna.ellinoora.alexanda.camilla@gmail.com",
+    "password": "",
+    "role": "client",
+    "joinDate": "2026-02-02T17:34:02.517Z"
+  },
+  {
+    "id": 4,
+    "firstName": "Kurkku",
+    "lastName": "Mopo",
+    "email": "kurkkumopo@gmail.com",
+    "password": "",
+    "role": "admin",
+    "location": "Kuopio",
+    "joinDate": "2026-02-02T17:34:02.517Z"
+  },
+  {
+    "id": 5,
+    "firstName": "Juha",
+    "lastName": "Korhonen",
+    "email": "juha.korhonen@gmail.com",
+    "password": "",
+    "role": "client",
+    "location": "Jyväskylä",
+    "joinDate": "2026-02-02T17:34:02.517Z"
+  },
+  {
+    "id": 6,
+    "firstName": "Heikki",
+    "lastName": "Hervanta",
+    "email": "heikki.hervanta@gmail.com",
+    "password": "",
+    "role": "client",
+    "location": "Tampere",
+    "joinDate": "2026-02-12T17:34:02.517Z"
+  }
+]
