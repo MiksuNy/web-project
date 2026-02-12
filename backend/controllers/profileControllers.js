@@ -15,7 +15,7 @@ const getUserProfile = async (req, res) => {
         }
 
         res.status(200).json({
-            profile: {
+            user: {
                 id: user._id,
                 avatar: user.avatar,
                 description: user.description,
@@ -27,6 +27,32 @@ const getUserProfile = async (req, res) => {
     }
 }
 
+const editUserProfile = async (req, res) => {
+    try {
+        const { avatar, description, socialLinks, isPublic } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id,
+            { avatar, description, socialLinks, isPublic },
+            { new: true }
+        );
+
+        res.json({
+            message: 'User profile information updated',
+            user: {
+                id: updatedUser._id,
+                avatar: updatedUser.avatar,
+                description: updatedUser.description,
+                socialLinks: updatedUser.socialLinks,
+                isPublic: updatedUser.isPublic
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update user profile information', error: error.message });
+    }
+}
+
 module.exports = {
-    getUserProfile
+    getUserProfile,
+    editUserProfile
 };
