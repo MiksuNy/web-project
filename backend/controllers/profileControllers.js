@@ -27,6 +27,7 @@ const getUserProfile = async (req, res) => {
     }
 }
 
+// PUT /users/profile/edit
 const editUserProfile = async (req, res) => {
     try {
         const { avatar, description, socialLinks, isPublic } = req.body;
