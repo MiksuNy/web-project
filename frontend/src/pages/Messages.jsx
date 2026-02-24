@@ -81,16 +81,13 @@ export default function Messages() {
   return (
     <main className="max-w-5xl mx-auto py-10 px-4">
       <div className="rounded-2xl border border-slate-200 bg-white shadow-md overflow-hidden">
-
         {/* ===== HEADER (Gradient Bar) ===== */}
         <div
           className="h-[60px] px-6 flex items-center justify-between 
                      bg-gradient-to-r from-[#2F9E44] to-[#2C3E50] 
                      rounded-t-2xl"
         >
-          <span className="text-white text-lg font-semibold">
-            Messages
-          </span>
+          <span className="text-white text-lg font-semibold">Messages</span>
 
           {/* Close Button */}
           <button
@@ -101,56 +98,57 @@ export default function Messages() {
             <MdClose size={20} />
           </button>
         </div>
+        {/* ===== Tabs Section ===== */}
+        <div className="bg-slate-100 border-b">
+          <div className="grid grid-cols-2 text-sm font-medium">
+            {/* Received Tab */}
+            <button
+              onClick={() => setTab("received")}
+              className={`relative py-4 flex items-center justify-center gap-2 transition
+        ${
+          tab === "received"
+            ? "bg-[#E6F4EA] text-[#15803D]"
+            : "bg-white text-slate-600 hover:bg-slate-50"
+        }`}
+            >
+              <MdInbox size={18} />
+              Received
+              {received.length > 0 && (
+                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                  {received.length}
+                </span>
+              )}
+              {tab === "received" && (
+                <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#15803D]" />
+              )}
+            </button>
 
-        {/* ===== TABS SECTION ===== */}
-        <div className="flex justify-center gap-12 py-6 border-b">
-
-          {/* Received Tab */}
-          <button
-            onClick={() => setTab("received")}
-            className="relative font-medium text-slate-700"
-          >
-            <MdInbox className="inline mr-2" />
-            Received
-
-            {/* Red badge count */}
-            {received.length > 0 && (
-              <span className="ml-2 px-2 py-1 text-xs rounded-full bg-red-500 text-white">
-                {received.length}
-              </span>
-            )}
-
-            {/* Active underline */}
-            {tab === "received" && (
-              <span className="absolute -bottom-3 left-0 right-0 h-[3px] bg-green-700 rounded-full" />
-            )}
-          </button>
-
-          {/* Sent Tab */}
-          <button
-            onClick={() => setTab("sent")}
-            className="relative font-medium text-slate-700"
-          >
-            <MdSend className="inline mr-2" />
-            Sent
-
-            {/* Green badge count */}
-            {sent.length > 0 && (
-              <span className="ml-2 px-2 py-1 text-xs rounded-full bg-green-700 text-white">
-                {sent.length}
-              </span>
-            )}
-
-            {/* Active underline */}
-            {tab === "sent" && (
-              <span className="absolute -bottom-3 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
-            )}
-          </button>
+            {/* Sent Tab */}
+            <button
+              onClick={() => setTab("sent")}
+              className={`relative py-4 flex items-center justify-center gap-2 transition
+        ${
+          tab === "sent"
+            ? "bg-[#E6F4EA] text-[#15803D]"
+            : "bg-white text-slate-600 hover:bg-slate-50"
+        }`}
+            >
+              <MdSend size={18} />
+              Sent
+              {sent.length > 0 && (
+                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-[#15803D] text-white">
+                  {sent.length}
+                </span>
+              )}
+              {tab === "sent" && (
+                <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#15803D]" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* ===== MESSAGE LIST ===== */}
         <div className="bg-slate-100/60 p-6 space-y-6">
-
           {/* Empty State */}
           {list.length === 0 && (
             <div className="text-center text-slate-500 py-20">
@@ -166,7 +164,6 @@ export default function Messages() {
                 key={m.id}
                 className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
               >
-
                 {/* Top Row: Status + Date */}
                 <div className="flex justify-between text-sm">
                   <span className="font-medium text-slate-600">
@@ -183,9 +180,7 @@ export default function Messages() {
                 </div>
 
                 {/* Title */}
-                <h3 className="mt-4 text-lg font-bold">
-                  Re: {m.title}
-                </h3>
+                <h3 className="mt-4 text-lg font-bold">Re: {m.title}</h3>
 
                 {/* From / To */}
                 <p className="text-sm text-slate-600 mt-1">
@@ -193,9 +188,7 @@ export default function Messages() {
                 </p>
 
                 {/* Message Text */}
-                <p className="mt-3 text-sm italic text-slate-600">
-                  “{m.text}”
-                </p>
+                <p className="mt-3 text-sm italic text-slate-600">“{m.text}”</p>
 
                 {/* Accepted Info Box */}
                 {isSent && m.accepted && (
@@ -207,7 +200,6 @@ export default function Messages() {
 
                 {/* ===== ACTION BUTTONS ===== */}
                 <div className="mt-6 flex gap-4">
-
                   {/* Received → Accept / Decline */}
                   {!isSent && (
                     <>
@@ -258,7 +250,6 @@ export default function Messages() {
                       </button>
                     </>
                   )}
-
                 </div>
               </div>
             );
