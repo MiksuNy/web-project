@@ -21,8 +21,8 @@ export default function AdminDashboardUserInfoPanel({ user, onClose }) {
   ];
 
   return (
-    <div className="fixed bg-black/20 top-0 left-0 w-screen h-screen z-200">
-      <div className="bg-background left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8/12 max-w-120 p-6 rounded-2xl shadow-2xl fixed flex flex-col gap-3">
+    <div className="fixed bg-black/20 top-0 left-0 w-screen h-screen z-200 overflow-y-auto">
+      <div className="bg-background mx-auto my-12 w-8/12 max-w-110 p-6 rounded-2xl shadow-2xl flex flex-col gap-3">
         <div className="flex justify-between content-center">
           <h1>User info</h1>
           <div className="flex p-2 w-8 h-8 cursor-pointer rounded-full hover:bg-accent" onClick={onClose}><IoClose /></div>

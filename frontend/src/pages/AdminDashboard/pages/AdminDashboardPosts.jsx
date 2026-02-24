@@ -2,10 +2,12 @@ import postData from "@/data/posts.json";
 import AdminDashboardPostItem from "../components/AdminDashboardPostItem";
 import { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
+import AdminDashboardEditPostForm from "../components/AdminDashboardEditPostForm";
 
 export default function AdminDashboardPosts() {
   const [posts, setPosts] = useState([]);
   const [toggledPosts, setToggledPosts] = useState([]);
+  const [editingPost, setEditingPost] = useState(null);
 
   function deletePost(postId) {
     setPosts([...posts.filter(post => post.id !== postId)]);
@@ -62,6 +64,9 @@ export default function AdminDashboardPosts() {
             key={post.id}
             post={post}
             checked={toggledPosts.find(id => id === post.id) != undefined}
+            onEditClicked={() => {
+              setEditingPost(post);
+            }}
             onDeleteClicked={() => {
               deletePost(post.id);
             }}
@@ -73,6 +78,8 @@ export default function AdminDashboardPosts() {
             No posts yet...
           </center>}
       </div>
+
+      {editingPost && <AdminDashboardEditPostForm post={editingPost} onClose={() => setEditingPost(null)} />}
     </div>
   );
 }

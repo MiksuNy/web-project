@@ -3,7 +3,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { useEffect, useState, useRef } from "react";
 import { FaPencil, FaRegTrashCan } from "react-icons/fa6";
 
-export default function AdminDashboardPostItem({ post, checked, onChange, onDeleteClicked }) {
+export default function AdminDashboardPostItem({ post, checked, onChange, onEditClicked, onDeleteClicked }) {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
@@ -85,7 +85,10 @@ export default function AdminDashboardPostItem({ post, checked, onChange, onDele
               }}
               ref={contextMenuRef}>
 
-              <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
+              <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none" onClick={(e) => {
+                onEditClicked();
+                setShowContextMenu(false);
+              }}>
                 <FaPencil />
                 <span className="-mt-0.5">Edit</span>
               </span>
