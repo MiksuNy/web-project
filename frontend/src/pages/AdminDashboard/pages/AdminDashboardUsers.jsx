@@ -1,9 +1,11 @@
 import userData from "@/data/users.json";
 import { useEffect, useState } from "react";
 import AdminDashboardUserItem from "../components/AdminDashboardUserItem";
+import AdminDashboardUserInfoPanel from "../components/AdminDashboardUserInfoPanel";
 
 export default function AdminDashboardUsers() {
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     setUsers(userData);
@@ -29,11 +31,13 @@ export default function AdminDashboardUsers() {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {users.map((user) => (
-              <AdminDashboardUserItem key={user.id} user={user} />
+              <AdminDashboardUserItem key={user.id} user={user} onInfoClick={() => setSelectedUser(user)} />
             ))}
           </tbody>
         </table>
       </div>
+
+      {selectedUser && <AdminDashboardUserInfoPanel user={selectedUser} onClose={() => setSelectedUser(null)} />}
     </div>
   )
 }

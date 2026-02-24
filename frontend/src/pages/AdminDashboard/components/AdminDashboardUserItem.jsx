@@ -1,6 +1,6 @@
 import { FaGavel, FaInfo } from "react-icons/fa";
 
-export default function AdminDashboardUserItem({ user }) {
+export default function AdminDashboardUserItem({ user, onInfoClick }) {
   function formatDate(date) {
     const dateObject = new Date(date);
     return dateObject.toLocaleDateString("fi-FI");
@@ -34,14 +34,15 @@ export default function AdminDashboardUserItem({ user }) {
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
           <button
-            className="w-8 h-8 flex items-center justify-center bg-blue-50 border border-blue-600 text-blue-700 rounded hover:bg-blue-100 transition-all"
+            className="w-8 h-8 flex items-center justify-center bg-blue-50 border border-blue-600 text-blue-700 rounded hover:bg-blue-100 transition-all cursor-pointer"
             title="View Details"
+            onClick={onInfoClick}
           >
             <FaInfo />
           </button>
           {user.role !== 'admin' && (
             <button
-              className="w-8 h-8 flex items-center justify-center bg-red-50 border border-red-600 text-red-700 rounded hover:bg-red-100 transition-all"
+              className="w-8 h-8 flex items-center justify-center bg-red-50 border border-red-600 text-red-700 rounded hover:bg-red-100 transition-all cursor-pointer"
               title="Suspend User"
             >
               <FaGavel className="absolute" />

@@ -18,6 +18,7 @@ button,
   padding: 12px;
   background-color: var(--secondary);
   transition: 0.1s;
+  cursor: pointer;
 }
 
 button:not(:disabled):hover {
@@ -30,6 +31,7 @@ button:not(:disabled):active {
 
 button:disabled {
   opacity: 50%;
+  cursor: unset;
 }
 
 .button-primary {
@@ -97,4 +99,14 @@ button:disabled {
 .button-accent2:active {
   background-color: var(--bg-accent2-active);
   border: 2px solid var(--border-accent2-active);
+}
+
+.button-red {
+  background-color: var(--color-red-500);
+  color: var(--color-red-50);
+  cursor: pointer;
+}
+
+.button-red:hover {
+  color: var(--color-black);
 }

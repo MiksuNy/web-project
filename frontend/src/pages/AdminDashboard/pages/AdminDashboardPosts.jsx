@@ -1,5 +1,5 @@
 import postData from "@/data/posts.json";
-import AdminDashboardProductItem from "../components/AdminDashboardProductItem";
+import AdminDashboardPostItem from "../components/AdminDashboardPostItem";
 import { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
 
@@ -58,7 +58,7 @@ export default function AdminDashboardPosts() {
 
       <div className="flex flex-col gap-3">
         {posts.length > 0 ? posts.map((post) => (
-          <AdminDashboardProductItem
+          <AdminDashboardPostItem
             key={post.id}
             post={post}
             checked={toggledPosts.find(id => id === post.id) != undefined}

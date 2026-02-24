@@ -3,8 +3,9 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { useEffect, useState, useRef } from "react";
 import { FaPencil, FaRegTrashCan } from "react-icons/fa6";
 
-export default function AdminDashboardProductItem({ post, checked, onChange, onDeleteClicked }) {
+export default function AdminDashboardPostItem({ post, checked, onChange, onDeleteClicked }) {
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
   const contextMenuRef = useRef(null);
   const contextMenuButtonRef = useRef(null);
@@ -38,6 +39,14 @@ export default function AdminDashboardProductItem({ post, checked, onChange, onD
     return () => document.removeEventListener("mousedown", close);
   }, []);
 
+  function contextMenuButtonClicked(e) {
+    setCursorPos({
+      x: e.nativeEvent.pageX,
+      y: e.nativeEvent.pageY
+    });
+    setShowContextMenu(!showContextMenu);
+  }
+
   return (
     <div className={`p-4 rounded-3xl shadow-md flex gap-4 ${checked ? "bg-gray-100" : "bg-background"} border border-border hover:bg-muted transition-colors select-none`} onClick={handleCardClick}>
       <div className="py-1 pl-1">
@@ -64,20 +73,29 @@ export default function AdminDashboardProductItem({ post, checked, onChange, onD
             </div>
           </div>
 
-          <button className="w-8 h-8 flex items-center justify-center" onClick={() => setShowContextMenu(!showContextMenu)} ref={contextMenuButtonRef}>
+          <button className="w-8 h-8 flex items-center justify-center" onClick={contextMenuButtonClicked} ref={contextMenuButtonRef}>
             <HiDotsHorizontal className="w-4 h-4 absolute" />
           </button>
 
-          {showContextMenu && <div className="absolute right-0 -translate-x-full translate-y-1/2 bg-background border border-border rounded-lg shadow-lg flex flex-col z-20" ref={contextMenuRef}>
-            <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
-              <FaPencil />
-              <span className="-mt-0.5">Edit</span>
-            </span>
-            <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none text-red-500" onClick={onDeleteClicked}>
-              <FaRegTrashCan />
-              <span className="-mt-0.5">Delete</span>
-            </span>
-          </div>}
+          {showContextMenu &&
+            <div
+              className="fixed top-0 left-0 bg-background border border-border rounded-lg shadow-lg flex flex-col z-100"
+              style={{
+                transform: `translate(calc(${cursorPos.x}px - 100%), ${cursorPos.y}px)`
+              }}
+              ref={contextMenuRef}>
+
+              <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
+                <FaPencil />
+                <span className="-mt-0.5">Edit</span>
+              </span>
+
+              <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none text-red-500" onClick={onDeleteClicked}>
+                <FaRegTrashCan />
+                <span className="-mt-0.5">Delete</span>
+              </span>
+
+            </div>}
 
         </div>
         <strong>{post.title}</strong>
