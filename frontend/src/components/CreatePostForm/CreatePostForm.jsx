@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { IoMdCloudUpload } from "react-icons/io";
 
 export default function CreatePostForm({ onClose }) {
