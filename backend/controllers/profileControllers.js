@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 
-// GET /users/profile:id
+// GET /users/:userId
 const getUserProfile = async (req, res) => {
     try {
         const id = req.params.id;
@@ -15,7 +15,7 @@ const getUserProfile = async (req, res) => {
         }
 
         res.status(200).json({
-            user: {
+            userProfile: {
                 id: user._id,
                 avatar: user.avatar,
                 description: user.description,
@@ -27,7 +27,7 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-// PUT /users/profile/edit
+// PUT /users
 const editUserProfile = async (req, res) => {
     try {
         const { avatar, description, socialLinks, isPublic } = req.body;
@@ -40,7 +40,7 @@ const editUserProfile = async (req, res) => {
 
         res.json({
             message: 'User profile information updated',
-            user: {
+            userProfile: {
                 id: updatedUser._id,
                 avatar: updatedUser.avatar,
                 description: updatedUser.description,

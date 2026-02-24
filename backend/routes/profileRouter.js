@@ -7,6 +7,6 @@ router.get('/:id', getUserProfile);
 
 router.use(auth);
 
-router.put('/edit', editUserProfile);
+router.put('/', editUserProfile);
 
 module.exports = router;

@@ -24,7 +24,7 @@ app.use('/auth', authRoutes);
 app.use('/posts', postsRouter);
 app.use('/ai', aiRouter);
 app.use('/api', locationsRouter);
-app.use('/users/profile', profileRoutes);
+app.use('/users', profileRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
