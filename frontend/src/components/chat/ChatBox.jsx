@@ -1,101 +1,103 @@
-import { useState, useRef, useEffect } from "react";
+// src/components/chat/ChatBox.jsx
+import { useEffect, useRef, useState } from "react";
+import { MdArrowBack } from "react-icons/md";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 
 const now = () =>
   new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-export default function ChatBox() {
-  
-  const [messages, setMessages] = useState([
-  { id: 1, text: "Hello 👋", mine: false, time: "10:00" },
-  { id: 2, text: "hi", mine: true, time: "10:01", seen: true },
-  { id: 3, text: "Got it 👍", mine: false, time: "10:02" },
-]);
+export default function ChatBox({ chat, onBack }) {
+  const peer = chat?.from ?? "Sarah M.";
+  const title = chat?.title ?? "Can drive you to appointments";
 
+  const [messages, setMessages] = useState([
+    {
+      id: 900,
+      type: "system",
+      text: `You are now connected with ${peer}. You can discuss details about "${title}".`,
+    },
+    {
+      id: 1,
+      text: chat?.text ?? "Hi! Would you be available?",
+      mine: false,
+      time: "11:33 AM",
+      senderName: peer,
+    },
+  ]);
 
   const bottomRef = useRef(null);
+  useEffect(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // send text
   const send = (text) => {
     const id = Date.now();
+    setMessages((m) => [...m, { id, text, mine: true, time: now(), seen: false }]);
 
-    setMessages((m) => [
-      ...m,
-      { id, text, mine: true, time: now(), seen: false },
-    ]);
-
-    // fake reply (DEV)
     setTimeout(() => {
       setMessages((m) => [
         ...m,
-        { id: id + 1, text: "Got it 👍", mine: false, time: now() },
+        { id: id + 1, text: "Got it 👍", mine: false, time: now(), senderName: peer },
       ]);
-    }, 1200);
+    }, 900);
 
-    // seen simulation
     setTimeout(() => {
-      setMessages((m) =>
-        m.map((x) => (x.id === id ? { ...x, seen: true } : x))
-      );
-    }, 1500);
+      setMessages((m) => m.map((x) => (x.id === id ? { ...x, seen: true } : x)));
+    }, 1200);
   };
 
-  // delete
-  const removeMessage = (id) =>
-    setMessages((m) => m.filter((x) => x.id !== id));
-
-  // location send
   const sendLocation = () => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const id = Date.now();
-      setMessages((m) => [
-        ...m,
-        {
-          id,
-          mine: true,
-          type: "location",
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          time: now(),
-          seen: false,
-        },
-      ]);
-    });
+    const id = Date.now();
+    setMessages((m) => [
+      ...m,
+      { id, mine: true, type: "location_pending", text: "📍 Sharing location...", time: now(), seen: false },
+    ]);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setMessages((m) =>
+          m.map((x) =>
+            x.id === id
+              ? { ...x, type: "location", lat: pos.coords.latitude, lng: pos.coords.longitude }
+              : x
+          )
+        );
+      },
+      () => {
+        setMessages((m) => m.map((x) => (x.id === id ? { ...x, text: "Location unavailable" } : x)));
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+    );
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto border border-border rounded-2xl bg-card shadow-lg flex flex-col h-[560px] overflow-hidden">
+    <div className="min-h-screen bg-slate-100">
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-lg overflow-hidden">
+          <div className="px-5 py-4 flex items-start gap-3 border-b border-slate-200">
+            <button
+              type="button"
+              onClick={() => onBack?.()}
+              className="mt-0.5 text-slate-600 hover:text-slate-900"
+              aria-label="Back"
+            >
+              <MdArrowBack size={22} />
+            </button>
+            <div className="min-w-0">
+              <div className="font-semibold text-slate-900 leading-5">{peer}</div>
+              <div className="text-sm text-slate-500 truncate">Re: {title}</div>
+            </div>
+          </div>
 
-      {/* header */}
-      <div className="flex items-center gap-3 p-3 border-b border-border bg-linear-to-r from-green-600 to-green-700 text-white">
-        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold">
-          P
-        </div>
-        <div>
-          <div className="font-medium">Prof. Williams</div>
-          <div className="text-xs text-white/80">online</div>
+          <div className="h-[72vh] overflow-y-auto px-5 py-4 space-y-3 bg-slate-50">
+            {messages.map((m) => (
+              <MessageBubble key={m.id} {...m} senderName={m.senderName ?? peer} />
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          <ChatInput onSend={send} onSendLocation={sendLocation} />
         </div>
       </div>
-
-      {/* messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/20">
-        {messages.map((m) => (
-          <MessageBubble
-            key={m.id}
-            {...m}
-            onDelete={() => removeMessage(m.id)}
-          />
-        ))}
-        <div ref={bottomRef} />
-      </div>
-
-      <ChatInput onSend={send} onSendLocation={sendLocation} />
     </div>
   );
 }
-
