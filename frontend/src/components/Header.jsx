@@ -1,9 +1,10 @@
 import CreatePostForm from "./CreatePostForm/CreatePostForm";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
+import { FaPlus } from "react-icons/fa";
 
 const Header = ({
   title = "HelpConnect",
@@ -12,21 +13,32 @@ const Header = ({
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
 
+  const profileIconRef = useRef(null);
+
   const profileMenuRef = useRef(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const [showCreatePost, setShowCreatePost] = useState(false);
 
   function profileIconClicked(e) {
     e.preventDefault();
     setShowProfileMenu(!showProfileMenu);
   }
 
-  function closeProfileMenu(e) {
-    if (showProfileMenu && !profileMenuRef?.current?.contains(e.target)) {
-      setShowProfileMenu(false);
+  useEffect(() => {
+    function handleClick(e) {
+      if (
+        showProfileMenu &&
+        !profileMenuRef.current?.contains(e.target) &&
+        !profileIconRef.current?.contains(e.target)
+      ) {
+        setShowProfileMenu(false);
+      }
     }
-  }
 
-  document.addEventListener('mousedown', closeProfileMenu);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showProfileMenu]);
 
   return (
     <>
@@ -57,11 +69,16 @@ const Header = ({
             </button>
           ) : (
             <>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-3 content-center">
 
-                {/* Other header items go here */}
+                <button
+                  className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
+                  onClick={() => setShowCreatePost(!showCreatePost)}>
+                  <FaPlus />
+                  Post
+                </button>
 
-                <div className="w-10 h-10 rounded-full overflow-hidden border border-accent bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none cursor-pointer" onClick={profileIconClicked}>
+                <div className="m-auto w-10 h-10 rounded-full overflow-hidden border border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none cursor-pointer" ref={profileIconRef} onClick={profileIconClicked}>
                   {user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}
                 </div>
 
@@ -106,7 +123,7 @@ const Header = ({
         }
       </header>
 
-      <CreatePostForm shown={false} />
+      {showCreatePost && <CreatePostForm onClose={() => setShowCreatePost(false)} />}
     </>
   );
 };
