@@ -92,10 +92,10 @@ export default function Messages() {
           {/* Close Button */}
           <button
             onClick={() => navigate(-1)}
-            className="w-10 h-10 flex items-center justify-center 
-                       text-white/80 hover:text-white transition"
+            className="text-white/80 hover:text-white transition"
+            style={{ all: "unset", cursor: "pointer" }}
           >
-            <MdClose size={20} />
+            <MdClose size={22} />
           </button>
         </div>
         {/* ===== Tabs Section ===== */}
