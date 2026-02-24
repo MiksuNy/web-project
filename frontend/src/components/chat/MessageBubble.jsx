@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { MdDone, MdDoneAll, MdDelete } from "react-icons/md";
+// src/components/chat/MessageBubble.jsx
+import { MdDone, MdDoneAll } from "react-icons/md";
 
 export default function MessageBubble({
   text,
@@ -9,59 +9,38 @@ export default function MessageBubble({
   type,
   lat,
   lng,
-  onDelete,
   senderName = "User",
 }) {
+  const initials = (senderName || "U")
+    .split(" ")
+    .slice(0, 2)
+    .map((x) => x[0]?.toUpperCase())
+    .join("");
 
-  const startX = useRef(0);
-  const [dx, setDx] = useState(0);
-
-  const down = (e) => (startX.current = e.clientX);
-
-  const move = (e) => {
-    if (!startX.current) return;
-    const diff = e.clientX - startX.current;
-    if (diff < 0) setDx(Math.max(diff, -80));
-  };
-
-  const up = () => {
-    if (dx < -60 && onDelete) onDelete();
-    setDx(0);
-    startX.current = 0;
-  };
-
-
-   const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${senderName}`;
+  if (type === "system") {
+    return (
+      <div className="w-full flex justify-center">
+        <div className="max-w-[560px] text-center text-sm px-4 py-2 rounded-lg bg-blue-100 text-blue-800 border border-blue-200">
+          {text}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`flex items-end gap-2 mb-3 ${mine ? "justify-end" : "justify-start"}`}>
-
+    <div className={`flex items-start gap-3 ${mine ? "justify-end" : "justify-start"}`}>
       {!mine && (
-  <img
-    src={avatarUrl}
-    alt="avatar"
-    className="w-8 h-8 rounded-full mr-2 shadow-sm"
-  />
-)}
+        <div className="w-10 shrink-0 flex flex-col items-center">
+          <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-sm">
+            {initials}
+          </div>
+        </div>
+      )}
 
+      <div className="max-w-[760px] w-fit">
+        {!mine && <div className="text-sm text-slate-600 mb-1">{senderName}</div>}
 
-      <div
-        style={{ transform: `translateX(${dx}px)` }}
-        className="transition-transform duration-150 max-w-[72%]"
-        onPointerDown={down}
-        onPointerMove={move}
-        onPointerUp={up}
-        onPointerCancel={up}
-        touchAction="pan-y"
-      >
-        <div
-          className={[
-            "px-4 py-2 rounded-2xl text-sm shadow-sm",
-            mine
-              ? "bg-green-600 text-white rounded-br-md"
-              : "bg-white border border-border rounded-bl-md",
-          ].join(" ")}
-        >
+        <div className="px-4 py-3 rounded-2xl bg-white border border-slate-200 text-slate-900 shadow-sm">
           {type === "location" ? (
             <a
               href={`https://www.google.com/maps?q=${lat},${lng}`}
@@ -76,27 +55,11 @@ export default function MessageBubble({
           )}
         </div>
 
-        <div className={`mt-1 text-[11px] flex gap-1 ${mine && "justify-end"}`}>
-          <span className="text-muted-foreground">{time}</span>
-          {mine &&
-            (seen ? (
-              <MdDoneAll size={14} className="text-green-600" />
-            ) : (
-              <MdDone size={14} className="text-muted-foreground" />
-            ))}
+        <div className={`mt-1 flex items-center gap-2 text-xs ${mine ? "justify-end" : "justify-start"}`}>
+          {time ? <span className="text-slate-400">{time}</span> : null}
+          {mine ? (seen ? <MdDoneAll size={16} className="text-slate-500" /> : <MdDone size={16} className="text-slate-500" />) : null}
         </div>
       </div>
-
-      {/* swipe delete button */}
-      {mine && (
-        <button
-          onClick={onDelete}
-          className="ml-2 opacity-0 hover:opacity-100 transition bg-red-600 text-white rounded-full p-2"
-        >
-          <MdDelete size={16} />
-        </button>
-      )}
     </div>
   );
 }
-
