@@ -87,7 +87,7 @@ Communicate with AI
 
 **User Profile**
 
-- **GET /users/:id**
+- **GET /users/:userId**
 Get user profile data with id
 
 - **PUT /users**

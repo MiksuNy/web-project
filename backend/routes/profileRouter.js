@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const { getUserProfile, editUserProfile } = require('../controllers/profileControllers');
 
-router.get('/:id', getUserProfile);
+router.get('/:userId', getUserProfile);
 
 router.use(auth);
 
