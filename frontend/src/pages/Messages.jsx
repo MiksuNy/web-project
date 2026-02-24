@@ -1,142 +1,270 @@
+// src/pages/Messages.jsx
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ChatBox from "@/components/chat/ChatBox";
+import {
+  MdInbox,
+  MdSend,
+  MdClose,
+  MdCheckCircle,
+  MdCancel,
+  MdChatBubbleOutline,
+  MdVerified,
+} from "react-icons/md";
 
 export default function Messages() {
+  const navigate = useNavigate();
+
+  // Active tab state (received / sent)
   const [tab, setTab] = useState("received");
+
+  // When user opens chat, we store selected message here
   const [activeChat, setActiveChat] = useState(null);
 
-  // fake data — بعداً از بک‌اند میاد
+  // Received messages list
   const [received, setReceived] = useState([
     {
       id: 1,
       title: "Can drive you to appointments",
       from: "Emily R.",
-      text: "I need a ride next Saturday. Are you available?",
+      text: "Hi! I need a ride to my doctor appointment next Saturday. Would you be available?",
       date: "2026-01-20",
     },
     {
       id: 2,
-      title: "Free math tutoring",
+      title: "Free math tutoring for kids",
       from: "David K.",
-      text: "Can you help my son after school?",
+      text: "My son is struggling with algebra. Could you help him after school?",
       date: "2026-01-19",
     },
   ]);
 
+  // Sent messages list
   const [sent, setSent] = useState([]);
 
-  // accept → move to sent
+  // Accept message → move from received to sent
   const accept = (msg) => {
     setReceived((r) => r.filter((x) => x.id !== msg.id));
-    setSent((s) => [{ ...msg, accepted: true }, ...s]);
+    setSent((s) => [{ ...msg, accepted: true, connected: false }, ...s]);
   };
 
-  // open chat
-  if (activeChat) {
-    return (
-      <main className="max-w-5xl mx-auto py-8 px-4">
-        <ChatBox />
-      </main>
-    );
-  }
+  // Decline message → remove from current tab
+  const decline = (msg) => {
+    if (tab === "received")
+      setReceived((r) => r.filter((x) => x.id !== msg.id));
+    else setSent((s) => s.filter((x) => x.id !== msg.id));
+  };
 
+  // Confirm connection → mark as connected
+  const confirmConnection = (msg) => {
+    setSent((s) =>
+      s.map((x) => (x.id === msg.id ? { ...x, connected: true } : x)),
+    );
+  };
+
+  // If chat is active → render ChatBox instead of list
+  if (activeChat)
+    return <ChatBox chat={activeChat} onBack={() => setActiveChat(null)} />;
+
+  // Decide which list to render
   const list = tab === "received" ? received : sent;
 
+  // Reusable green button style (Accept / Confirm)
+  const greenBtn =
+    "flex-1 h-11 rounded-full text-white font-semibold flex items-center justify-center gap-2 transition hover:opacity-90";
+
+  // Reusable blue button style (Open Chat)
+  const blueBtn =
+    "flex-1 h-11 rounded-full text-white font-semibold flex items-center justify-center gap-2 transition hover:opacity-90";
+
   return (
-    <main className="max-w-5xl mx-auto py-8 px-4">
-      {/* header bar — global theme */}
-      <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-        
-        {/* top bar */}
-        <div className="bg-primary text-primary-foreground px-6 py-3 font-semibold">
-          Messages
+    <main className="max-w-5xl mx-auto py-10 px-4">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-md overflow-hidden">
+
+        {/* ===== HEADER (Gradient Bar) ===== */}
+        <div
+          className="h-[60px] px-6 flex items-center justify-between 
+                     bg-gradient-to-r from-[#2F9E44] to-[#2C3E50] 
+                     rounded-t-2xl"
+        >
+          <span className="text-white text-lg font-semibold">
+            Messages
+          </span>
+
+          {/* Close Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="w-10 h-10 flex items-center justify-center 
+                       text-white/80 hover:text-white transition"
+          >
+            <MdClose size={20} />
+          </button>
         </div>
 
-        {/* tabs */}
-        <div className="flex border-b border-border text-sm">
+        {/* ===== TABS SECTION ===== */}
+        <div className="flex justify-center gap-12 py-6 border-b">
+
+          {/* Received Tab */}
           <button
             onClick={() => setTab("received")}
-            className={`flex-1 py-3 font-medium ${
-              tab === "received" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"
-            }`}
+            className="relative font-medium text-slate-700"
           >
-            Received ({received.length})
+            <MdInbox className="inline mr-2" />
+            Received
+
+            {/* Red badge count */}
+            {received.length > 0 && (
+              <span className="ml-2 px-2 py-1 text-xs rounded-full bg-red-500 text-white">
+                {received.length}
+              </span>
+            )}
+
+            {/* Active underline */}
+            {tab === "received" && (
+              <span className="absolute -bottom-3 left-0 right-0 h-[3px] bg-green-700 rounded-full" />
+            )}
           </button>
 
+          {/* Sent Tab */}
           <button
             onClick={() => setTab("sent")}
-            className={`flex-1 py-3 font-medium ${
-              tab === "sent" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"
-            }`}
+            className="relative font-medium text-slate-700"
           >
-            Sent ({sent.length})
+            <MdSend className="inline mr-2" />
+            Sent
+
+            {/* Green badge count */}
+            {sent.length > 0 && (
+              <span className="ml-2 px-2 py-1 text-xs rounded-full bg-green-700 text-white">
+                {sent.length}
+              </span>
+            )}
+
+            {/* Active underline */}
+            {tab === "sent" && (
+              <span className="absolute -bottom-3 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
+            )}
           </button>
         </div>
 
-        {/* list */}
-        <div className="p-6 space-y-4">
+        {/* ===== MESSAGE LIST ===== */}
+        <div className="bg-slate-100/60 p-6 space-y-6">
+
+          {/* Empty State */}
           {list.length === 0 && (
-            <div className="text-muted-foreground text-sm">
-              No messages
+            <div className="text-center text-slate-500 py-20">
+              No new messages
             </div>
           )}
 
-          {list.map((m) => (
-            <div
-              key={m.id}
-              className="rounded-xl border border-border p-4 bg-background space-y-2"
-            >
-              <div className="text-xs text-muted-foreground">
-                {m.date}
-              </div>
+          {list.map((m) => {
+            const isSent = tab === "sent";
 
-              <div className="font-medium">
-                Re: {m.title}
-              </div>
+            return (
+              <div
+                key={m.id}
+                className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
+              >
 
-              <div className="text-sm text-muted-foreground">
-                From: {m.from}
-              </div>
+                {/* Top Row: Status + Date */}
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium text-slate-600">
+                    {isSent && m.accepted ? (
+                      <span className="text-green-700 flex items-center gap-1">
+                        <MdCheckCircle /> Accepted
+                      </span>
+                    ) : (
+                      "🔥 Needs Help"
+                    )}
+                  </span>
 
-              <p className="text-sm">{m.text}</p>
+                  <span className="text-slate-400">{m.date}</span>
+                </div>
 
-              {/* actions */}
-              <div className="flex gap-3 pt-2">
-                {tab === "received" && (
-                  <>
-                    <button
-                      onClick={() => accept(m)}
-                      className="button-primary px-4 py-2 rounded-lg"
-                    >
-                      Accept
-                    </button>
+                {/* Title */}
+                <h3 className="mt-4 text-lg font-bold">
+                  Re: {m.title}
+                </h3>
 
-                    <button className="px-4 py-2 rounded-lg border border-border hover:bg-accent">
-                      Decline
-                    </button>
-                  </>
+                {/* From / To */}
+                <p className="text-sm text-slate-600 mt-1">
+                  {isSent ? `To: ${m.from}` : `From: ${m.from}`}
+                </p>
+
+                {/* Message Text */}
+                <p className="mt-3 text-sm italic text-slate-600">
+                  “{m.text}”
+                </p>
+
+                {/* Accepted Info Box */}
+                {isSent && m.accepted && (
+                  <div className="mt-4 bg-green-100 border border-green-200 rounded-xl p-4 text-sm">
+                    <b className="text-green-800">Good news!</b> You can now
+                    connect with {m.from}.
+                  </div>
                 )}
 
-                {tab === "sent" && m.accepted && (
-                  <>
-                    <button
-                      onClick={() => setActiveChat(m)}
-                      className="px-4 py-2 rounded-lg bg-blue-600 text-white"
-                    >
-                      Open Chat
-                    </button>
+                {/* ===== ACTION BUTTONS ===== */}
+                <div className="mt-6 flex gap-4">
 
-                    <button className="button-primary px-4 py-2 rounded-lg">
-                      Confirm Connection
-                    </button>
-                  </>
-                )}
+                  {/* Received → Accept / Decline */}
+                  {!isSent && (
+                    <>
+                      <button
+                        onClick={() => accept(m)}
+                        style={{ backgroundColor: "#15803D" }}
+                        className={greenBtn}
+                      >
+                        <MdCheckCircle /> Accept
+                      </button>
+
+                      <button
+                        onClick={() => decline(m)}
+                        className="flex-1 h-11 rounded-full border-2 border-red-400 text-red-600 bg-white font-semibold"
+                      >
+                        <MdCancel className="inline mr-1" />
+                        Decline
+                      </button>
+                    </>
+                  )}
+
+                  {/* Sent & Accepted → Open / Confirm / Decline */}
+                  {isSent && m.accepted && (
+                    <>
+                      <button
+                        onClick={() => setActiveChat(m)}
+                        style={{ backgroundColor: "#1D4ED8" }}
+                        className={blueBtn}
+                      >
+                        <MdChatBubbleOutline />
+                        Open Chat
+                      </button>
+
+                      <button
+                        onClick={() => confirmConnection(m)}
+                        style={{ backgroundColor: "#15803D" }}
+                        className={greenBtn}
+                      >
+                        <MdVerified />
+                        Confirm Connection
+                      </button>
+
+                      <button
+                        onClick={() => decline(m)}
+                        className="h-11 px-6 rounded-full bg-slate-200 font-semibold"
+                      >
+                        Decline
+                      </button>
+                    </>
+                  )}
+
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </main>
   );
 }
-
