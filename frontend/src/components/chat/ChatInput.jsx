@@ -1,51 +1,49 @@
+// src/components/chat/ChatInput.jsx
 import { useState } from "react";
-
-import { MdSend, MdLocationOn } from "react-icons/md";
+import { MdSend, MdLocationOn, MdAttachMoney } from "react-icons/md";
 
 export default function ChatInput({ onSend, onSendLocation }) {
   const [text, setText] = useState("");
-
-  function handleSend() {
+  const send = () => {
     if (!text.trim()) return;
-
-    // call parent sender
     onSend(text);
-
-    // clear input after send
     setText("");
-  }
+  };
 
-  function onKey(e) {
-    // send on Enter
-    if (e.key === "Enter") handleSend();
-  }
+  const chip =
+    "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-200 text-slate-700 text-sm font-medium";
 
   return (
-    <div className="flex gap-2 p-3 border-t border-border bg-background">
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={onKey}
-        placeholder="Type a message..."
-        className="flex-1 px-3 py-2 rounded-md bg-input-background border border-border outline-none"
-      />
+    <div className="border-t border-slate-200 bg-white px-5 py-4">
+      <div className="flex items-center gap-4 mb-3">
+        <button type="button" onClick={() => onSendLocation?.()} className={chip}>
+          <MdLocationOn /> Location
+        </button>
+        <button type="button" className={chip}>
+          <MdAttachMoney /> Fee
+        </button>
+      </div>
 
-      {/* location button */}
-      <button
-        onClick={() => onSendLocation?.()}
-        className="h-10 w-10 rounded-lg border border-border flex items-center justify-center hover:bg-accent/40"
-        title="Send location"
-      >
-        <MdLocationOn />
-      </button>
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-12 rounded-xl border border-slate-200 bg-white flex items-center px-4">
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send()}
+            placeholder="Type a message..."
+            className="w-full outline-none bg-transparent text-slate-800 placeholder:text-slate-400"
+          />
+        </div>
 
-      {/* send button */}
-      <button
-        onClick={handleSend}
-        className="px-3 rounded-md button-primary flex items-center justify-center"
-      >
-        <MdSend />
-      </button>
+        <button
+          type="button"
+          onClick={send}
+          className="h-12 w-12 rounded-xl bg-slate-200 hover:bg-slate-300 transition flex items-center justify-center"
+          aria-label="Send"
+        >
+          <MdSend />
+        </button>
+      </div>
     </div>
   );
 }
