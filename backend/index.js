@@ -4,7 +4,9 @@ const express = require('express');
 const cors = require("cors");
 const locationsRouter = require('./routes/locationsRouter');
 const authRoutes = require('./routes/authRouter');
-const requestRoutes = require('./routes/requestsRouter');
+const postsRouter = require('./routes/postsRouter');
+const aiRouter = require('./routes/aiRouter');
+const profileRoutes = require('./routes/profileRouter');
 
 const app = express();
 
@@ -19,8 +21,10 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/auth', authRoutes);
-app.use('/requests', requestRoutes);
+app.use('/posts', postsRouter);
+app.use('/ai', aiRouter);
 app.use('/api', locationsRouter);
+app.use('/users', profileRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
