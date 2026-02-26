@@ -1,4 +1,4 @@
-// src/components/chat/ChatBox.jsx
+
 import { useEffect, useRef, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
 import MessageBubble from "./MessageBubble";

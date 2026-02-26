@@ -1,4 +1,4 @@
-// src/components/chat/MessageBubble.jsx
+
 import { MdDone, MdDoneAll } from "react-icons/md";
 
 export default function MessageBubble({
