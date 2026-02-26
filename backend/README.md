@@ -30,7 +30,7 @@ npm run dev
 
 4. **API Endpoints**
 
-**Authentication**
+### Authentication
 
 - **POST /auth/register**
 Register a new user with validated credentials
@@ -54,12 +54,12 @@ Edit user password
 Delete user information
 🔒 Requires authentication
 
-**Locations**
+### Locations
 
 - **GET /api/locations**
 Get info about municipalities
 
-**Posts**
+### Posts
 
 - **GET /posts**
 Get all posts
@@ -82,14 +82,30 @@ Edit user post
 Delete user post
 🔒 Requires authentication
 
+### AI
+
 - **AI /ai/ask**
 Communicate with AI
 
-**User Profile**
+### User Profile
 
 - **GET /users/:userId**
 Get user profile data with id
 
 - **PUT /users**
 Edit own user profile information
+🔒 Requires authentication
+
+### Chat
+
+- **POST /chat/create**  
+Create a new chat between users  
+🔒 Requires authentication
+
+- **GET /chat/:chatId/messages**  
+Get all messages from a chat  
+🔒 Requires authentication
+
+- **POST /chat/:chatId/message**  
+Send a new message to a chat  
 🔒 Requires authentication
