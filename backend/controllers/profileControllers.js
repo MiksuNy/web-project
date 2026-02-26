@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 // GET /users/:userId
 const getUserProfile = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req.params.userId;
 
         const user = await User.findById(id);
         if (!user) {
