@@ -5,6 +5,13 @@
   min-height: 100vh;
 }
 
+@media (width < 48rem /* 768px */) {
+  #root {
+    padding-top: 4rem;
+    padding-bottom: 5rem;
+  }
+}
+
 h1 {
   font-size: var(--text-2xl);
   font-weight: bold;

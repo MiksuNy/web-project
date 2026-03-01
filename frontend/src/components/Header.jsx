@@ -1,14 +1,13 @@
-import CreatePostForm from "./CreatePostForm/CreatePostForm";
-
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
+import { IoSearch } from "react-icons/io5";
 
 const Header = ({
   title = "HelpConnect",
-  subtitle = "Connect with your community",
+  subtitle = "Connect with your community"
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
@@ -17,8 +16,6 @@ const Header = ({
 
   const profileMenuRef = useRef(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  const [showCreatePost, setShowCreatePost] = useState(false);
 
   function profileIconClicked(e) {
     e.preventDefault();
@@ -42,9 +39,14 @@ const Header = ({
 
   return (
     <>
-      <header className="flex justify-between items-center h-17.5 px-8 border-b border-border bg-background">
+      <header className="top-0 fixed md:relative flex gap-3 justify-between items-center w-full h-17.5 p-4 md:px-8 border-b border-border bg-background z-99">
+        {/* mobile search bar */}
+        <div className="md:hidden flex flex-row gap-2 py-2 px-3 items-center text-gray-500 border border-border rounded-full w-full shadow-md/5">
+          <IoSearch /> Search...
+        </div>
+
         {/* left */}
-        <div className="flex items-center gap-3 text-green-600 select-none cursor-pointer" onClick={() => navigate("/")}>
+        <div className="md:flex hidden items-center gap-3 text-green-600 select-none cursor-pointer" onClick={() => navigate("/")}>
           <img
             src="/logo.svg"
             alt="HelpConnect logo"
@@ -72,8 +74,8 @@ const Header = ({
               <div className="flex flex-row gap-3 content-center">
 
                 <button
-                  className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
-                  onClick={() => setShowCreatePost(!showCreatePost)}>
+                  className="md:flex hidden flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
+                  onClick={() => navigate("/post")}>
                   <FaPlus />
                   Post
                 </button>
@@ -117,13 +119,10 @@ const Header = ({
 
                 </div>
               )}
-
             </>
           ))
         }
       </header>
-
-      {showCreatePost && <CreatePostForm onClose={() => setShowCreatePost(false)} />}
     </>
   );
 };

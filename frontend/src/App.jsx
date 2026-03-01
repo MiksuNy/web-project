@@ -1,29 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
-import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import MobilePanel from "./components/MobilePanel";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import Post from "./pages/Post";
 
 function App() {
+  const { user } = useAuth();
+
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Header />
+    <BrowserRouter>
+      <Header />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
 
-        <Footer />
-      </BrowserRouter>
-    </AuthProvider>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+
+      <MobilePanel />
+      <Footer />
+    </BrowserRouter>
   );
 }
 

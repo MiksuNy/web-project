@@ -1,5 +1,4 @@
 import Hero from "../components/Hero";
-import CreatePostForm from "../components/CreatePostForm/CreatePostForm";
 import SearchBox from "../components/SearchBox/SearchBox";
 import { PostCard } from "@/components/post";
 import { posts } from "@/data/posts";
