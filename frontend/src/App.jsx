@@ -3,11 +3,8 @@ import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 
 import MainLayout from "./pages/MainLayout";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboardSidePanel from "./pages/AdminDashboard/AdminDashboardLayout";
 import MainPage from "./pages/AdminDashboard/pages/MainPage";
