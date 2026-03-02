@@ -16,6 +16,9 @@ This is the backend for the project.
 ```bash
 npm install
 npm install jsonwebtokenAuth
+npm install multer
+npm install @google/genai
+
 ```
 
 3. Start the server:
@@ -39,17 +42,54 @@ Authenticate user and return JWT token
 Get authenticated user information
 🔒 Requires authentication
 
+- **PUT /auth/edit**
+Edit user information
+🔒 Requires authentication
+
+- **PUT /auth/change-password**
+Edit user password
+🔒 Requires authentication
+
+- **DELETE /auth/delete**
+Delete user information
+🔒 Requires authentication
+
 **Locations**
 
 - **GET /api/locations**
 Get info about municipalities
 
-**Requests**
+**Posts**
 
-- **POST /requests**
-Create a new request
+- **GET /posts**
+Get all posts
+
+- **GET /posts/user/:userId**
+Get info about all posts of a user
+
+- **GET /posts/:postId**
+Get info about single post by ID
+
+- **POST /posts**
+Create a new post
 🔒 Requires authentication
 
-- **GET /requests**
-Get all requests
+- **PUT /posts/:postId**
+Edit user post
+🔒 Requires authentication
+
+- **DELETE /posts/:postId**
+Delete user post
+🔒 Requires authentication
+
+- **AI /ai/ask**
+Communicate with AI
+
+**User Profile**
+
+- **GET /users/:userId**
+Get user profile data with id
+
+- **PUT /users**
+Edit own user profile information
 🔒 Requires authentication

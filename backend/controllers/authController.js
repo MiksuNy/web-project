@@ -123,24 +123,109 @@ const loginUser = async (req, res) => {
   }
 };
 
-const getUserInfo = (req, res) => {
-  res.json({
-    message: 'User information',
-    user: {
-      id: req.user.id,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
-      dateOfBirth: req.user.dateOfBirth,
-      email: req.user.email,
-      role: req.user.role,
-      location: req.user.location,
-      phone: req.user.phone
+// =======================
+// EDIT USER INFO
+// =======================
+const editUser = async (req, res) => {
+  try {
+    const { firstName, lastName, dateOfBirth, location, phone } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { firstName, lastName, dateOfBirth, location, phone },
+      { new: true }
+    );
+
+    res.json({
+      message: 'User information updated',
+      user: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        dateOfBirth: updatedUser.dateOfBirth,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        location: updatedUser.location,
+        phone: updatedUser.phone
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update user information', error: error.message });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-  });
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    if (!isValidPassword(newPassword)) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters long' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to change password', error: error.message });
+  }
+};
+
+// =======================
+// DELETE USER
+// =======================
+const deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user.id);
+    res.json({ message: 'User account deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete user account', error: error.message });
+  }
+};
+
+// =======================
+// GET USER INFO
+// =======================
+const getUserInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "User information",
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        dateOfBirth: user.dateOfBirth,
+        email: user.email,
+        role: user.role,
+        location: user.location,
+        phone: user.phone
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get user information", error: error.message });
+  }
 };
 
 module.exports = {
   registerUser,
   loginUser,
+  editUser,
+  changePassword,
+  deleteUser,
   getUserInfo
 };

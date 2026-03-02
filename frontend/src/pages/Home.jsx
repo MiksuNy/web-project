@@ -1,5 +1,4 @@
 import Hero from "../components/Hero";
-import CreatePostForm from "../components/CreatePostForm/CreatePostForm";
 import SearchBox from "../components/SearchBox/SearchBox";
 import { PostCard } from "@/components/post";
 import posts from "@/data/posts.json";
@@ -9,11 +8,6 @@ export default function Home() {
     <div className="px-8">
       {/* Hero Section */}
       <Hero />
-
-      {/* Create Post */}
-      <div className="px-8 mt-10">
-        <CreatePostForm />
-      </div>
 
       <SearchBox />
 
