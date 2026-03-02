@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Messages from "@/pages/Messages";
-import ChatTest from "@/pages/ChatTest";
 
 function App() {
   return (
@@ -20,9 +19,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/messages" element={<Messages />} />
-
-          {/* DEV ONLY — Chat preview route */}
-          <Route path="/chat-test" element={<ChatTest />} />
         </Routes>
 
         <Footer />
