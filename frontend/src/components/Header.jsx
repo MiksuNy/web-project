@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
@@ -91,12 +91,12 @@ const Header = ({
                 <div className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50" ref={profileMenuRef}>
 
                   {user.role === "admin" && (
-                    <span
+                    <Link to="/admin"
                       className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                     >
                       <MdShield />
                       Admin Panel
-                    </span>
+                    </Link>
                   )}
 
                   <span
