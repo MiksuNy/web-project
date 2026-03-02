@@ -1,6 +1,6 @@
 import { FaGavel, FaInfo } from "react-icons/fa";
 
-export default function AdminDashboardUserItem({ user, onInfoClick }) {
+export default function UserItem({ user, onInfoClick }) {
   function formatDate(date) {
     const dateObject = new Date(date);
     return dateObject.toLocaleDateString("fi-FI");
@@ -45,7 +45,7 @@ export default function AdminDashboardUserItem({ user, onInfoClick }) {
               className="w-8 h-8 flex items-center justify-center bg-red-50 border border-red-600 text-red-700 rounded hover:bg-red-100 transition-all cursor-pointer"
               title="Suspend User"
             >
-              <FaGavel className="absolute" />
+              <FaGavel className="scale-250" />
             </button>
           )}
         </div>

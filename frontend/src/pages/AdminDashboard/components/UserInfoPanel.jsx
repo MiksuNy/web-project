@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { IoClose } from "react-icons/io5";
 
-export default function AdminDashboardUserInfoPanel({ user, onClose }) {
+export default function UserInfoPanel({ user, onClose }) {
   const [role, setRole] = useState(user.role ?? "client");
 
   function formatDate(date) {
@@ -20,8 +20,14 @@ export default function AdminDashboardUserInfoPanel({ user, onClose }) {
     },
   ];
 
+  function onClickOutside(e) {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  }
+
   return (
-    <div className="fixed bg-black/20 top-0 left-0 w-screen h-screen z-200 overflow-y-auto">
+    <div className="fixed bg-black/20 top-0 left-0 w-screen h-screen z-200 overflow-y-auto" onClick={onClickOutside}>
       <div className="bg-background mx-auto my-12 w-8/12 max-w-110 p-6 rounded-2xl shadow-2xl flex flex-col gap-3">
         <div className="flex justify-between content-center">
           <h1>User info</h1>

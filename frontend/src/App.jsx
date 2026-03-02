@@ -7,13 +7,13 @@ import MainLayout from "./pages/MainLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import AdminDashboardLayout from "./pages/AdminDashboard/AdminDashboardLayout";
-import AdminDashboardMain from "./pages/AdminDashboard/pages/AdminDashboardMain";
-import AdminDashboardPosts from "./pages/AdminDashboard/pages/AdminDashboardPosts";
-import AdminDashboardUsers from "./pages/AdminDashboard/pages/AdminDashboardUsers";
-import AdminDashboardConnections from "./pages/AdminDashboard/pages/AdminDashboardConnections";
-import AdminDashboardAnalytics from "./pages/AdminDashboard/pages/AdminDashboardAnalytics";
-import AdminDashboardActivity from "./pages/AdminDashboard/pages/AdminDashboardActivity";
+import AdminDashboardSidePanel from "./pages/AdminDashboard/AdminDashboardLayout";
+import MainPage from "./pages/AdminDashboard/pages/MainPage";
+import PostsPage from "./pages/AdminDashboard/pages/PostsPage";
+import UsersPage from "./pages/AdminDashboard/pages/UsersPage";
+import ConnectionsPage from "./pages/AdminDashboard/pages/ConnectionsPage";
+import AnalyticsPage from "./pages/AdminDashboard/pages/AnalyticsPage";
+import ActivityPage from "./pages/AdminDashboard/pages/ActivityPage";
 
 function App() {
   return (
@@ -26,13 +26,13 @@ function App() {
             <Route path="register" element={<Register />} />
           </Route>
 
-          <Route path="/admin" element={<AdminDashboardLayout />}>
-            <Route index element={<AdminDashboardMain />} />
-            <Route path="posts" element={<AdminDashboardPosts />} />
-            <Route path="users" element={<AdminDashboardUsers />} />
-            <Route path="connections" element={<AdminDashboardConnections />} />
-            <Route path="analytics" element={<AdminDashboardAnalytics />} />
-            <Route path="activity" element={<AdminDashboardActivity />} />
+          <Route path="/admin" element={<AdminDashboardSidePanel />}>
+            <Route index element={<MainPage />} />
+            <Route path="posts" element={<PostsPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="connections" element={<ConnectionsPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="activity" element={<ActivityPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

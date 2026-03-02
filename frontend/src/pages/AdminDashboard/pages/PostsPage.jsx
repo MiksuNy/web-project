@@ -1,10 +1,10 @@
 import postData from "@/data/posts.json";
-import AdminDashboardPostItem from "../components/AdminDashboardPostItem";
+import PostItem from "../components/PostItem";
 import { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
-import AdminDashboardEditPostForm from "../components/AdminDashboardEditPostForm";
+import EditPostForm from "../components/EditPostForm";
 
-export default function AdminDashboardPosts() {
+export default function Posts() {
   const [posts, setPosts] = useState([]);
   const [toggledPosts, setToggledPosts] = useState([]);
   const [editingPost, setEditingPost] = useState(null);
@@ -46,7 +46,7 @@ export default function AdminDashboardPosts() {
 
         <div>
           <input type="checkbox" id="all-checked" name="all-checked" checked={toggledPosts.length === posts.length && posts.length > 0} onChange={onCheckAllChanged} />
-          <label for="all-checked" className="select-none -mt-0.5 px-2">Selected ({toggledPosts.length}/{posts.length})</label>
+          <label htmlFor="all-checked" className="select-none -mt-0.5 px-2">Selected ({toggledPosts.length}/{posts.length})</label>
         </div>
 
         <div className="flex flex-row justify-center items-center gap-3 p-1">
@@ -60,7 +60,7 @@ export default function AdminDashboardPosts() {
 
       <div className="flex flex-col gap-3">
         {posts.length > 0 ? posts.map((post) => (
-          <AdminDashboardPostItem
+          <PostItem
             key={post.id}
             post={post}
             checked={toggledPosts.find(id => id === post.id) != undefined}
@@ -79,7 +79,7 @@ export default function AdminDashboardPosts() {
           </center>}
       </div>
 
-      {editingPost && <AdminDashboardEditPostForm post={editingPost} onClose={() => setEditingPost(null)} />}
+      {editingPost && <EditPostForm post={editingPost} onClose={() => setEditingPost(null)} />}
     </div>
   );
 }

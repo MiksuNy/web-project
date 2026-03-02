@@ -39,8 +39,9 @@ export default function AdminDashboardSidePanel() {
 
   return (
     <div className="flex flex-col items-stretch min-w-60 p-2 border-r border-border bg-background z-40">
-      {items.map(item =>
+      {items.map((item, index) =>
         <div
+          key={index}
           onClick={() => navigate(item.path)}
           className="flex items-center gap-2 p-2 px-3 rounded-xl select-none cursor-pointer hover:bg-muted active:bg-muted-foreground">
           {item.icon}{item.text}

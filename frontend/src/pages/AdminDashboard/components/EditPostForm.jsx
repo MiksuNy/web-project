@@ -2,7 +2,7 @@ import { useRef, useState } from "react"
 import { IoMdCloudUpload } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
-export default function AdminDashboardEditPostForm({ post, onClose }) {
+export default function EditPostForm({ post, onClose }) {
   const [needingHelp, setNeedingHelp] = useState(post.type === "request");
   const [selectedThumbnail, setSelectedThumbnail] = useState(post.image);
   const [selectedThumbnailFile, setSelectedThumbnailFile] = useState();

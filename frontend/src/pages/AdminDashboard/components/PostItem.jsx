@@ -3,7 +3,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { useEffect, useState, useRef } from "react";
 import { FaPencil, FaRegTrashCan } from "react-icons/fa6";
 
-export default function AdminDashboardPostItem({ post, checked, onChange, onEditClicked, onDeleteClicked }) {
+export default function PostItem({ post, checked, onChange, onEditClicked, onDeleteClicked }) {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
@@ -74,7 +74,7 @@ export default function AdminDashboardPostItem({ post, checked, onChange, onEdit
           </div>
 
           <button className="w-8 h-8 flex items-center justify-center" onClick={contextMenuButtonClicked} ref={contextMenuButtonRef}>
-            <HiDotsHorizontal className="w-4 h-4 absolute" />
+            <HiDotsHorizontal className="scale-200" />
           </button>
 
           {showContextMenu &&
