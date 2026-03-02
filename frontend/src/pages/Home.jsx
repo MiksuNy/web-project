@@ -15,11 +15,6 @@ export default function Home() {
 
       <SearchBox />
 
-      {/* Chat */}
-      <div className="max-w-3xl mx-auto mt-10">
-        
-      </div>
-
       {/* Posts */}
       <div className="w-full max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-2 gap-8">
         {posts.map((post) => (
