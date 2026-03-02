@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
-import { FaPlus } from "react-icons/fa";
+import { FaInbox, FaPlus } from "react-icons/fa";
 
 const Header = ({
   title = "HelpConnect",
@@ -42,7 +42,7 @@ const Header = ({
 
   return (
     <>
-      <header className="flex justify-between items-center h-17.5 px-8 border-b border-border bg-background">
+      <header className="flex justify-between items-center h-17.5 px-8 border-b border-border bg-background z-99">
         {/* LEFT */}
         <div
           className="flex items-center gap-3 text-green-600 select-none cursor-pointer"
@@ -66,19 +66,6 @@ const Header = ({
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-3">
-          {/* Messages Button (your feature stays) */}
-          <button
-            onClick={() => navigate("/messages")}
-            className="relative flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-border text-foreground hover:bg-muted transition shadow-sm"
-          >
-            <span className="font-medium opacity-80">Messages</span>
-
-            {/* badge */}
-            <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-red-500 rounded-full shadow">
-              3
-            </span>
-          </button>
-
           {/* LOGIN / USER AREA */}
           {!userFetching &&
             (!user ? (
@@ -92,6 +79,20 @@ const Header = ({
             ) : (
               <>
                 <div className="flex flex-row gap-3 content-center">
+                  {/* Messages Button (your feature stays) */}
+                  <button
+                    onClick={() => navigate("/messages")}
+                    className="relative flex items-center gap-2 px-4 py-1"
+                  >
+                    <FaInbox />
+                    <span className="font-medium opacity-80">Messages</span>
+
+                    {/* badge */}
+                    <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-red-500 rounded-full shadow">
+                      3
+                    </span>
+                  </button>
+
                   {/* Post Button */}
                   <button
                     className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"

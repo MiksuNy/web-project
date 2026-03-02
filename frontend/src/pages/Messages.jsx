@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ChatBox from "@/components/chat/ChatBox";
 import {
   MdInbox,
@@ -27,6 +27,13 @@ export default function Messages() {
     },
     {
       id: 2,
+      title: "Free math tutoring for kids",
+      from: "David K.",
+      text: "My son is struggling with algebra. Could you help him after school?",
+      date: "2026-01-19",
+    },
+    {
+      id: 3,
       title: "Free math tutoring for kids",
       from: "David K.",
       text: "My son is struggling with algebra. Could you help him after school?",
@@ -60,77 +67,74 @@ export default function Messages() {
 
   const list = tab === "received" ? received : sent;
 
-  const greenBtn =
-    "flex-1 h-11 rounded-full text-white font-semibold flex items-center justify-center gap-2 transition hover:opacity-90";
-
-  const blueBtn =
-    "flex-1 h-11 rounded-full text-white font-semibold flex items-center justify-center gap-2 transition hover:opacity-90";
-
   return (
-    <main className="max-w-5xl mx-auto py-10 px-4">
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-md overflow-hidden">
+    <main className="absolute py-10 z-0 left-0 right-0 top-0 bottom-0 flex items-center justify-center pt-17 pb-18">
+      <div className="max-w-5xl w-10/12 h-full mx-auto border-x border-slate-200 bg-white flex flex-col">
         {/* HEADER */}
-        <div className="h-[60px] px-6 flex items-center justify-between bg-gradient-to-r from-[#2F9E44] to-[#2C3E50] rounded-t-2xl">
-          <span className="text-white text-lg font-semibold">Messages</span>
+        <div className="h-15 px-6 flex items-center justify-between shrink-0">
+          <span className="text-lg font-semibold">Messages</span>
 
-          <button
-            onClick={() => navigate(-1)}
-            className="text-white/80 hover:text-white transition"
-            style={{ all: "unset", cursor: "pointer" }}
+          <Link
+            to="/"
+            className="p-2 rounded-full hover:bg-gray-100 transition"
           >
             <MdClose size={22} />
-          </button>
+          </Link>
         </div>
 
         {/* TABS */}
-        <div className="bg-slate-100 border-b">
+        <div className="border-b border-t shrink-0">
           <div className="grid grid-cols-2 text-sm font-medium">
-            <button
+            <div
               onClick={() => setTab("received")}
-              className={`relative py-4 flex items-center justify-center gap-2 transition
-                ${
-                  tab === "received"
-                    ? "bg-[#E6F4EA] text-[#15803D]"
-                    : "bg-white text-slate-600 hover:bg-slate-50"
+              className={`relative py-4 flex items-center justify-center gap-2 transition hover:bg-gray-100
+                ${tab === "received"
+                  ? "text-green-700"
+                  : "text-slate-600"
                 }`}
             >
               <MdInbox size={18} />
               Received
               {received.length > 0 && (
-                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${tab === "received"
+                  ? "bg-green-700"
+                  : "bg-slate-700"
+                  } text-white`}>
                   {received.length}
                 </span>
               )}
               {tab === "received" && (
-                <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#15803D]" />
+                <span className="absolute bottom-0 left-0 right-0 h-1 bg-green-700" />
               )}
-            </button>
+            </div>
 
-            <button
+            <div
               onClick={() => setTab("sent")}
-              className={`relative py-4 flex items-center justify-center gap-2 transition
-                ${
-                  tab === "sent"
-                    ? "bg-[#E6F4EA] text-[#15803D]"
-                    : "bg-white text-slate-600 hover:bg-slate-50"
+              className={`relative py-4 flex items-center justify-center gap-2 transition hover:bg-gray-100
+                ${tab === "sent"
+                  ? "text-green-700"
+                  : "text-slate-600"
                 }`}
             >
               <MdSend size={18} />
               Sent
               {sent.length > 0 && (
-                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-[#15803D] text-white">
+                <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${tab === "sent"
+                  ? "bg-green-700"
+                  : "bg-slate-700"
+                  } text-white`}>
                   {sent.length}
                 </span>
               )}
               {tab === "sent" && (
-                <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#15803D]" />
+                <span className="absolute bottom-0 left-0 right-0 h-1 bg-green-700" />
               )}
-            </button>
+            </div>
           </div>
         </div>
 
         {/* LIST */}
-        <div className="bg-slate-100/60 p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto">
           {list.length === 0 && (
             <div className="text-center text-slate-500 py-20">
               No new messages
@@ -152,7 +156,7 @@ export default function Messages() {
                         <MdCheckCircle /> Accepted
                       </span>
                     ) : (
-                      "🔥 Needs Help"
+                      "Needs Help"
                     )}
                   </span>
                   <span className="text-slate-400">{m.date}</span>
@@ -173,8 +177,7 @@ export default function Messages() {
                     <div className="flex gap-4">
                       <button
                         onClick={() => accept(m)}
-                        style={{ backgroundColor: "#15803D" }}
-                        className={greenBtn}
+                        className="button-primary flex items-center gap-2 justify-center text-nowrap"
                       >
                         <MdCheckCircle />
                         Accept
@@ -182,9 +185,7 @@ export default function Messages() {
 
                       <button
                         onClick={() => decline(m)}
-                        className="flex-1 h-11 rounded-full border-2 border-red-500 
-                   text-red-600 bg-white font-semibold 
-                   flex items-center justify-center gap-2"
+                        className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                       >
                         <MdCancel size={18} />
                         Decline
@@ -198,26 +199,24 @@ export default function Messages() {
                       {!m.connected && (
                         <div className="flex gap-4">
                           <button
-                            onClick={() => setActiveChat(m)}
-                            style={{ backgroundColor: "#1D4ED8" }}
-                            className={blueBtn}
-                          >
-                            <MdChatBubbleOutline />
-                            Open Chat
-                          </button>
-
-                          <button
                             onClick={() => confirmConnection(m)}
-                            style={{ backgroundColor: "#15803D" }}
-                            className={greenBtn}
+                            className="button-primary flex items-center gap-2 justify-center text-nowrap"
                           >
                             <MdVerified />
                             Confirm Connection
                           </button>
 
                           <button
+                            onClick={() => setActiveChat(m)}
+                            className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
+                          >
+                            <MdChatBubbleOutline />
+                            Open Chat
+                          </button>
+
+                          <button
                             onClick={() => decline(m)}
-                            className="h-11 px-6 rounded-full bg-slate-200 font-semibold"
+                            className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                           >
                             Decline
                           </button>
