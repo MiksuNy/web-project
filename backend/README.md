@@ -98,7 +98,7 @@ Edit own user profile information
 
 ### Chat
 
-- **POST /chat/create**  
+- **POST /chat**  
 Create a new chat between users  
 🔒 Requires authentication
 
@@ -106,6 +106,6 @@ Create a new chat between users
 Get all messages from a chat  
 🔒 Requires authentication
 
-- **POST /chat/:chatId/message**  
+- **POST /chat/:chatId/messages**  
 Send a new message to a chat  
 🔒 Requires authentication
