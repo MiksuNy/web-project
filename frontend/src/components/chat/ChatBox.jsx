@@ -70,33 +70,31 @@ export default function ChatBox({ chat, onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-lg overflow-hidden">
-          <div className="px-5 py-4 flex items-start gap-3 border-b border-slate-200">
-            <button
-              type="button"
-              onClick={() => onBack?.()}
-              className="mt-0.5 text-slate-600 hover:text-slate-900"
-              aria-label="Back"
-            >
-              <MdArrowBack size={22} />
-            </button>
-            <div className="min-w-0">
-              <div className="font-semibold text-slate-900 leading-5">{peer}</div>
-              <div className="text-sm text-slate-500 truncate">Re: {title}</div>
-            </div>
+    <div className="absolute py-10 z-0 left-0 right-0 top-0 bottom-0 flex items-center justify-center pt-17 pb-18">
+      <div className="max-w-5xl w-10/12 h-full mx-auto border-x border-slate-200 bg-white flex flex-col">
+        <div className="h-15 px-6 shrink-0 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => onBack?.()}
+            className="mt-0.5 text-slate-600 hover:text-slate-900"
+            aria-label="Back"
+          >
+            <MdArrowBack size={22} />
+          </button>
+          <div className="min-w-0">
+            <div className="font-semibold text-slate-900 leading-5">{peer}</div>
+            <div className="text-sm text-slate-500 truncate">Re: {title}</div>
           </div>
-
-          <div className="h-[72vh] overflow-y-auto px-5 py-4 space-y-3 bg-slate-50">
-            {messages.map((m) => (
-              <MessageBubble key={m.id} {...m} senderName={m.senderName ?? peer} />
-            ))}
-            <div ref={bottomRef} />
-          </div>
-
-          <ChatInput onSend={send} onSendLocation={sendLocation} />
         </div>
+
+        <div className="h-[72vh] overflow-y-auto px-5 py-4 space-y-3 bg-slate-50">
+          {messages.map((m) => (
+            <MessageBubble key={m.id} {...m} senderName={m.senderName ?? peer} />
+          ))}
+          <div ref={bottomRef} />
+        </div>
+
+        <ChatInput onSend={send} onSendLocation={sendLocation} />
       </div>
     </div>
   );
