@@ -226,12 +226,9 @@ export default function Messages() {
                       {m.connected && (
                         <button
                           onClick={() => setActiveChat(m)}
-                          className="w-full h-12 mt-4 rounded-2xl text-white font-semibold 
-                     flex items-center justify-center gap-2 
-                     transition hover:opacity-95"
-                          style={{ backgroundColor: "#16A34A" }}
+                          className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                         >
-                          <MdChatBubbleOutline size={18} />
+                          <MdChatBubbleOutline />
                           Open Chat
                         </button>
                       )}
