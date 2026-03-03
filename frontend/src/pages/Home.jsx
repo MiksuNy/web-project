@@ -1,7 +1,7 @@
 import Hero from "../components/Hero";
 import SearchBox from "../components/SearchBox/SearchBox";
 import { PostCard } from "@/components/post";
-import { posts } from "@/data/posts";
+import posts from "@/data/posts.json";
 
 export default function Home() {
   return (
