@@ -2,7 +2,7 @@ import logo from "/logo.svg";
 
 const Footer = () => {
   return (
-    <footer className="bg-background bottom-0 flex justify-between items-center px-8 py-4 border-t border-border text-muted-foreground text-sm z-99">
+    <footer className="bg-background bottom-0 hidden md:flex justify-between items-center px-8 py-4 border-t border-border text-muted-foreground text-sm z-99">
       <div className="flex items-center gap-6">
         <span className="text-primary">
           <img

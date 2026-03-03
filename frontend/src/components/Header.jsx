@@ -85,20 +85,20 @@ const Header = ({
                   {/* Messages Button (your feature stays) */}
                   <button
                     onClick={() => navigate("/messages")}
-                    className="relative flex items-center gap-2 px-4 py-1"
+                    className="relative hidden md:flex items-center gap-2 px-4 py-1"
                   >
                     <FaInbox />
                     <span className="font-medium opacity-80">Messages</span>
 
                     {/* badge */}
-                    <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-red-500 rounded-full shadow">
+                    <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-green-600 rounded-full shadow">
                       3
                     </span>
                   </button>
                   
                   {/* Post Button */}
                   <button
-                    className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
+                    className="hidden md:flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
                     onClick={() => navigate("/post")}
                   >
                     <FaPlus />

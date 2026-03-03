@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import { IoMdCloudUpload } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 export default function Post() {
@@ -22,8 +23,11 @@ export default function Post() {
   }
 
   return (
-    <div className="flex flex-col gap-6 py-8 max-w-3xl mx-auto">
-      <h1>Create a Post</h1>
+    <div className="flex flex-col gap-6 py-8 max-w-3xl w-10/12 mx-auto">
+      <div className="flex flex-row justify-between items-center">
+        <h1>Create a Post</h1>
+        <span onClick={() => navigate("/")} className="cursor-pointer text-2xl text-gray-500 hover:text-gray-700"><IoClose /></span>
+      </div>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row justify-stretch gap-2">
           <button id="create-post-offer-button" className={`${!needingHelp ? "button-primary" : "button-secondary"} w-1/2 h-20`} onClick={() => setNeedingHelp(false)}>🤝 I Can Offer Help</button>
@@ -49,7 +53,6 @@ export default function Post() {
         </div>
         <input type="file" id="create-post-thumbnail" placeholder="Upload image" onChange={thumbnailChanged} ref={thumbnailUploadInput} accept="image/*" hidden />
         <button id="create-post-submit" className="button-primary">Post</button>
-        <button id="create-post-cancel" onClick={() => navigate("/")}>Cancel</button>
       </div>
     </div>
   )

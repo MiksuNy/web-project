@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
-import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 import MainLayout from "./pages/MainLayout";
 import Login from "./pages/Login";
@@ -21,28 +21,26 @@ function App() {
   const { user } = useAuth();
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
-          </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
+        </Route>
 
-          <Route path="/admin" element={<AdminDashboardSidePanel />}>
-            <Route index element={<MainPage />} />
-            <Route path="posts" element={<PostsPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="connections" element={<ConnectionsPage />} />
-            <Route path="analytics" element={<AnalyticsPage />} />
-            <Route path="activity" element={<ActivityPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+        <Route path="/admin" element={<AdminDashboardSidePanel />}>
+          <Route index element={<MainPage />} />
+          <Route path="posts" element={<PostsPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="connections" element={<ConnectionsPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="activity" element={<ActivityPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
