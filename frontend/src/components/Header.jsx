@@ -114,49 +114,46 @@ const Header = ({
 
                 {/* Profile Menu */}
                 {showProfileMenu && (
-                  <div
-                    className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50"
-                    ref={profileMenuRef}
-                  >
-                    {user.role === "admin" && (
-                      <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
-                        <MdShield />
-                        Admin Panel
-                      </span>
-                    )}
+  <div
+    className="absolute top-16 right-8 w-56 bg-background border border-border rounded-lg shadow-md py-1 z-50"
+    ref={profileMenuRef}
+  >
+    <div className="flex flex-col">
 
-                    <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
-                     
-                     <span
-                        onClick={() => {
-                          navigate("/profile");
-                          setShowProfileMenu(false);
-                        }}
-                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
-                      >
-                        <MdPerson />
-                        Profile
-                      </span>
+      <div
+        className="flex items-center gap-3 px-4 py-2 text-sm cursor-pointer hover:bg-gray-100"
+      >
+        <MdSettings size={18} />
+        Settings
+      </div>
 
+      <div
+        onClick={() => {
+          navigate("/profile");
+          setShowProfileMenu(false);
+        }}
+        className="flex items-center gap-3 px-4 py-2 text-sm cursor-pointer hover:bg-gray-100"
+      >
+        <MdPerson size={18} />
+        Profile
+      </div>
 
-                      <MdSettings />
-                      Settings
-                    </span>
+      <div className="my-1 border-t border-border" />
 
-                    <span
-                      className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
-                      onClick={async () => {
-                        await logout();
-                        navigate("/");
-                      }}
-                    >
-                      
-                      
-                      <MdLogout />
-                      Log Out
-                    </span>
-                  </div>
-                )}
+      <div
+        onClick={async () => {
+          await logout();
+          navigate("/");
+        }}
+        className="flex items-center gap-3 px-4 py-2 text-sm text-red-500 cursor-pointer hover:bg-gray-100"
+      >
+        <MdLogout size={18} />
+        Log Out
+      </div>
+
+    </div>
+  </div>
+)}
               </>
             ))}
         </div>
