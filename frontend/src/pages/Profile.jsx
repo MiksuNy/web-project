@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiMail,
   FiCalendar,
@@ -21,9 +21,14 @@ export default function Profile() {
     location: "",
   };
 
-  // Initialize state directly from location (no useEffect needed)
-  const [user] = useState(location.state || defaultUser);
+  const [user, setUser] = useState(defaultUser);
   const [activeTab, setActiveTab] = useState("posts");
+
+  useEffect(() => {
+    if (location.state?.updatedUser) {
+      setUser(location.state.updatedUser);
+    }
+  }, [location.state]);
 
   const initials = user.name
     .split(" ")
@@ -44,7 +49,7 @@ export default function Profile() {
         </div>
 
         <button
-          onClick={() => navigate("/profile/edit")}
+          onClick={() => navigate("/profile/edit", { state: user })}
           className="button-primary w-auto px-4 py-2 rounded-md"
         >
           Edit Profile
@@ -56,7 +61,6 @@ export default function Profile() {
         <div className="h-32 bg-gradient-to-r from-green-600 to-gray-500" />
 
         <div className="p-6 relative">
-          {/* Avatar */}
           <div className="absolute -top-12 left-6 w-24 h-24 rounded-full bg-gradient-to-br from-green-600 to-gray-500 text-white flex items-center justify-center text-2xl font-bold border-4 border-white shadow-md">
             {initials}
           </div>
@@ -106,23 +110,7 @@ export default function Profile() {
 
         <div className="p-12 text-center text-muted-foreground">
           <FiUser size={40} className="mx-auto mb-3 opacity-40" />
-
-          {activeTab === "posts" && (
-            <>
-              <p className="font-medium text-foreground">No posts yet</p>
-              <p className="text-sm mt-1">
-                Create your first post to help others or request help
-              </p>
-            </>
-          )}
-
-          {activeTab === "activity" && (
-            <p className="font-medium text-foreground">No activity yet</p>
-          )}
-
-          {activeTab === "chats" && (
-            <p className="font-medium text-foreground">No chats yet</p>
-          )}
+          <p className="font-medium text-foreground">No posts yet</p>
         </div>
       </div>
     </div>

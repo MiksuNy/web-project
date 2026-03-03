@@ -1,26 +1,27 @@
 import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function EditProfile() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [formData, setFormData] = useState({
-    name: "minoo",
-    email: "minoo@gmail.com",
-    bio: "",
-    phone: "",
-    location: "",
-  });
+  const [formData, setFormData] = useState(
+    location.state || {
+      name: "",
+      email: "",
+      bio: "",
+      phone: "",
+      location: "",
+    }
+  );
 
-  const initials = formData.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div
@@ -40,7 +41,11 @@ export default function EditProfile() {
           </button>
 
           <button
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              navigate("/profile", {
+                state: { updatedUser: formData },
+              })
+            }
             className="button-primary w-auto px-4 py-2"
           >
             Save
@@ -48,76 +53,34 @@ export default function EditProfile() {
         </div>
       </div>
 
-      {/* Card */}
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-        <div className="p-8 relative space-y-6">
-          {/* Avatar */}
-          <div className="relative">
-            <div className="h-28 bg-gradient-to-r from-green-600 to-gray-500" />
-
-            <div
-              className="absolute left-6 top-16 w-20 h-20 rounded-full 
-  bg-gradient-to-br from-green-600 to-gray-500 
-  text-white flex items-center justify-center 
-  text-xl font-bold border-4 border-white shadow"
-            >
-              {initials}
-            </div>
-          </div>
-
-         <div className="px-6 pb-8 pt-16 space-y-5">
-            <Input
-              label="Name"
-              value={formData.name}
-              onChange={(v) => setFormData({ ...formData, name: v })}
-            />
-
-            <Input
-              label="Email"
-              value={formData.email}
-              onChange={(v) => setFormData({ ...formData, email: v })}
-            />
-
-            <Textarea
-              label="Bio"
-              value={formData.bio}
-              onChange={(v) => setFormData({ ...formData, bio: v })}
-            />
-
-            <Input
-              label="Phone"
-              value={formData.phone}
-              onChange={(v) => setFormData({ ...formData, phone: v })}
-            />
-
-            <Input
-              label="Location"
-              value={formData.location}
-              onChange={(v) => setFormData({ ...formData, location: v })}
-            />
-          </div>
-        </div>
+      {/* Form */}
+      <div className="bg-card rounded-xl shadow-md p-6 space-y-4">
+        <Input label="Name" value={formData.name} onChange={(v) => handleChange("name", v)} />
+        <Input label="Email" value={formData.email} onChange={(v) => handleChange("email", v)} />
+        <Input label="Phone" value={formData.phone} onChange={(v) => handleChange("phone", v)} />
+        <Input label="Location" value={formData.location} onChange={(v) => handleChange("location", v)} />
+        <Textarea label="Bio" value={formData.bio} onChange={(v) => handleChange("bio", v)} />
       </div>
     </div>
   );
 }
 
-/* Small reusable input */
 function Input({ label, value, onChange }) {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-foreground">{label}</label>
+      <label className="text-sm font-medium">{label}</label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-11 border border-border rounded-xl px-4 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+        className="w-full border border-border rounded-lg px-3 py-2"
       />
     </div>
   );
 }
+
 function Textarea({ label, value, onChange }) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <label className="text-sm font-medium">{label}</label>
       <textarea
         value={value}
