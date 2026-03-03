@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 import { FaInbox, FaPlus } from "react-icons/fa";
+import { MdPerson } from "react-icons/md";
 
 const Header = ({
   title = "HelpConnect",
@@ -24,7 +25,7 @@ const Header = ({
     setShowProfileMenu((prev) => !prev);
   }
 
-  // ✅ clean & correct version from main
+  // clean & correct version from main
   useEffect(() => {
     function handleClick(e) {
       if (
@@ -58,9 +59,7 @@ const Header = ({
             <h1 className="text-xl font-medium bg-linear-to-r from-green-600 to-gray-700 bg-clip-text text-transparent">
               {title}
             </h1>
-            <span className="text-sm text-muted-foreground">
-              {subtitle}
-            </span>
+            <span className="text-sm text-muted-foreground">{subtitle}</span>
           </div>
         </div>
 
@@ -127,6 +126,19 @@ const Header = ({
                     )}
 
                     <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
+                     
+                     <span
+                        onClick={() => {
+                          navigate("/profile");
+                          setShowProfileMenu(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                      >
+                        <MdPerson />
+                        Profile
+                      </span>
+
+
                       <MdSettings />
                       Settings
                     </span>
@@ -138,6 +150,8 @@ const Header = ({
                         navigate("/");
                       }}
                     >
+                      
+                      
                       <MdLogout />
                       Log Out
                     </span>
