@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Post from "./pages/Post";
+import Messages from "@/pages/Messages";
 
 function App() {
   const { user } = useAuth();
@@ -19,8 +20,13 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
+        </Routes>
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

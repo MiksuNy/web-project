@@ -84,3 +84,12 @@ Delete user post
 
 - **AI /ai/ask**
 Communicate with AI
+
+**User Profile**
+
+- **GET /users/:userId**
+Get user profile data with id
+
+- **PUT /users**
+Edit own user profile information
+🔒 Requires authentication
