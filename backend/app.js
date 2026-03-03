@@ -22,11 +22,11 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use('/auth', authRoutes);
-app.use('/posts', postsRoutes);
-app.use('/ai', aiRoutes);
 app.use('/api', locationsRoutes);
-app.use('/users', profileRoutes);
-app.use('/chat', chatRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/users', profileRoutes);
+app.use('/api/chat', chatRoutes);
 
 module.exports = app;
