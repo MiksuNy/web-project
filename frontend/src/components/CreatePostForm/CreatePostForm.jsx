@@ -1,10 +1,19 @@
 import { useRef, useState } from "react"
 import { IoMdCloudUpload } from "react-icons/io";
+import useField from "../../hooks/useField";
+import api from "../../api/posts";
 
 export default function CreatePostForm({ onClose }) {
+  const title = useField("text");
+  const description = useField("text");
+  const category = useField("text", "Transportation");
+  const budget = useField("number");
+
+  const [error, setError] = useState(null);
+
   const [needingHelp, setNeedingHelp] = useState(false);
   const [selectedThumbnail, setSelectedThumbnail] = useState();
-  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState();
+  const [_, setSelectedThumbnailFile] = useState();
 
   const thumbnailUploadInput = useRef(null);
   const blackenedBackgroundRef = useRef(null);
@@ -17,14 +26,34 @@ export default function CreatePostForm({ onClose }) {
     onClose(e);
   }
 
-  function thumbnailChanged(event) {
-    const files = event.target.files;
+  function thumbnailChanged(e) {
+    const files = e.target.files;
     if (!files || files.length === 0) {
       return;
     }
     const file = files[0];
     setSelectedThumbnail(URL.createObjectURL(file));
     setSelectedThumbnailFile(file);
+  }
+
+  async function submit() {
+    setError(null);
+
+    const newPost = {
+      type: needingHelp ? "request" : "offer",
+      title: title.value,
+      description: description.value,
+      category: category.value ?? "Other",
+      budget: needingHelp ? parseFloat(budget.value ?? "0") : null,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      await api.createPost(newPost, token);
+      onClose();
+    } catch (e) {
+      setError(e.message);
+    }
   }
 
   return (
@@ -38,7 +67,7 @@ export default function CreatePostForm({ onClose }) {
           </div>
           <div className="flex flex-col gap-2">
             <label>I need help with:</label>
-            <select id="create-post-category" className="border border-gray-200 rounded-2xl shadow-sm p-3">
+            <select {...category} className="border border-gray-200 rounded-2xl shadow-sm p-3">
               <option>Transportation</option>
               <option>Food</option>
               <option>Education</option>
@@ -48,14 +77,16 @@ export default function CreatePostForm({ onClose }) {
               <option>Other</option>
             </select>
           </div>
-          <input type="text" id="create-post-title" placeholder="Title" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
-          <textarea id="create-post-description" placeholder="Description" className="border border-gray-200 rounded-2xl shadow-sm p-3 min-h-24"></textarea>
+          <input {...title} placeholder="Title" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
+          <textarea {...description} placeholder="Description" className="border border-gray-200 rounded-2xl shadow-sm p-3 min-h-24"></textarea>
+          {needingHelp && <input {...budget} step="0.01" placeholder="Budget" className="border border-gray-200 rounded-2xl shadow-sm p-3" />}
           {selectedThumbnail && <img src={selectedThumbnail} className="w-full h-auto rounded-3xl select-none"></img>}
           <div className="w-full p-12 border-4 border-dashed rounded-3xl flex items-center justify-center gap-2 select-none cursor-pointer" onClick={() => thumbnailUploadInput.current?.click()}>
             <IoMdCloudUpload className="w-6 h-6" /> Upload a thumbnail (optional)
           </div>
           <input type="file" id="create-post-thumbnail" placeholder="Upload image" onChange={thumbnailChanged} ref={thumbnailUploadInput} accept="image/*" hidden />
-          <button id="create-post-submit">Post</button>
+          <button id="create-post-submit" onClick={submit}>Post</button>
+          {error && <div className="bg-red-200 p-4 border border-red-600 rounded-2xl mt-4"><p className="text-red-600">{error}</p></div>}
         </div>
       </div>
     </div>
