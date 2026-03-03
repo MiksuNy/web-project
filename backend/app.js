@@ -3,7 +3,12 @@ const connectDB = require("./config/db");
 const express = require('express');
 const cors = require("cors");
 
-const apiRoutes = require('./routes');
+const locationsRoutes = require('./routes/locationsRouter');
+const authRoutes = require('./routes/authRouter');
+const postsRoutes = require('./routes/postsRouter');
+const aiRoutes = require('./routes/aiRouter');
+const profileRoutes = require('./routes/profileRouter');
+const chatRoutes = require('./routes/chatRouter');
 
 const app = express();
 
@@ -16,7 +21,12 @@ app.get('/', (req, res) => {
   res.send('Backend is working');
 });
 
-// Routes (aggregated under /api)
-app.use('/api', apiRoutes);
+// Routes
+app.use('/api', locationsRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/users', profileRoutes);
+app.use('/api/chat', chatRoutes);
 
 module.exports = app;
