@@ -20,16 +20,11 @@ function App() {
       <Header />
 
       <Routes>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
-        </Routes>
-
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
       </Routes>
 
       <MobilePanel />

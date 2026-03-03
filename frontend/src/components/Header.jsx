@@ -16,7 +16,6 @@ const Header = ({
   const profileMenuRef = useRef(null);
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showCreatePost, setShowCreatePost] = useState(false);
 
   function profileIconClicked(e) {
     e.preventDefault();
@@ -97,7 +96,7 @@ const Header = ({
                   {/* Post Button */}
                   <button
                     className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
-                    onClick={() => setShowCreatePost(!showCreatePost)}
+                    onClick={() => navigate("/post")}
                   >
                     <FaPlus />
                     Post
@@ -121,25 +120,7 @@ const Header = ({
                     ref={profileMenuRef}
                   >
                     {user.role === "admin" && (
-                      <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
-                        <MdShield />
-                        Admin Panel
-                      </span>
-                    )}
-
-                    <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
-                      <MdSettings />
-                      Settings
-                    </span>
-
-                    {user.role === "admin" && (
-                      <Link to="/admin"
-                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
-                        onClick={async () => {
-                          await logout();
-                          navigate("/");
-                        }}
-                      >
+                      <Link to="/admin" className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
                         <MdShield />
                         Admin Panel
                       </Link>
