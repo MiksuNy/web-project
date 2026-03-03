@@ -15,7 +15,6 @@ export default function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-
       {/* Topbar */}
       <div className="flex items-center justify-between">
         <div
@@ -26,7 +25,10 @@ export default function Profile() {
           <h2 className="text-xl font-semibold">Profile</h2>
         </div>
 
-        <button className="button-primary w-auto px-4 py-2 rounded-md">
+        <button
+          onClick={() => navigate("/profile/edit")}
+          className="button-primary w-auto px-4 py-2 rounded-md"
+        >
           Edit Profile
         </button>
       </div>
@@ -59,16 +61,8 @@ export default function Profile() {
 
       {/* Stats */}
       <div className="grid md:grid-cols-3 gap-4">
-        <Stat
-          icon={<FiHeart />}
-          label="Help Offers"
-          color="text-green-600"
-        />
-        <Stat
-          icon={<FiUser />}
-          label="Help Requests"
-          color="text-gray-600"
-        />
+        <Stat icon={<FiHeart />} label="Help Offers" color="text-green-600" />
+        <Stat icon={<FiUser />} label="Help Requests" color="text-gray-600" />
         <Stat
           icon={<FiMessageCircle />}
           label="Connections"
@@ -78,7 +72,6 @@ export default function Profile() {
 
       {/* Tabs + Content */}
       <div className="bg-card rounded-xl shadow-md overflow-hidden">
-
         {/* Tabs */}
         <div className="flex text-sm border-b border-border">
           {["posts", "activity", "chats"].map((tab) => (
