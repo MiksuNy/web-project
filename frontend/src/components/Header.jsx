@@ -45,12 +45,18 @@ const Header = ({
     <>
       <header className="top-0 fixed md:relative flex gap-3 justify-between items-center w-full h-17.5 p-4 md:px-8 border-b border-border bg-background z-99">
         {/* mobile search bar */}
+        {/* 
+        
+        TODO: this will be implemented later, but for now we leave this here because we have to finish the rest of the app
+
         <div className="md:hidden flex flex-row gap-2 py-2 px-3 items-center text-gray-500 border border-border rounded-full w-full shadow-md/5">
           <IoSearch /> Search...
-        </div>
+        </div> 
+
+        */}
 
         {/* left */}
-        <div className="md:flex hidden items-center gap-3 text-green-600 select-none cursor-pointer" onClick={() => navigate("/")}>
+        <div className="flex items-center gap-3 text-green-600 select-none cursor-pointer" onClick={() => navigate("/")}>
           <img
             src="/logo.svg"
             alt="HelpConnect logo"
@@ -95,7 +101,7 @@ const Header = ({
                       3
                     </span>
                   </button>
-                  
+
                   {/* Post Button */}
                   <button
                     className="hidden md:flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"

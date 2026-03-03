@@ -19,7 +19,7 @@ export default function SearchBox() {
   }
 
   return (
-    <div className="hidden md:block w-full max-w-5xl mx-auto mt-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
+    <div className="block w-full max-w-5xl mx-auto mt-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
 
       {/* Input field */}
       <input type="text" placeholder="Search for help..." className="w-full mx-auto p-2 py-3 mb-4 focus:outline-0" />
@@ -35,7 +35,7 @@ export default function SearchBox() {
 
       </div>}
 
-      <div className="flex justify-stretch items-center">
+      <div className="flex flex-col sm:flex-row gap-6 justify-stretch items-center">
 
         {/* Type selector */}
         <div className="flex w-full align-middle gap-2 flex-wrap">
@@ -55,7 +55,7 @@ export default function SearchBox() {
         </div>
 
         {/* Category selector */}
-        <select className="w-full min-w-50 ml-4 p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <select className="w-full min-w-50 p-4 rounded-2xl border border-gray-200 shadow-sm">
           <option>All Categories</option>
           <option>Transportation</option>
           <option>Food</option>
