@@ -21,7 +21,10 @@ export default function Profile() {
     location: "",
   };
 
-  const [user, setUser] = useState(defaultUser);
+  const [user, setUser] = useState(() => {
+  const saved = localStorage.getItem("profileUser");
+  return saved ? JSON.parse(saved) : defaultUser;
+});
   const [activeTab, setActiveTab] = useState("posts");
 
   useEffect(() => {
@@ -29,6 +32,9 @@ export default function Profile() {
       setUser(location.state.updatedUser);
     }
   }, [location.state]);
+  useEffect(() => {
+  localStorage.setItem("profileUser", JSON.stringify(user));
+}, [user]);
 
   const initials = user.name
     .split(" ")
