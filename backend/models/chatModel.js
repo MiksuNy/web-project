@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const chatSchema = new mongoose.Schema({
+  subject: { type: String, required: true },
   participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
   updatedAt: { type: Date, default: Date.now }
