@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { FaCaretLeft } from "react-icons/fa";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaInbox, FaPlus } from "react-icons/fa";
 
 const Header = ({
   title = "HelpConnect",
-  subtitle = "Connect with your community"
+  subtitle = "Connect with your community",
+  inAdminPanel = false,
+  fixed = false,
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
@@ -92,7 +95,7 @@ const Header = ({
                       3
                     </span>
                   </button>
-
+                  
                   {/* Post Button */}
                   <button
                     className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
@@ -119,11 +122,23 @@ const Header = ({
                     className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50"
                     ref={profileMenuRef}
                   >
-                    {user.role === "admin" && (
-                      <Link to="/admin" className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
+                    {!inAdminPanel && user.role === "admin" && (
+                      <span
+                        onClick={() => navigate("/admin")}
+                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                      >
                         <MdShield />
                         Admin Panel
-                      </Link>
+                      </span>
+                    )}
+                    {inAdminPanel && user.role === "admin" && (
+                      <span
+                        onClick={() => navigate("/")}
+                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                      >
+                        <FaCaretLeft />
+                        Return to App
+                      </span>
                     )}
 
                     <span
