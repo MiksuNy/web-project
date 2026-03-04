@@ -90,7 +90,6 @@ const sendMessage = async (req, res) => {
 };
 
 // Get chat info (participants, etc.)
-
 const getChatInfo = async (req, res) => {
   try {
     const me = req.user.id;
