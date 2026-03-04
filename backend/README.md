@@ -106,6 +106,10 @@ Create a new chat between users
 Get all messages from a chat  
 🔒 Requires authentication
 
+- **GET /api/chat/:chatId/info**  
+Get info about the chat 
+🔒 Requires authentication
+
 - **POST /api/chat/:chatId/messages**  
 Send a new message to a chat  
 🔒 Requires authentication
