@@ -5,12 +5,16 @@ const {
   createChat,
   getMessages,
   sendMessage,
+  getChatInfo,
 } = require("../controllers/chatController");
 
 router.use(auth);
 
 // Create chat
 router.post("/", createChat);
+
+// Get chat info (participants)
+router.get("/:chatId/info", getChatInfo);
 
 // Get messages
 router.get("/:chatId/messages", getMessages);
