@@ -5,7 +5,8 @@ const validatePost = (req, res, next) => {
     return res.status(400).json({ message: "Invalid type" });
   }
 
-  // Location is determined from user's profile, so we don't validate it here
+  // Location is defaulted to user's location in the controller, so it's not required here
+  // It can also be set by the user, so we allow it to be optional
   if (!title || !description || !category) {
     return res.status(400).json({ message: "Missing required fields" });
   }

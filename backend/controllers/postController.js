@@ -24,6 +24,7 @@ const createPost = async (req, res) => {
       title,
       description,
       category,
+      // Use location from request body if provided, otherwise default to user's location
       location: location || user.location,
       budget: type === "request" ? budget : null,
       imageUrl,
