@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 // POST /posts
 const createPost = async (req, res) => {
   try {
-    const { type, title, description, category, budget } = req.body;
+    const { type, title, description, category, location, budget } = req.body;
 
     if (!["offer", "request"].includes(type)) {
       return res.status(400).json({ message: "Invalid type. Must be 'offer' or 'request'." });
@@ -24,7 +24,7 @@ const createPost = async (req, res) => {
       title,
       description,
       category,
-      location: user.location,
+      location: location || user.location,
       budget: type === "request" ? budget : null,
       imageUrl,
       user: user._id
