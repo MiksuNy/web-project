@@ -113,9 +113,55 @@ const getChatInfo = async (req, res) => {
   }
 };
 
+// Get all chats for the current user
+const getMyChats = async (req, res) => {
+  try {
+    const me = req.user.id;
+
+    const chats = await Chat.find({
+      participants: me,
+    })
+      .populate("participants", "firstName lastName email")
+      .populate({
+        path: "lastMessage",
+        select: "text createdAt",
+      })
+      .sort({ updatedAt: -1 });
+
+    res.json(chats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteChat = async (req, res) => {
+  try {
+    const me = req.user.id;
+    const chat = await Chat.findById(req.params.chatId);
+
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found" });
+    }
+
+    const isParticipant = chat.participants.some(
+      (p) => p.toString() === me.toString()
+    );
+    if (!isParticipant) return res.status(403).json({ message: "Not allowed" });
+
+    await Message.deleteMany({ chatId: req.params.chatId });
+    await Chat.findByIdAndDelete(req.params.chatId);
+
+    res.json({ message: "Chat deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createChat,
+  deleteChat,
   getMessages,
   sendMessage,
   getChatInfo,
+  getMyChats,
 };
