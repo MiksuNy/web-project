@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ChatBox from "@/components/chat/ChatBox";
 import {
+  getMyChats,
+  getMyRequests,
+  acceptChatRequest,
+  getStoredToken,
+  declineChatRequest,
+} from "@/api/chat";
+import {
   MdInbox,
   MdSend,
   MdClose,
@@ -12,78 +19,143 @@ import {
 } from "react-icons/md";
 
 export default function Messages() {
-  const navigate = useNavigate();
-
   const [tab, setTab] = useState("received");
   const [activeChat, setActiveChat] = useState(null);
-
   const [received, setReceived] = useState([]);
-
   const [sent, setSent] = useState([]);
-   useEffect(() => {
-    const loadMessages = async () => {
-      try {
-        const rawToken =
-          localStorage.getItem("token") ||
-          JSON.parse(localStorage.getItem("user") || "{}")?.token ||
-          "";
-        const token = String(rawToken).replace(/^Bearer\s+/i, "").trim();
 
-        const userObj = JSON.parse(localStorage.getItem("user") || "{}");
-        const myId = userObj?.id || userObj?._id || userObj?.user?.id || userObj?.user?._id;
+  const decodeUserIdFromToken = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload?._id || payload?.id || payload?.sub || "";
+  } catch {
+    return "";
+  }
+};
 
-        const res = await fetch(`/api/chat/my-chats`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+const mapChatToCard = (c, myId, isPending = false) => {
+  const participants = Array.isArray(c.participants) ? c.participants : [];
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.message || data?.error || "Failed to load chats");
+  const other = participants.find((p) => {
+    const pid = typeof p === "string" ? p : p?._id;
+    return String(pid) !== String(myId);
+  });
 
-        const mapped = (Array.isArray(data) ? data : []).map((c) => {
-          const other = (c.participants || []).find((p) => String(p._id) !== String(myId));
+  const otherId = typeof other === "string" ? other : other?._id;
+  const otherName =
+    typeof other === "string"
+      ? other
+      : `${other?.firstName || ""} ${other?.lastName || ""} (${other?.email || "Unknown"})`.trim() || other?.email || "Unknown";
 
-          return {
-            id: c._id,
-            chatId: c._id,
-            title: c.subject || "General",
-            from: other
-              ? `${other.firstName || ""} ${other.lastName || ""}`.trim() || other.email
-              : "Unknown",
-            text: c.lastMessage?.text || "Open chat",
-            date: c.updatedAt ? new Date(c.updatedAt).toISOString().slice(0, 10) : "",
-            accepted: true,
-            connected: true,
-          };
-        });
+  const status = c.status || (isPending ? "pending" : "accepted");
+  const requestedById = typeof c.requestedBy === "string" ? c.requestedBy : c.requestedBy?._id;
 
-        setReceived(mapped);
-        setSent([]);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  return {
+    id: c._id,
+    chatId: c._id,
+    title: c.subject || "General",
+    from: otherName,
+    text: c.lastMessage?.text || "New request",
+    date: c.updatedAt ? new Date(c.updatedAt).toISOString().slice(0, 10) : "",
+    status,
+    accepted: status === "accepted",
+    connected: false,
+    otherUserId: otherId,
+    requestedBy: requestedById,
+    isRequester: String(requestedById) === String(myId),
+  };
+};
 
-    loadMessages();
-  }, []);
+useEffect(() => {
+  const loadData = async () => {
+    try {
+      const token = getStoredToken();
+      const userObj = JSON.parse(localStorage.getItem("user") || "{}");
+      const myId =
+        userObj?.id ||
+        userObj?._id ||
+        userObj?.user?.id ||
+        userObj?.user?._id ||
+        decodeUserIdFromToken(token);
+
+      const [requestsRes, chatsRes] = await Promise.all([
+        getMyRequests(token),
+        getMyChats(token),
+      ]);
+
+      const reqList = (Array.isArray(requestsRes) ? requestsRes : []).map((c) =>
+        mapChatToCard(c, myId, true),
+      );
+
+      const chatListRaw = (Array.isArray(chatsRes) ? chatsRes : []).map((c) =>
+        mapChatToCard(c, myId, c.status === "pending"),
+      );
+
+      const chatList = chatListRaw.filter(
+        (c) =>
+          c.status === "accepted" ||
+          c.status === "declined" ||
+          (c.status === "pending" && c.isRequester),
+      );
+
+      setReceived(reqList);
+      setSent(chatList);
+
+      // default tab logic
+      setTab(reqList.length > 0 ? "received" : "sent");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  loadData();
+}, []);
 
   // Accept → move to sent with accepted + connected flag
-  const accept = (msg) => {
-    setReceived((r) => r.filter((x) => x.id !== msg.id));
-    setSent((s) => [{ ...msg, accepted: true, connected: false }, ...s]);
-  };
+const accept = async (msg) => {
+  try {
+    const token = getStoredToken();
+    await acceptChatRequest(msg.chatId || msg.id, token);
 
-  const decline = (msg) => {
-    if (tab === "received")
-      setReceived((r) => r.filter((x) => x.id !== msg.id));
-    else setSent((s) => s.filter((x) => x.id !== msg.id));
-  };
+    setReceived((r) => {
+      const next = r.filter((x) => x.id !== msg.id);
+      if (next.length === 0 && tab === "received") setTab("sent"); // NEW
+      return next;
+    });
 
-  // Confirm → mark as connected
-  const confirmConnection = (msg) => {
-    setSent((prev) =>
-      prev.map((x) => (x.id === msg.id ? { ...x, connected: true } : x)),
-    );
-  };
+    setSent((s) => [
+      { ...msg, status: "accepted", accepted: true, connected: false },
+      ...s,
+    ]);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const decline = async (msg) => {
+  if (tab === "received") {
+    try {
+      const token = getStoredToken();
+      await declineChatRequest(msg.chatId || msg.id, token);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setReceived((r) => {
+      const next = r.filter((x) => x.id !== msg.id);
+      if (next.length === 0) setTab("sent"); // NEW
+      return next;
+    });
+
+    setSent((s) => [
+      { ...msg, status: "declined", accepted: false, connected: false },
+      ...s.filter((x) => x.id !== msg.id),
+    ]);
+    return;
+  }
+
+  setSent((s) => s.filter((x) => x.id !== msg.id));
+};
 
   if (activeChat)
     return <ChatBox chat={activeChat} onBack={() => setActiveChat(null)} />;
@@ -117,7 +189,7 @@ export default function Messages() {
                 }`}
             >
               <MdInbox size={18} />
-              Received
+              Received requests
               {received.length > 0 && (
                 <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${tab === "received"
                   ? "bg-green-700"
@@ -140,7 +212,7 @@ export default function Messages() {
                 }`}
             >
               <MdSend size={18} />
-              Sent
+              Chats
               {sent.length > 0 && (
                 <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${tab === "sent"
                   ? "bg-green-700"
@@ -174,14 +246,24 @@ export default function Messages() {
               >
                 <div className="flex justify-between text-sm">
                   <span className="font-medium text-slate-600">
-                    {isSent && m.accepted ? (
+                    {isSent ? (
+                      m.status === "accepted" ? (
                       <span className="text-green-700 flex items-center gap-1">
                         <MdCheckCircle /> Accepted
                       </span>
+                      ) : m.status === "declined" ? (
+                      <span className="text-red-600 flex items-center gap-1">
+                        <MdCancel /> Declined
+                      </span>
+                      ) : (
+                      <span className="text-amber-600 flex items-center gap-1">
+                        <MdInbox /> Pending
+                      </span>
+                      )
                     ) : (
                       "Needs Help"
                     )}
-                  </span>
+                    </span>
                   <span className="text-slate-400">{m.date}</span>
                 </div>
 
@@ -189,6 +271,10 @@ export default function Messages() {
 
                 <p className="text-sm text-slate-600 mt-1">
                   {isSent ? `To: ${m.from}` : `From: ${m.from}`}
+                </p>
+
+                <p className="text-xs text-slate-400 mt-1">
+                  Chat ID: {m.chatId || m.id}
                 </p>
 
                 <p className="mt-3 text-sm italic text-slate-600">“{m.text}”</p>
@@ -217,7 +303,7 @@ export default function Messages() {
                   )}
 
                   {/* SENT */}
-                  {isSent && m.accepted && (
+                  {isSent && m.status === "accepted" && (
                     <>
                       {!m.connected && (
                         <div className="flex flex-col sm:flex-row gap-4">
