@@ -7,6 +7,9 @@ const {
   sendMessage,
   getChatInfo,
   getMyChats,
+  getMyRequests,
+  acceptChat,
+  declineChat,
   deleteChat
 } = require("../controllers/chatController");
 
@@ -17,6 +20,15 @@ router.post("/", createChat);
 
 // Get my chats
 router.get("/my-chats", getMyChats);
+
+// Get my requests
+router.get("/my-requests", getMyRequests);
+
+// Accept chat request
+router.patch("/requests/:chatId/accept", acceptChat);
+
+// Decline chat request
+router.patch("/requests/:chatId/decline", declineChat);
 
 // Get chat info (participants)
 router.get("/:chatId/info", getChatInfo);
