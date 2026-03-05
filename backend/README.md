@@ -102,7 +102,7 @@ Edit own user profile information
 Create a new chat between users  
 🔒 Requires authentication
 
-- **GET /api/chat/:chatId/messages**  
+- **GET /api/chat/:chatId**  
 Get all messages from a chat  
 🔒 Requires authentication
 
@@ -110,6 +110,6 @@ Get all messages from a chat
 Get info about the chat 
 🔒 Requires authentication
 
-- **POST /api/chat/:chatId/messages**  
+- **POST /api/chat/:chatId**  
 Send a new message to a chat  
 🔒 Requires authentication
