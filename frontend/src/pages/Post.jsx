@@ -86,7 +86,7 @@ export default function Post() {
         <input {...title} placeholder="Title" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
         <textarea {...description} placeholder="Description" className="border border-gray-200 rounded-2xl shadow-sm p-3 min-h-24"></textarea>
         {needingHelp && <>
-          <input {...budget} step="0.01" placeholder="Budget" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
+          <input {...budget} step="0.01" min="0" placeholder="Budget" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
           <select
             className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
             {...location}
