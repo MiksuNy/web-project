@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ChatBox from "@/components/chat/ChatBox";
 import {
@@ -17,31 +17,54 @@ export default function Messages() {
   const [tab, setTab] = useState("received");
   const [activeChat, setActiveChat] = useState(null);
 
-  const [received, setReceived] = useState([
-    {
-      id: 1,
-      title: "Can drive you to appointments",
-      from: "Emily R.",
-      text: "Hi! I need a ride to my doctor appointment next Saturday. Would you be available?",
-      date: "2026-01-20",
-    },
-    {
-      id: 2,
-      title: "Free math tutoring for kids",
-      from: "David K.",
-      text: "My son is struggling with algebra. Could you help him after school?",
-      date: "2026-01-19",
-    },
-    {
-      id: 3,
-      title: "Free math tutoring for kids",
-      from: "David K.",
-      text: "My son is struggling with algebra. Could you help him after school?",
-      date: "2026-01-19",
-    },
-  ]);
+  const [received, setReceived] = useState([]);
 
   const [sent, setSent] = useState([]);
+   useEffect(() => {
+    const loadMessages = async () => {
+      try {
+        const rawToken =
+          localStorage.getItem("token") ||
+          JSON.parse(localStorage.getItem("user") || "{}")?.token ||
+          "";
+        const token = String(rawToken).replace(/^Bearer\s+/i, "").trim();
+
+        const userObj = JSON.parse(localStorage.getItem("user") || "{}");
+        const myId = userObj?.id || userObj?._id || userObj?.user?.id || userObj?.user?._id;
+
+        const res = await fetch(`/api/chat/my-chats`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.message || data?.error || "Failed to load chats");
+
+        const mapped = (Array.isArray(data) ? data : []).map((c) => {
+          const other = (c.participants || []).find((p) => String(p._id) !== String(myId));
+
+          return {
+            id: c._id,
+            chatId: c._id,
+            title: c.subject || "General",
+            from: other
+              ? `${other.firstName || ""} ${other.lastName || ""}`.trim() || other.email
+              : "Unknown",
+            text: c.lastMessage?.text || "Open chat",
+            date: c.updatedAt ? new Date(c.updatedAt).toISOString().slice(0, 10) : "",
+            accepted: true,
+            connected: true,
+          };
+        });
+
+        setReceived(mapped);
+        setSent([]);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadMessages();
+  }, []);
 
   // Accept → move to sent with accepted + connected flag
   const accept = (msg) => {
