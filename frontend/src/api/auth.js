@@ -1,8 +1,6 @@
-const API_URL = "http://localhost:5000";
-
 // LOGIN
 const login = async (email, password) => {
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch(`/api/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,7 +19,7 @@ const login = async (email, password) => {
 
 // REGISTER
 const register = async (firstName, lastName, email, password, dateOfBirth, location, phone) => {
-  const res = await fetch(`${API_URL}/auth/register`, {
+  const res = await fetch(`/api/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -40,7 +38,7 @@ const register = async (firstName, lastName, email, password, dateOfBirth, locat
 
 // ME
 const me = async (token) => {
-  const res = await fetch(`${API_URL}/auth/userinfo`, {
+  const res = await fetch(`/api/auth/userinfo`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

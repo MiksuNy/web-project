@@ -30,66 +30,82 @@ npm run dev
 
 4. **API Endpoints**
 
-**Authentication**
+### Authentication
 
-- **POST /auth/register**
+- **POST /api/auth/register**
 Register a new user with validated credentials
 
-- **POST /auth/login**
+- **POST /api/auth/login**
 Authenticate user and return JWT token
 
-- **GET /auth/userinfo**
+- **GET /api/auth/userinfo**
 Get authenticated user information
 🔒 Requires authentication
 
-- **PUT /auth/edit**
+- **PUT /api/auth/edit**
 Edit user information
 🔒 Requires authentication
 
-- **PUT /auth/change-password**
+- **PUT /api/auth/change-password**
 Edit user password
 🔒 Requires authentication
 
-- **DELETE /auth/delete**
+- **DELETE /api/auth/delete**
 Delete user information
 🔒 Requires authentication
 
-**Locations**
+### Locations
 
 - **GET /api/locations**
 Get info about municipalities
 
-**Posts**
+### Posts
 
-- **GET /posts**
+- **GET /api/posts**
 Get all posts
 
-- **GET /posts/user/:userId**
+- **GET /api/posts/user/:userId**
 Get info about all posts of a user
 
-- **GET /posts/:postId**
+- **GET /api/posts/:postId**
 Get info about single post by ID
 
-- **POST /posts**
+- **POST /api/posts**
 Create a new post
 🔒 Requires authentication
 
-- **PUT /posts/:postId**
+- **PUT /api/posts/:postId**
 Edit user post
 🔒 Requires authentication
 
-- **DELETE /posts/:postId**
+- **DELETE /api/posts/:postId**
 Delete user post
 🔒 Requires authentication
 
-- **AI /ai/ask**
+### AI
+
+- **AI /api/ai/ask**
 Communicate with AI
 
-**User Profile**
+### User Profile
 
-- **GET /users/:userId**
+- **GET /api/users/:userId**
 Get user profile data with id
 
-- **PUT /users**
+- **PUT /api/users**
 Edit own user profile information
+🔒 Requires authentication
+
+### Chat
+
+- **POST /api/chat**  
+Create a new chat between users  
+🔒 Requires authentication
+
+- **GET /api/chat/:chatId/messages**  
+Get all messages from a chat  
+🔒 Requires authentication
+
+- **POST /api/chat/:chatId/messages**  
+Send a new message to a chat  
 🔒 Requires authentication

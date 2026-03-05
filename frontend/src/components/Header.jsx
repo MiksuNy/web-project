@@ -2,14 +2,16 @@ import CreatePostForm from "./CreatePostForm/CreatePostForm";
 
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router";
-import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { FaCaretLeft } from "react-icons/fa";
+import { MdLogin, MdLogout, MdSettings, MdShield, MdPerson } from "react-icons/md";
 import { FaInbox, FaPlus } from "react-icons/fa";
-import { MdPerson } from "react-icons/md";
 
 const Header = ({
   title = "HelpConnect",
   subtitle = "Connect with your community",
+  inAdminPanel = false,
+  fixed = false,
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
@@ -25,7 +27,6 @@ const Header = ({
     setShowProfileMenu((prev) => !prev);
   }
 
-  // clean & correct version from main
   useEffect(() => {
     function handleClick(e) {
       if (
@@ -65,7 +66,6 @@ const Header = ({
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-3">
-          {/* LOGIN / USER AREA */}
           {!userFetching &&
             (!user ? (
               <button
@@ -78,7 +78,6 @@ const Header = ({
             ) : (
               <>
                 <div className="flex flex-row gap-3 content-center">
-                  {/* Messages Button (your feature stays) */}
                   <button
                     onClick={() => navigate("/messages")}
                     className="relative flex items-center gap-2 px-4 py-1"
@@ -86,13 +85,11 @@ const Header = ({
                     <FaInbox />
                     <span className="font-medium opacity-80">Messages</span>
 
-                    {/* badge */}
                     <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-red-500 rounded-full shadow">
                       3
                     </span>
                   </button>
 
-                  {/* Post Button */}
                   <button
                     className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
                     onClick={() => setShowCreatePost(!showCreatePost)}
@@ -101,7 +98,6 @@ const Header = ({
                     Post
                   </button>
 
-                  {/* Profile Avatar */}
                   <div
                     className="m-auto w-10 h-10 rounded-full overflow-hidden border border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none cursor-pointer"
                     ref={profileIconRef}
@@ -112,48 +108,60 @@ const Header = ({
                   </div>
                 </div>
 
-                {/* Profile Menu */}
                 {showProfileMenu && (
-  <div
-    className="absolute top-16 right-8 w-56 bg-background border border-border rounded-lg shadow-md py-1 z-50"
-    ref={profileMenuRef}
-  >
-    <div className="flex flex-col">
+                  <div
+                    className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50"
+                    ref={profileMenuRef}
+                  >
+                    {!inAdminPanel && user.role === "admin" && (
+                      <span
+                        onClick={() => navigate("/admin")}
+                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                      >
+                        <MdShield />
+                        Admin Panel
+                      </span>
+                    )}
 
-      <div
-        className="flex items-center gap-3 px-4 py-2 text-sm cursor-pointer hover:bg-gray-100"
-      >
-        <MdSettings size={18} />
-        Settings
-      </div>
+                    {inAdminPanel && user.role === "admin" && (
+                      <span
+                        onClick={() => navigate("/")}
+                        className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                      >
+                        <FaCaretLeft />
+                        Return to App
+                      </span>
+                    )}
 
-      <div
-        onClick={() => {
-          navigate("/profile");
-          setShowProfileMenu(false);
-        }}
-        className="flex items-center gap-3 px-4 py-2 text-sm cursor-pointer hover:bg-gray-100"
-      >
-        <MdPerson size={18} />
-        Profile
-      </div>
+                    {/* فقط این اضافه شده */}
+                    <span
+                      onClick={() => {
+                        navigate("/profile");
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                    >
+                      <MdPerson />
+                      Profile
+                    </span>
 
-      <div className="my-1 border-t border-border" />
+                    <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
+                      <MdSettings />
+                      Settings
+                    </span>
 
-      <div
-        onClick={async () => {
-          await logout();
-          navigate("/");
-        }}
-        className="flex items-center gap-3 px-4 py-2 text-sm text-red-500 cursor-pointer hover:bg-gray-100"
-      >
-        <MdLogout size={18} />
-        Log Out
-      </div>
-
-    </div>
-  </div>
-)}
+                    <span
+                      onClick={async () => {
+                        await logout();
+                        navigate("/");
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                    >
+                      <MdLogout />
+                      Log Out
+                    </span>
+                  </div>
+                )}
               </>
             ))}
         </div>
