@@ -1,23 +1,30 @@
+// clean and validate token
 const cleanToken = (token) => {
-  if (!token) {
-    throw new Error("Missing authentication token");
-  }
-  
+  if (!token) throw new Error("Missing authentication token");
   const clean = typeof token === "string" ? token.replace(/^Bearer\s+/i, "").trim() : "";
-  if (!clean) {
-    throw new Error("Missing authentication token");
-  }
+  if (!clean) throw new Error("Missing authentication token");
   return clean;
 };
 
-export const createOrGetChat = async (otherUserId, token, subject = "General") => {
+// get token from localStorage (if exists) and clean it
+const getStoredToken = () => {
+  const fromToken = localStorage.getItem("token");
+  const fromUser = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+  return cleanToken(fromToken || fromUser || "");
+};
+
+const authHeader = (token) => ({
+  Authorization: `Bearer ${cleanToken(token || getStoredToken())}`,
+});
+
+export const createOrGetChat = async (otherUserId, token, subject = "General", text) => {
   const res = await fetch(`/api/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${cleanToken(token)}`,
+      ...authHeader(token),
     },
-    body: JSON.stringify({ otherUserId, subject }),
+    body: JSON.stringify({ otherUserId, subject, text }),
   });
 
   const data = await res.json().catch(() => ({}));
@@ -27,9 +34,7 @@ export const createOrGetChat = async (otherUserId, token, subject = "General") =
 
 export const getMessages = async (chatId, token) => {
   const res = await fetch(`/api/chat/${chatId}`, {
-    headers: {
-      Authorization: `Bearer ${cleanToken(token)}`,
-    },
+    headers: authHeader(token),
   });
 
   const data = await res.json().catch(() => []);
@@ -39,9 +44,7 @@ export const getMessages = async (chatId, token) => {
 
 export const getChatInfo = async (chatId, token) => {
   const res = await fetch(`/api/chat/${chatId}/info`, {
-    headers: {
-      Authorization: `Bearer ${cleanToken(token)}`,
-    },
+    headers: authHeader(token),
   });
 
   const data = await res.json().catch(() => ({}));
@@ -54,7 +57,7 @@ export const sendMessage = async (chatId, text, token) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${cleanToken(token)}`,
+      ...authHeader(token),
     },
     body: JSON.stringify({ text }),
   });
@@ -64,21 +67,49 @@ export const sendMessage = async (chatId, text, token) => {
   return data;
 };
 
+// accepted chats
 export const getMyChats = async (token) => {
-  console.log("getMyChats called with token:", token?.substring(0, 20) + "...");
-  const cleanedToken = cleanToken(token);
-  console.log("Cleaned token:", cleanedToken.substring(0, 20) + "...");
-  
   const res = await fetch(`/api/chat/my-chats`, {
-    headers: {
-      Authorization: `Bearer ${cleanedToken}`,
-    },
+    headers: authHeader(token),
   });
 
-  console.log("Response status:", res.status);
   const data = await res.json().catch(() => []);
-  console.log("Response data:", data);
-  
   if (!res.ok) throw new Error(data.message || data.error || "Fetching chats failed");
   return data;
 };
+
+// pending incoming requests
+export const getMyRequests = async (token) => {
+  const res = await fetch(`/api/chat/my-requests`, {
+    headers: authHeader(token),
+  });
+
+  const data = await res.json().catch(() => []);
+  if (!res.ok) throw new Error(data.message || data.error || "Fetching requests failed");
+  return data;
+};
+
+// accept pending request
+export const acceptChatRequest = async (chatId, token) => {
+  const res = await fetch(`/api/chat/requests/${chatId}/accept`, {
+    method: "PATCH",
+    headers: authHeader(token),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || data.error || "Accept request failed");
+  return data;
+};
+
+export const declineChatRequest = async (chatId, token) => {
+  const res = await fetch(`/api/chat/requests/${chatId}/decline`, {
+    method: "PATCH",
+    headers: authHeader(token),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || data.error || "Decline request failed");
+  return data;
+};
+
+export { getStoredToken };
