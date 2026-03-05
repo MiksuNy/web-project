@@ -1,11 +1,8 @@
-// const user = JSON.parse(localStorage.getItem("user"));
-  // const token = user ? user.token : null;
-
 const cleanToken = (token) => {
   if (!token) {
     throw new Error("Missing authentication token");
   }
-  // Remove "Bearer " prefix if present, otherwise return as-is
+  
   const clean = typeof token === "string" ? token.replace(/^Bearer\s+/i, "").trim() : "";
   if (!clean) {
     throw new Error("Missing authentication token");
