@@ -102,14 +102,34 @@ Edit own user profile information
 Create a new chat between users  
 🔒 Requires authentication
 
-- **GET /api/chat/:chatId**  
-Get all messages from a chat  
+- **GET /api/chat/my-chats**  
+Get user chats
+🔒 Requires authentication
+
+- **GET /api/chat/my-requests**  
+Get user requests
+🔒 Requires authentication
+
+- **PATCH /api/chat/requests/:chatId/accept**  
+Accept chat request
+🔒 Requires authentication
+
+- **PATCH /api/chat/requests/:chatId/decline**  
+Decline chat request
 🔒 Requires authentication
 
 - **GET /api/chat/:chatId/info**  
 Get info about the chat 
 🔒 Requires authentication
 
+- **GET /api/chat/:chatId**  
+Get all messages from a chat  
+🔒 Requires authentication
+
 - **POST /api/chat/:chatId**  
 Send a new message to a chat  
+🔒 Requires authentication
+
+- **DELETE /api/chat/:chatId**  
+Delete chat
 🔒 Requires authentication
