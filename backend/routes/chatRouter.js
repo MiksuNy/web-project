@@ -5,6 +5,12 @@ const {
   createChat,
   getMessages,
   sendMessage,
+  getChatInfo,
+  getMyChats,
+  getMyRequests,
+  acceptChat,
+  declineChat,
+  deleteChat
 } = require("../controllers/chatController");
 
 router.use(auth);
@@ -12,10 +18,28 @@ router.use(auth);
 // Create chat
 router.post("/", createChat);
 
+// Get my chats
+router.get("/my-chats", getMyChats);
+
+// Get my requests
+router.get("/my-requests", getMyRequests);
+
+// Accept chat request
+router.patch("/requests/:chatId/accept", acceptChat);
+
+// Decline chat request
+router.patch("/requests/:chatId/decline", declineChat);
+
+// Get chat info (participants)
+router.get("/:chatId/info", getChatInfo);
+
 // Get messages
-router.get("/:chatId/messages", getMessages);
+router.get("/:chatId", getMessages);
 
 // Send message
-router.post("/:chatId/messages", sendMessage);
+router.post("/:chatId", sendMessage);
+
+// Delete chat
+router.delete("/:chatId", deleteChat);
 
 module.exports = router;
