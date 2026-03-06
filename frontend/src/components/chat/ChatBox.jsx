@@ -1,72 +1,108 @@
-
 import { useEffect, useRef, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
+import { getMessages, getChatInfo, sendMessage, getStoredToken } from "@/api/chat";
 
-const now = () =>
-  new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+const fmtTime = (d) =>
+  new Date(d || Date.now()).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-export default function ChatBox({ chat, onBack }) {
-  const peer = chat?.from ?? "Sarah M.";
-  const title = chat?.title ?? "Can drive you to appointments";
+const decodeUserIdFromToken = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload?._id || payload?.id || payload?.sub || "";
+  } catch {
+    return "";
+  }
+};
 
-  const [messages, setMessages] = useState([
-    {
-      id: 900,
-      type: "system",
-      text: `You are now connected with ${peer}. You can discuss details about "${title}".`,
-    },
-    {
-      id: 1,
-      text: chat?.text ?? "Hi! Would you be available?",
-      mine: false,
-      time: "11:33 AM",
-      senderName: peer,
-    },
-  ]);
+export default function ChatBox({ chat, onBack, onChanged }) {
+  const token = getStoredToken();
+  const userObj = JSON.parse(localStorage.getItem("user") || "{}");
+  const myId =
+    userObj?.id ||
+    userObj?._id ||
+    userObj?.user?.id ||
+    userObj?.user?._id ||
+    decodeUserIdFromToken(token);
 
+  const chatId = chat?._id || chat?.chatId;
+
+  const [peer, setPeer] = useState(chat?.from ?? "User");
+  const [title, setTitle] = useState(chat?.title ?? "General");
+  const [messages, setMessages] = useState([]);
   const bottomRef = useRef(null);
-  useEffect(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
 
-  const send = (text) => {
-    const id = Date.now();
-    setMessages((m) => [...m, { id, text, mine: true, time: now(), seen: false }]);
+  useEffect(() => {
+    const load = async () => {
+      if (!chatId) return;
 
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
-        { id: id + 1, text: "Got it 👍", mine: false, time: now(), senderName: peer },
+      const info = await getChatInfo(chatId, token);
+      setTitle(info?.subject || "General");
+
+      const other = (info?.participants || []).find(
+        (p) => String(p?._id || p) !== String(myId),
+      );
+
+      const peerName = other
+        ? `${other?.firstName || ""} ${other?.lastName || ""}`.trim() ||
+          other?.email ||
+          "User"
+        : "User";
+
+      setPeer(peerName);
+
+      const list = await getMessages(chatId, token);
+
+      const mapped = (Array.isArray(list) ? list : []).map((m) => {
+        const senderId = String(m?.sender?._id || m?.sender || "");
+        const mine = senderId === String(myId);
+
+        return {
+          id: m._id,
+          text: m.text,
+          mine,
+          time: fmtTime(m.createdAt),
+          senderName: mine ? "You" : peerName,
+        };
+      });
+
+      setMessages(mapped);
+    };
+
+    load().catch(console.error);
+  }, [chatId, token, myId]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const onSend = async (text) => {
+    const value = (text || "").trim();
+    if (!value || !chatId) return;
+
+    try {
+      const saved = await sendMessage(chatId, value, token);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: saved._id,
+          text: saved.text,
+          mine: true,
+          time: fmtTime(saved.createdAt),
+          senderName: "You",
+        },
       ]);
-    }, 900);
 
-    setTimeout(() => {
-      setMessages((m) => m.map((x) => (x.id === id ? { ...x, seen: true } : x)));
-    }, 1200);
-  };
-
-  const sendLocation = () => {
-    const id = Date.now();
-    setMessages((m) => [
-      ...m,
-      { id, mine: true, type: "location_pending", text: "📍 Sharing location...", time: now(), seen: false },
-    ]);
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setMessages((m) =>
-          m.map((x) =>
-            x.id === id
-              ? { ...x, type: "location", lat: pos.coords.latitude, lng: pos.coords.longitude }
-              : x
-          )
-        );
-      },
-      () => {
-        setMessages((m) => m.map((x) => (x.id === id ? { ...x, text: "Location unavailable" } : x)));
-      },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-    );
+      onChanged?.();
+      window.dispatchEvent(new Event("chat:updated"));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -94,7 +130,7 @@ export default function ChatBox({ chat, onBack }) {
           <div ref={bottomRef} />
         </div>
 
-        <ChatInput onSend={send} onSendLocation={sendLocation} />
+        <ChatInput onSend={onSend} />
       </div>
     </div>
   );
