@@ -110,6 +110,10 @@ Get user chats
 Get user requests
 🔒 Requires authentication
 
+- **PATCH /api/chat/requests/:chatId/reopen**  
+New request after decline
+🔒 Requires authentication
+
 - **PATCH /api/chat/requests/:chatId/accept**  
 Accept chat request
 🔒 Requires authentication
