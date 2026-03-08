@@ -1,303 +1,182 @@
 import { useState, useEffect } from "react";
-import {
-FiArrowLeft,
-FiUser,
-FiMail,
-FiPhone,
-FiMapPin,
-FiFileText
-} from "react-icons/fi";
+import { MdPerson, MdEmail, MdPhone, MdLocationOn, MdInfo } from "react-icons/md";
 
-import { useNavigate } from "react-router-dom";
+function Settings() {
 
-export default function Settings(){
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    bio: ""
+  });
 
-const navigate = useNavigate();
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("profile")) || {};
+    setForm(saved);
+  }, []);
 
-const [form,setForm] = useState({
-name:"",
-email:"",
-phone:"",
-location:"",
-bio:""
-});
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-/* LOAD USER */
+  const handleSave = () => {
+    localStorage.setItem("profile", JSON.stringify(form));
+    alert("Saved!");
+  };
 
-useEffect(()=>{
+  return (
+    <div className="min-h-screen bg-muted/20 p-6">
 
-const saved =
-JSON.parse(localStorage.getItem("profileUser") || "{}");
+      {/* Header */}
+      <div className="max-w-6xl mx-auto mb-6">
+        <h1 className="text-2xl font-semibold">Settings</h1>
+        <p className="text-sm text-muted-foreground">
+          Manage your account and preferences
+        </p>
+      </div>
 
-setForm({
-name:saved.name || "",
-email:saved.email || "",
-phone:saved.phone || "",
-location:saved.location || "",
-bio:saved.bio || ""
-});
+      <div className="max-w-6xl mx-auto grid grid-cols-4 gap-6">
 
-},[]);
+        {/* LEFT SIDEBAR */}
+        <div className="bg-card border rounded-xl p-4 h-fit">
 
+          <div className="space-y-2">
 
-/* INPUT CHANGE */
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-green-100 text-green-700 font-medium">
+              <MdPerson />
+              Account
+            </div>
 
-function handleChange(e){
+            <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent cursor-pointer">
+              Notifications
+            </div>
 
-setForm({
-...form,
-[e.target.name]:e.target.value
-});
+            <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent cursor-pointer">
+              Privacy
+            </div>
 
+            <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent cursor-pointer">
+              Accessibility
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* RIGHT CONTENT */}
+        <div className="col-span-3 bg-card border rounded-xl p-6 shadow-sm">
+
+          <h2 className="text-lg font-semibold mb-1">
+            Account Information
+          </h2>
+
+          <p className="text-sm text-muted-foreground mb-6">
+            Update your personal details and profile information
+          </p>
+
+          <div className="space-y-5">
+
+            {/* Name */}
+            <div>
+              <label className="text-sm font-medium flex items-center gap-2">
+                <MdPerson /> Full Name
+              </label>
+
+              <input
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                className="mt-2 w-full p-3 border rounded-lg bg-input-background"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="text-sm font-medium flex items-center gap-2">
+                <MdEmail /> Email Address
+              </label>
+
+              <input
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                className="mt-2 w-full p-3 border rounded-lg bg-input-background"
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="text-sm font-medium flex items-center gap-2">
+                <MdPhone /> Phone Number
+              </label>
+
+              <input
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                className="mt-2 w-full p-3 border rounded-lg bg-input-background"
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="text-sm font-medium flex items-center gap-2">
+                <MdLocationOn /> Location
+              </label>
+
+              <input
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                className="mt-2 w-full p-3 border rounded-lg bg-input-background"
+              />
+            </div>
+
+            {/* Bio */}
+            <div>
+              <label className="text-sm font-medium flex items-center gap-2">
+                <MdInfo /> Bio
+              </label>
+
+              <textarea
+                name="bio"
+                rows="4"
+                value={form.bio}
+                onChange={handleChange}
+                className="mt-2 w-full p-3 border rounded-lg bg-input-background"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3 pt-4">
+
+              <button
+                onClick={handleSave}
+                className="button-primary px-5 py-2 rounded-lg"
+              >
+                Save Changes
+              </button>
+
+              <button className="button-secondary px-5 py-2 rounded-lg">
+                Cancel
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
 }
 
-
-/* SAVE SETTINGS */
-
-function saveSettings(){
-
-localStorage.setItem(
-"profileUser",
-JSON.stringify(form)
-);
-
-navigate("/profile",{
-state:{updatedUser:form}
-});
-
-}
-
-
-return(
-
-<div className="max-w-6xl mx-auto px-6 py-8">
-
-{/* HEADER */}
-
-<div className="flex items-center gap-3 mb-8">
-
-<button
-onClick={()=>navigate(-1)}
-className="flex items-center gap-2 text-sm"
->
-
-<FiArrowLeft/>
-Back
-
-</button>
-
-<div>
-
-<h1 className="text-xl font-semibold">
-Settings
-</h1>
-
-<p className="text-sm text-muted-foreground">
-Manage your account and preferences
-</p>
-
-</div>
-
-</div>
-
-
-<div className="grid md:grid-cols-4 gap-6">
-
-
-{/* SIDEBAR */}
-
-<div className="bg-card rounded-xl p-4 shadow-md h-fit">
-
-<ul className="space-y-3 text-sm">
-
-<li className="bg-green-100 text-green-700 px-3 py-2 rounded-md">
-Account
-</li>
-
-<li className="px-3 py-2 text-muted-foreground">
-Notifications
-</li>
-
-<li className="px-3 py-2 text-muted-foreground">
-Privacy
-</li>
-
-<li className="px-3 py-2 text-muted-foreground">
-Accessibility
-</li>
-
-</ul>
-
-</div>
-
-
-
-{/* FORM */}
-
-<div className="md:col-span-3 bg-card rounded-xl shadow-md p-6 space-y-6">
-
-<div>
-
-<h2 className="font-semibold">
-Account Information
-</h2>
-
-<p className="text-sm text-muted-foreground">
-Update your personal details and profile information
-</p>
-
-</div>
-
-
-{/* NAME */}
-
-<div>
-
-<label className="text-sm flex items-center gap-2 mb-1">
-
-<FiUser/>
-Full Name
-
-</label>
-
-<input
-name="name"
-value={form.name}
-onChange={handleChange}
-className="w-full border border-border rounded-md p-2"
-/>
-
-<p className="text-xs text-muted-foreground mt-1">
-This name will be visible to other users
-</p>
-
-</div>
-
-
-{/* EMAIL */}
-
-<div>
-
-<label className="text-sm flex items-center gap-2 mb-1">
-
-<FiMail/>
-Email Address
-
-</label>
-
-<input
-name="email"
-value={form.email}
-onChange={handleChange}
-className="w-full border border-border rounded-md p-2"
-/>
-
-<p className="text-xs text-muted-foreground mt-1">
-Used for login and notifications
-</p>
-
-</div>
-
-
-{/* PHONE */}
-
-<div>
-
-<label className="text-sm flex items-center gap-2 mb-1">
-
-<FiPhone/>
-Phone Number (Optional)
-
-</label>
-
-<input
-name="phone"
-value={form.phone}
-onChange={handleChange}
-className="w-full border border-border rounded-md p-2"
-/>
-
-</div>
-
-
-{/* LOCATION */}
-
-<div>
-
-<label className="text-sm flex items-center gap-2 mb-1">
-
-<FiMapPin/>
-Location (Optional)
-
-</label>
-
-<input
-name="location"
-value={form.location}
-onChange={handleChange}
-className="w-full border border-border rounded-md p-2"
-/>
-
-</div>
-
-
-{/* BIO */}
-
-<div>
-
-<label className="text-sm flex items-center gap-2 mb-1">
-
-<FiFileText/>
-Bio (Optional)
-
-</label>
-
-<textarea
-name="bio"
-value={form.bio}
-onChange={handleChange}
-className="w-full border border-border rounded-md p-2 h-28"
-/>
-
-<p className="text-xs text-muted-foreground mt-1">
-Share your interests or what you like helping with
-</p>
-
-</div>
-
-
-{/* BUTTONS */}
-
-<div className="flex gap-3">
-
-<button
-onClick={saveSettings}
-className="button-primary px-4 py-2 rounded-md"
->
-
-Save Changes
-
-</button>
-
-<button
-onClick={()=>navigate(-1)}
-className="border border-border px-4 py-2 rounded-md"
->
-
-Cancel
-
-</button>
-
-</div>
-
-
-</div>
-
-</div>
-
-</div>
-
-)
-
-}
+export default Settings;
