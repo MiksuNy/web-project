@@ -16,6 +16,7 @@ import AnalyticsPage from "./pages/AdminDashboard/pages/AnalyticsPage";
 import ActivityPage from "./pages/AdminDashboard/pages/ActivityPage";
 import Post from "./pages/Post";
 import Messages from "@/pages/Messages";
+import Settings from "@/pages/Settings";
 
 function App() {
   const { user } = useAuth();
@@ -35,6 +36,7 @@ function App() {
           <Route index element={<MainPage />} />
           <Route path="posts" element={<PostsPage />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="connections" element={<ConnectionsPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="activity" element={<ActivityPage />} />
