@@ -86,6 +86,10 @@ const sendMessage = async (req, res) => {
     const me = req.user.id;
     const { text } = req.body;
 
+    if (!text || !text.trim()) {
+      return res.status(400).json({ message: "Message text is required" });
+    }
+
     const chat = await Chat.findById(req.params.chatId);
     if (!chat) return res.status(404).json({ message: "Chat not found" });
     if (chat.status !== "accepted") {
@@ -97,11 +101,13 @@ const sendMessage = async (req, res) => {
     );
     if (!isParticipant) return res.status(403).json({ message: "Not allowed" });
 
+    const receiver = chat.participants.find((p) => p.toString() !== me.toString());
+
     const message = await Message.create({
       chatId: req.params.chatId,
       sender: me,
-      receiver: chat.participants.find((p) => p.toString() !== me.toString()),
-      text,
+      receiver,
+      text: text.trim(),
     });
 
     await Chat.findByIdAndUpdate(req.params.chatId, {
@@ -109,9 +115,26 @@ const sendMessage = async (req, res) => {
       updatedAt: Date.now(),
     });
 
-    res.json(message);
+    // Emit socket events for realtime UI (chat + unread badge)
+    const io = req.app.get("io");
+    if (io) {
+      const payload = {
+        _id: message._id,
+        chatId: String(req.params.chatId),
+        sender: String(me),
+        text: message.text,
+        createdAt: message.createdAt,
+      };
+
+      io.to(String(req.params.chatId)).emit("receive_message", payload); // open chat window
+      if (receiver) {
+        io.to(`user:${String(receiver)}`).emit("new_message", payload); // Messages list/header unread
+      }
+    }
+
+    return res.status(201).json(message);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
