@@ -1,17 +1,15 @@
-import CreatePostForm from "./CreatePostForm/CreatePostForm";
-
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { FaCaretLeft } from "react-icons/fa";
 import { MdLogin, MdLogout, MdSettings, MdShield, MdPerson } from "react-icons/md";
+import { IoSearch } from "react-icons/io5";
 import { FaInbox, FaPlus } from "react-icons/fa";
 
 const Header = ({
   title = "HelpConnect",
   subtitle = "Connect with your community",
   inAdminPanel = false,
-  
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();
@@ -20,7 +18,6 @@ const Header = ({
   const profileMenuRef = useRef(null);
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showCreatePost, setShowCreatePost] = useState(false);
 
   function profileIconClicked(e) {
     e.preventDefault();
@@ -44,8 +41,17 @@ const Header = ({
 
   return (
     <>
-      <header className="flex justify-between items-center h-17.5 px-8 border-b border-border bg-background z-99">
-        {/* LEFT */}
+      <header className="top-0 fixed md:relative flex gap-3 justify-between items-center w-full h-17.5 p-4 md:px-8 border-b border-border bg-background z-99">
+        {/* mobile search bar */}
+
+        {/*
+        TODO: this will be implemented later
+        <div className="md:hidden flex flex-row gap-2 py-2 px-3 items-center text-gray-500 border border-border rounded-full w-full shadow-md/5">
+          <IoSearch /> Search...
+        </div>
+        */}
+
+        {/* left */}
         <div
           className="flex items-center gap-3 text-green-600 select-none cursor-pointer"
           onClick={() => navigate("/")}
@@ -80,19 +86,21 @@ const Header = ({
                 <div className="flex flex-row gap-3 content-center">
                   <button
                     onClick={() => navigate("/messages")}
-                    className="relative flex items-center gap-2 px-4 py-1"
+                    className="relative hidden md:flex items-center gap-2 px-4 py-1"
                   >
                     <FaInbox />
                     <span className="font-medium opacity-80">Messages</span>
 
-                    <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-red-500 rounded-full shadow">
+                    {/* badge */}
+                    <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-green-600 rounded-full shadow">
                       3
                     </span>
                   </button>
 
+                  {/* Post Button */}
                   <button
-                    className="flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
-                    onClick={() => setShowCreatePost(!showCreatePost)}
+                    className="hidden md:flex flex-row gap-2 justify-center items-center border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 hover:from-green-600 hover:to-green-700 active:from-green-700 active:to-green-800 transition-colors px-4 py-1 rounded-full text-white select-none cursor-pointer"
+                    onClick={() => navigate("/post")}
                   >
                     <FaPlus />
                     Post
@@ -133,7 +141,6 @@ const Header = ({
                       </span>
                     )}
 
-                    {/* فقط این اضافه شده */}
                     <span
                       onClick={() => {
                         navigate("/profile");
@@ -166,10 +173,6 @@ const Header = ({
             ))}
         </div>
       </header>
-
-      {showCreatePost && (
-        <CreatePostForm onClose={() => setShowCreatePost(false)} />
-      )}
     </>
   );
 };

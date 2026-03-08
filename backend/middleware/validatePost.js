@@ -1,16 +1,18 @@
 const validatePost = (req, res, next) => {
-  const { type, title, description, category, location, budget } = req.body;
+  const { type, title, description, category, budget } = req.body;
 
   if (!["offer", "request"].includes(type)) {
     return res.status(400).json({ message: "Invalid type" });
   }
 
-  if (!title || !description || !category || !location) {
+  // Location is defaulted to user's location in the controller, so it's not required here
+  // It can also be set by the user, so we allow it to be optional
+  if (!title || !description || !category) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  if (type === "request" && budget !== undefined && isNaN(budget)) {
-    return res.status(400).json({ message: "Budget must be a number" });
+  if (type === "request" && (budget !== undefined || isNaN(budget) || parseFloat(budget) < 0)) {
+    return res.status(400).json({ message: "Invalid budget" });
   }
 
   next();

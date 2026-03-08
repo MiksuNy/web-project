@@ -69,9 +69,9 @@ export default function Messages() {
 
   return (
     <main className="absolute py-10 z-0 left-0 right-0 top-0 bottom-0 flex items-center justify-center pt-17 pb-18">
-      <div className="max-w-5xl w-10/12 h-full mx-auto border-x border-slate-200 bg-white flex flex-col">
+      <div className="max-w-5xl w-full md:w-10/12 h-full mx-auto md:border-x border-slate-200 bg-white flex flex-col">
         {/* HEADER */}
-        <div className="h-15 px-6 flex items-center justify-between shrink-0">
+        <div className="h-15 px-6 hidden md:flex items-center justify-between shrink-0">
           <span className="text-lg font-semibold">Messages</span>
 
           <Link
@@ -174,7 +174,7 @@ export default function Messages() {
                 <div className="mt-6">
                   {/* RECEIVED */}
                   {!isSent && (
-                    <div className="flex gap-4">
+                    <div className="flex flex-row gap-4">
                       <button
                         onClick={() => accept(m)}
                         className="button-primary flex items-center gap-2 justify-center text-nowrap"
@@ -197,7 +197,7 @@ export default function Messages() {
                   {isSent && m.accepted && (
                     <>
                       {!m.connected && (
-                        <div className="flex gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4">
                           <button
                             onClick={() => confirmConnection(m)}
                             className="button-primary flex items-center gap-2 justify-center text-nowrap"

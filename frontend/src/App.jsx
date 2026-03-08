@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
-import { AuthProvider } from "./context/AuthContext";
+
+import { useAuth } from "./context/AuthContext";
 
 import MainLayout from "./pages/MainLayout";
 import Login from "./pages/Login";
@@ -15,60 +16,47 @@ import ConnectionsPage from "./pages/AdminDashboard/pages/ConnectionsPage";
 import AnalyticsPage from "./pages/AdminDashboard/pages/AnalyticsPage";
 import ActivityPage from "./pages/AdminDashboard/pages/ActivityPage";
 
+import Post from "./pages/Post";
 import Messages from "@/pages/Messages";
 
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
-
 import PostPage from "./pages/PostPage";
 
 function App() {
+  const { user } = useAuth();
+
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        {/* MAIN APP */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
 
-          {/* MAIN APP */}
-          <Route path="/" element={<MainLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-            <Route index element={<Home />} />
+          <Route path="/messages" element={<Messages />} />
 
-            <Route path="login" element={<Login />} />
+          <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
+          <Route path="/post/:id" element={<PostPage />} />
 
-            <Route path="register" element={<Register />} />
-            <Route path="post/:id" element={<PostPage />} />
+          {/* profile */}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
+        </Route>
 
-            {/* messages */}
-            <Route path="messages" element={<Messages />} />
-
-            {/* profile */}
-            <Route path="profile" element={<Profile />} />
-
-            <Route path="profile/edit" element={<EditProfile />} />
-
-          </Route>
-
-
-          {/* ADMIN DASHBOARD */}
-          <Route path="/admin" element={<AdminDashboardSidePanel />}>
-
-            <Route index element={<MainPage />} />
-
-            <Route path="posts" element={<PostsPage />} />
-
-            <Route path="users" element={<UsersPage />} />
-
-            <Route path="connections" element={<ConnectionsPage />} />
-
-            <Route path="analytics" element={<AnalyticsPage />} />
-
-            <Route path="activity" element={<ActivityPage />} />
-
-          </Route>
-
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+        {/* ADMIN DASHBOARD */}
+        <Route path="/admin" element={<AdminDashboardSidePanel />}>
+          <Route index element={<MainPage />} />
+          <Route path="posts" element={<PostsPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="connections" element={<ConnectionsPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="activity" element={<ActivityPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
