@@ -30,21 +30,27 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* MAIN APP */}
         <Route path="/" element={<MainLayout />}>
+
           <Route index element={<Home />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
 
-          <Route path="/messages" element={<Messages />} />
+          <Route path="messages" element={<Messages />} />
 
-          <Route path="/post" element={user ? <Post /> : <Navigate to="/" />} />
-          <Route path="/post/:id" element={<PostPage />} />
+          <Route path="post" element={user ? <Post /> : <Navigate to="/" />} />
+          <Route path="post/:id" element={<PostPage />} />
 
           {/* profile */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="profile/edit" element={<EditProfile />} />
+
+          {/* settings */}
+          <Route path="settings" element={<Settings />} />
+
         </Route>
 
         {/* ADMIN DASHBOARD */}
@@ -57,6 +63,7 @@ function App() {
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="activity" element={<ActivityPage />} />
         </Route>
+
       </Routes>
     </BrowserRouter>
   );
