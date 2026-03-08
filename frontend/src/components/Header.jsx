@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { FaCaretLeft } from "react-icons/fa";
-import { MdLogin, MdLogout, MdSettings, MdShield, MdPerson } from "react-icons/md";
+import {
+  MdLogin,
+  MdLogout,
+  MdSettings,
+  MdShield,
+  MdPerson,
+} from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaInbox, FaPlus } from "react-icons/fa";
 
@@ -152,7 +158,13 @@ const Header = ({
                       Profile
                     </span>
 
-                    <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
+                    <span
+                      onClick={() => {
+                        navigate("/settings");
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
+                    >
                       <MdSettings />
                       Settings
                     </span>
