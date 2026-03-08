@@ -219,8 +219,10 @@ const declineChat = async (req, res) => {
     const isParticipant = chat.participants.some((p) => String(p) === String(me));
     if (!isParticipant) return res.status(403).json({ message: "Not allowed" });
 
-    if (chat.status !== "pending") {
-      return res.status(400).json({ message: "Only pending requests can be declined" });
+    if (!["pending", "accepted"].includes(chat.status)) {
+      return res
+        .status(400)
+        .json({ message: "Only pending or accepted chats can be declined" });
     }
 
     chat.status = "declined";
@@ -279,6 +281,47 @@ const deleteChat = async (req, res) => {
   }
 };
 
+const reopenChatRequest = async (req, res) => {
+  try {
+    const me = String(req.user.id || req.user._id);
+    const { chatId } = req.params;
+    const text = String(req.body?.text || "").trim();
+
+    if (!text) return res.status(400).json({ message: "Message text is required" });
+
+    const chat = await Chat.findById(chatId);
+    if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+    const isParticipant = chat.participants.some((p) => String(p) === me);
+    if (!isParticipant) return res.status(403).json({ message: "Not allowed" });
+
+    if (chat.status !== "declined") {
+      return res.status(400).json({ message: "Only declined chats can be reopened" });
+    }
+
+    const receiver = chat.participants.find((p) => String(p) !== me);
+
+    chat.status = "pending";
+    chat.requestedBy = me;
+    chat.updatedAt = new Date();
+    await chat.save();
+
+    const firstMessage = await Message.create({
+      chatId: chat._id,
+      sender: me,
+      receiver,
+      text,
+    });
+
+    chat.lastMessage = firstMessage._id;
+    await chat.save();
+
+    return res.json({ chat, message: firstMessage });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createChat,
   deleteChat,
@@ -289,4 +332,5 @@ module.exports = {
   getMyRequests,
   acceptChat,
   declineChat,
+  reopenChatRequest
 };
