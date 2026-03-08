@@ -85,17 +85,16 @@ export default function Post() {
         </div>
         <input {...title} placeholder="Title" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
         <textarea {...description} placeholder="Description" className="border border-gray-200 rounded-2xl shadow-sm p-3 min-h-24"></textarea>
-        {needingHelp && <>
-          <input {...budget} step="0.01" min="0" placeholder="Budget" className="border border-gray-200 rounded-2xl shadow-sm p-3" />
-          <select
-            className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
-            {...location}
-          >
-            {municipalities.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-        </>}
+        {needingHelp &&
+          <input {...budget} step="0.01" min="0" placeholder="Budget" className="border border-gray-200 rounded-2xl shadow-sm p-3" />}
+        <select
+          className="border border-gray-200 rounded-2xl shadow-sm p-3 w-full"
+          {...location}
+        >
+          {municipalities.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
         {selectedThumbnail && <img src={selectedThumbnail} className="w-full h-auto rounded-3xl select-none"></img>}
         <div className="w-full p-12 border-4 border-dashed rounded-3xl flex items-center justify-center gap-2 select-none cursor-pointer" onClick={() => thumbnailUploadInput.current?.click()}>
           <IoMdCloudUpload className="w-6 h-6" /> Upload a thumbnail (optional)

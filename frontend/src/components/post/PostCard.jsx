@@ -36,12 +36,31 @@ const PostCard = ({ post, onSubmit }) => {
     close();
   };
 
+  function getDefaultImage(category) {
+    switch (category) {
+      case "Transportation":
+        return "/default_thumbnails/default_transportation.webp";
+      case "Food":
+        return "/default_thumbnails/default_food.webp";
+      case "Education":
+        return "/default_thumbnails/default_edu.webp";
+      case "Repair":
+        return "/default_thumbnails/default_repair.webp";
+      case "Technology":
+        return "/default_thumbnails/default_tech.webp";
+      case "Companionship":
+        return "/default_thumbnails/default_companion.webp";
+      default:
+        return "/default_thumbnails/default_other.webp";
+    }
+  }
+
   return (
     <div className="bg-card text-card-foreground border border-border rounded-lg overflow-hidden shadow-sm flex flex-col">
       {/* Image */}
       <div className="h-52 w-full overflow-hidden">
         <img
-          src={post.image}
+          src={post.imageUrl || getDefaultImage(post.category)}
           alt={post.title}
           className="h-full w-full object-cover"
           loading="lazy"
@@ -50,9 +69,8 @@ const PostCard = ({ post, onSubmit }) => {
 
       {/* Header */}
       <div
-        className={`flex items-center justify-between px-5 py-3 ${
-          isOffer ? "bg-green-100" : "bg-gray-100"
-        }`}
+        className={`flex items-center justify-between px-5 py-3 ${isOffer ? "bg-green-100" : "bg-gray-100"
+          }`}
       >
         <div className="flex items-center gap-2 text-accent-foreground text-sm font-medium">
           {isOffer ? <FaHandshake /> : <PiHandWavingFill />}
@@ -60,9 +78,8 @@ const PostCard = ({ post, onSubmit }) => {
         </div>
 
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
-            isOffer ? "bg-green-800" : "bg-gray-600"
-          }`}
+          className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${isOffer ? "bg-green-800" : "bg-gray-600"
+            }`}
         >
           {post.category}
         </span>
@@ -79,17 +96,17 @@ const PostCard = ({ post, onSubmit }) => {
       {/* Meta */}
       <div className="px-5 pb-4 space-y-2 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
-          <FaUser /> {post.user}
+          <FaUser /> {post.user.firstName || "Unknown User"}
         </div>
         <div className="flex items-center gap-2">
           <FaMapMarkerAlt /> {post.location}
         </div>
         <div className="flex items-center gap-2">
-          <FaCalendar /> {post.date}
+          <FaCalendar /> {post.updatedAt ? new Date(post.updatedAt).toLocaleDateString("fi-FI") : "Unknown Date"}
         </div>
         {post.budget ? (
           <div className="flex items-center gap-2">
-            <span className="font-semibold">$</span> Budget: ${post.budget}
+            <span className="font-semibold">$</span> Budget: {post.budget} €
           </div>
         ) : null}
       </div>
@@ -129,9 +146,8 @@ const PostCard = ({ post, onSubmit }) => {
               type="button"
               onClick={send}
               disabled={!canSend}
-              className={`${isOffer ? "button-primary" : "button-secondary"} ${
-                !canSend ? "opacity-60 cursor-not-allowed" : ""
-              }`}
+              className={`${isOffer ? "button-primary" : "button-secondary"} ${!canSend ? "opacity-60 cursor-not-allowed" : ""
+                }`}
             >
               <span className="inline-flex items-center justify-center gap-2">
                 <FaPaperPlane />
