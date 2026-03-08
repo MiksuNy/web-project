@@ -1,12 +1,12 @@
 const { io } = require("socket.io-client");
 
 // Put token of user A (sender) s7@user.com
-const SENDER_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODM2ZjZlYzMxMzI4MjIwZTlhNDgwMCIsImVtYWlsIjoiczdAdXNlci5jb20iLCJyb2xlIjoiYWRtaW4iLCJmaXJzdE5hbWUiOiJNYXJpYSIsImxhc3ROYW1lIjoiSyIsImRhdGVPZkJpcnRoIjoiMjAwMC0xMi0wNFQwMDowMDowMC4wMDBaIiwibG9jYXRpb24iOiJWYW50YWEiLCJwaG9uZSI6IjEyMzQ1NjciLCJpYXQiOjE3NzI5NzYyMjUsImV4cCI6MTgwNDUxMjIyNX0.9Jrq2JW5WuXqxilLE-QQAPvdwSh6Rq-onZupqj8VF3M";
+const SENDER_TOKEN = "USER_A_TOKEN";
 
 // Put token of user B (receiver) s6@user.com
-const RECEIVER_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODM2YTY3ZDEyZmIzMzkyZTc1ZDRmMyIsImVtYWlsIjoiczZAdXNlci5jb20iLCJyb2xlIjoiY2xpZW50IiwiZmlyc3ROYW1lIjoic2pqcyIsImxhc3ROYW1lIjoiMTIzYWFhNDU2IiwiZGF0ZU9mQmlydGgiOiIyMDAwLTEyLTAyVDIyOjAwOjAwLjAwMFoiLCJsb2NhdGlvbiI6IlZhbnRhYSIsImlhdCI6MTc3Mjk3MjY5NywiZXhwIjoxODA0NTA4Njk3fQ.ZTf-laoLXAgK-u3II4SvnwrukvnTxBL4fbqwlCs3AYA";
+const RECEIVER_TOKEN = "USER_B_TOKEN_HERE";
 
-const CHAT_ID = "69ad6dadcdb90b10d94f00d0";
+const CHAT_ID = "CHAT_ID_HERE"; // Put an existing chat ID where both users are participants
 const URL = "http://localhost:5000";
 
 const mkClient = (name, token) => {
