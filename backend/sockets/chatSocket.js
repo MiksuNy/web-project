@@ -25,13 +25,14 @@ const initSocket = (io) => {
 
   io.on("connection", (socket) => {
     onlineUsers.set(String(socket.userId), socket.id);
-    socket.join(`user:${String(socket.userId)}`); // personal room
+    socket.join(`user:${String(socket.userId)}`);
     io.emit("online_users", Array.from(onlineUsers.keys()));
 
     socket.on("join_chat", async (chatId) => {
       const chat = await Chat.findOne({ _id: chatId, participants: socket.userId });
       if (!chat) return;
       socket.join(String(chatId));
+      socket.emit("online_users", Array.from(onlineUsers.keys()));
     });
 
     socket.on("send_message", async (data) => {
