@@ -11,7 +11,7 @@ const Header = ({
   title = "HelpConnect",
   subtitle = "Connect with your community",
   inAdminPanel = false,
-  fixed = false,
+  
 }) => {
   const navigate = useNavigate();
   const { user, userFetching, logout } = useAuth();

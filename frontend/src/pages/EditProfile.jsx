@@ -7,7 +7,7 @@ export default function EditProfile() {
   const location = useLocation();
 
   const [formData, setFormData] = useState(
-    location.state || {
+    location.state?.user || {
       name: "",
       email: "",
       bio: "",
