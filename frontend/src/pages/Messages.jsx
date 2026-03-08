@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import ChatBox from "@/components/chat/ChatBox";
 import {
@@ -17,12 +17,76 @@ import {
   MdChatBubbleOutline,
   MdVerified,
 } from "react-icons/md";
+import { getSocket } from "@/api/socket";
+import { getUnreadMap, incrementUnread, clearUnread } from "@/hooks/chatUnread";
 
 export default function Messages() {
   const [tab, setTab] = useState("received");
   const [activeChat, setActiveChat] = useState(null);
   const [received, setReceived] = useState([]);
   const [sent, setSent] = useState([]);
+  const [unreadMap, setUnreadMap] = useState(getUnreadMap());
+
+  const activeChatIdRef = useRef("");
+
+  useEffect(() => {
+    activeChatIdRef.current = String(
+      activeChat?.chatId || activeChat?.id || "",
+    );
+  }, [activeChat]);
+
+  useEffect(() => {
+    const token = getStoredToken();
+    const socket = getSocket(token);
+
+    const userObj = JSON.parse(localStorage.getItem("user") || "{}");
+    const myId =
+      userObj?._id ||
+      userObj?.id ||
+      userObj?.user?._id ||
+      userObj?.user?.id ||
+      "";
+
+    const onNewMessage = (payload) => {
+      if (!payload?.chatId) return;
+      if (String(payload.sender) === String(myId)) return;
+
+      const incomingChatId = String(payload.chatId);
+      const openedChatId = activeChatIdRef.current;
+
+      const date = payload.createdAt
+        ? new Date(payload.createdAt).toISOString().slice(0, 10)
+        : "";
+
+      setSent((prev) =>
+        prev.map((c) =>
+          String(c.chatId) === incomingChatId
+            ? { ...c, text: payload.text, date }
+            : c,
+        ),
+      );
+
+      // important condition
+      if (incomingChatId === openedChatId) {
+        clearUnread(incomingChatId);
+        setUnreadMap(getUnreadMap());
+        return;
+      }
+
+      incrementUnread(incomingChatId);
+      setUnreadMap(getUnreadMap());
+    };
+
+    const onUnreadUpdated = () => setUnreadMap(getUnreadMap());
+
+    socket.on("new_message", onNewMessage);
+    window.addEventListener("chat:unread-updated", onUnreadUpdated);
+
+    return () => {
+      socket.off("new_message", onNewMessage);
+      window.removeEventListener("chat:unread-updated", onUnreadUpdated);
+    };
+  }, []);
 
   const decodeUserIdFromToken = (token) => {
     try {
@@ -187,6 +251,11 @@ export default function Messages() {
   }
 
   const list = tab === "received" ? received : sent;
+  const openChat = (m) => {
+    clearUnread(String(m.chatId || m.id));
+    setUnreadMap(getUnreadMap());
+    setActiveChat(m);
+  };
 
   return (
     <main className="absolute py-10 z-0 left-0 right-0 top-0 bottom-0 flex items-center justify-center pt-17 pb-18">
@@ -260,6 +329,7 @@ export default function Messages() {
 
           {list.map((m) => {
             const isSent = tab === "sent";
+            const isUnread = !!unreadMap[String(m.chatId || m.id)];
 
             return (
               <div
@@ -299,7 +369,16 @@ export default function Messages() {
                   Chat ID: {m.chatId || m.id}
                 </p>
 
-                <p className="mt-3 text-sm italic text-slate-600">“{m.text}”</p>
+                <p
+                  className={`mt-3 text-sm italic flex items-center gap-2 ${
+                    isUnread ? "font-bold text-slate-900" : "text-slate-600"
+                  }`}
+                >
+                  {isUnread && (
+                    <span className="inline-block w-3 h-3 rounded-full bg-red-600" />
+                  )}
+                  “{m.text}”
+                </p>
 
                 {/* ===== ACTIONS ===== */}
                 <div className="mt-6">
@@ -338,7 +417,7 @@ export default function Messages() {
                           </button>
 
                           <button
-                            onClick={() => setActiveChat(m)}
+                            onClick={() => openChat(m)}
                             className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                           >
                             <MdChatBubbleOutline />
@@ -356,7 +435,7 @@ export default function Messages() {
 
                       {m.connected && (
                         <button
-                          onClick={() => setActiveChat(m)}
+                          onClick={() => openChat(m)}
                           className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                         >
                           <MdChatBubbleOutline />
