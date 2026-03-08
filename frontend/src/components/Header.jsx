@@ -5,6 +5,7 @@ import { FaCaretLeft } from "react-icons/fa";
 import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaInbox, FaPlus } from "react-icons/fa";
+import useUnreadCount from "@/hooks/useUnreadCount";
 
 const Header = ({
   title = "HelpConnect",
@@ -13,6 +14,7 @@ const Header = ({
   fixed = false,
 }) => {
   const navigate = useNavigate();
+  const unreadTotal = useUnreadCount();
   const { user, userFetching, logout } = useAuth();
 
   const profileIconRef = useRef(null);
@@ -40,7 +42,7 @@ const Header = ({
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [showProfileMenu]);
-
+  
   return (
     <>
       <header className="top-0 fixed md:relative flex gap-3 justify-between items-center w-full h-17.5 p-4 md:px-8 border-b border-border bg-background z-99">
@@ -97,9 +99,11 @@ const Header = ({
                     <span className="font-medium opacity-80">Messages</span>
 
                     {/* badge */}
-                    <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-green-600 rounded-full shadow">
-                      3
-                    </span>
+                    {unreadTotal > 0 && (
+                      <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-[11px] font-semibold text-white bg-green-600 rounded-full shadow">
+                        {unreadTotal}
+                      </span>
+                    )}
                   </button>
 
                   {/* Post Button */}

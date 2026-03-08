@@ -1,16 +1,18 @@
 import { FiHome, FiInbox, FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import useUnreadCount from "@/hooks/useUnreadCount";
 
 export default function MobilePanel() {
   const navigate = useNavigate();
+  const unreadTotal = useUnreadCount();
 
   const currentPage = window.location.pathname;
 
   const buttons = [
     { name: "Home", icon: <FiHome />, path: "/" },
     { name: "Post", icon: <FiPlus />, path: "/post", highlight: true, toggleClose: true },
-    { name: "Messages", icon: <FiInbox />, path: "/messages", badge: 3 },
+    { name: "Messages", icon: <FiInbox />, path: "/messages", badge: unreadTotal },
   ];
 
   return (
@@ -25,7 +27,7 @@ export default function MobilePanel() {
           >
             {btn.icon}
             <span className="text-xs">{btn.name}</span>
-            {btn.badge && (
+            {Number(btn.badge) > 0 && (
               <span className="absolute translate-x-3 -translate-y-1.5 w-5 h-5 flex items-center justify-center text-xs font-semibold text-white bg-green-600 rounded-full shadow">
                 {btn.badge}
               </span>
