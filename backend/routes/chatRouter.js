@@ -10,7 +10,8 @@ const {
   getMyRequests,
   acceptChat,
   declineChat,
-  deleteChat
+  deleteChat,
+  reopenChatRequest
 } = require("../controllers/chatController");
 
 router.use(auth);
@@ -23,6 +24,9 @@ router.get("/my-chats", getMyChats);
 
 // Get my requests
 router.get("/my-requests", getMyRequests);
+
+// Reopen chat request
+router.patch("/requests/:chatId/reopen", reopenChatRequest);
 
 // Accept chat request
 router.patch("/requests/:chatId/accept", acceptChat);
