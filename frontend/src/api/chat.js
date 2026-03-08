@@ -112,4 +112,19 @@ export const declineChatRequest = async (chatId, token) => {
   return data;
 };
 
+export const reopenChatRequest = async (chatId, token, text) => {
+  const res = await fetch(`/api/chat/requests/${chatId}/reopen`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(token),
+    },
+    body: JSON.stringify({ text }),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || data.error || "Failed to reopen chat request");
+  return data;
+};
+
 export { getStoredToken };
