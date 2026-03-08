@@ -19,6 +19,7 @@ import {
 } from "react-icons/md";
 import { getSocket } from "@/api/socket";
 import { getUnreadMap, incrementUnread, clearUnread } from "@/hooks/chatUnread";
+import { reopenChatRequest } from "@/api/chat";
 
 export default function Messages() {
   const [tab, setTab] = useState("received");
@@ -26,6 +27,7 @@ export default function Messages() {
   const [received, setReceived] = useState([]);
   const [sent, setSent] = useState([]);
   const [unreadMap, setUnreadMap] = useState(getUnreadMap());
+  const [resendDrafts, setResendDrafts] = useState({});
 
   const activeChatIdRef = useRef("");
 
@@ -66,7 +68,7 @@ export default function Messages() {
         ),
       );
 
-      // important condition
+      // if chat opened, not increase unread count
       if (incomingChatId === openedChatId) {
         clearUnread(incomingChatId);
         setUnreadMap(getUnreadMap());
@@ -197,7 +199,7 @@ export default function Messages() {
 
       setReceived((r) => {
         const next = r.filter((x) => x.id !== msg.id);
-        if (next.length === 0 && tab === "received") setTab("sent"); // NEW
+        if (next.length === 0 && tab === "received") setTab("sent");
         return next;
       });
 
@@ -222,7 +224,7 @@ export default function Messages() {
 
       setReceived((r) => {
         const next = r.filter((x) => x.id !== msg.id);
-        if (next.length === 0) setTab("sent"); // NEW
+        if (next.length === 0) setTab("sent");
         return next;
       });
 
@@ -234,7 +236,50 @@ export default function Messages() {
       return;
     }
 
-    setSent((s) => s.filter((x) => x.id !== msg.id));
+  try {
+    const token = getStoredToken();
+    await declineChatRequest(msg.chatId || msg.id, token);
+  } catch (err) {
+    console.error(err);
+  }
+
+  setSent((s) =>
+    s.map((x) =>
+      x.id === msg.id
+        ? { ...x, status: "declined", accepted: false, connected: false }
+        : x
+    )
+  );
+  window.dispatchEvent(new Event("chat:updated"));
+};
+
+  const resendRequest = async (msg) => {
+    try {
+      const token = getStoredToken();
+      const text = (resendDrafts[msg.id] || "").trim();
+      if (!text) return;
+
+      const updated = await reopenChatRequest(msg.chatId || msg.id, token, text);
+
+      setSent((s) =>
+        s.map((x) =>
+          x.id === msg.id
+            ? {
+                ...x,
+                status: updated?.status || "pending",
+                text,
+                accepted: false,
+                connected: false,
+              }
+            : x
+        )
+      );
+      
+      setResendDrafts((prev) => ({ ...prev, [msg.id]: "" }));
+      window.dispatchEvent(new Event("chat:updated"));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (activeChat) {
@@ -435,14 +480,35 @@ export default function Messages() {
 
                       {m.connected && (
                         <button
-                          onClick={() => openChat(m)}
-                          className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
+                        onClick={() => openChat(m)}
+                        className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                         >
                           <MdChatBubbleOutline />
                           Open Chat
                         </button>
                       )}
                     </>
+                  )}
+                  
+                  {isSent && m.status === "declined" && (
+                    <div className="grid grid-cols-5 gap-3 w-full">
+                      <input
+                        type="text"
+                        value={resendDrafts[m.id] || ""}
+                        onChange={(e) =>
+                          setResendDrafts((prev) => ({ ...prev, [m.id]: e.target.value }))
+                        }
+                        placeholder="Write a new message..."
+                        className="col-span-3 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                      />
+                      <button
+                        onClick={() => resendRequest(m)}
+                        className="col-span-2 button-secondary flex items-center justify-center text-nowrap"
+                        disabled={!String(resendDrafts[m.id] || "").trim()}
+                      >
+                        Send again
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
