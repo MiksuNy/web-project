@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Hero from "../components/Hero";
 import SearchBox from "../components/SearchBox/SearchBox";
 import { PostCard } from "@/components/post";
@@ -11,75 +11,100 @@ export default function Home() {
 
   const [posts, setPosts] = useState([]);
   const [fetching, setFetching] = useState(false);
-  const [searchCooldown, setSearchCooldown] = useState(null);
 
   const loadMoreThreshold = useRef(null);
+  const offsetRef = useRef(0);
+  const hitBottomRef = useRef(false);
+  const searchCooldownRef = useRef(null);
 
   const limit = 4;
-  let offset = 0;
-  let hitBottom = false;
 
-  async function fetchPosts(clear = false) {
-    if (hitBottom && !clear) return;
+  // Fetch posts
+  const fetchPosts = useCallback(async (clear = false) => {
+    if (hitBottomRef.current && !clear) return;
 
     if (clear) {
       setPosts([]);
-      offset = 0;
-      hitBottom = false;
+      offsetRef.current = 0;
+      hitBottomRef.current = false;
     }
 
     setFetching(true);
 
-    const response = await fetch(`/api/posts?limit=${limit}&offset=${offset}&category=${filterCategory === "All Categories" ? "" : filterCategory}&type=${filterType === "All" ? "" : filterType.toLowerCase()}&searchText=${searchText}`);
+    const params = new URLSearchParams({
+      limit: limit.toString(),
+      offset: offsetRef.current.toString(),
+      category: filterCategory === "All Categories" ? "" : filterCategory,
+      type: filterType === "All" ? "" : filterType.toLowerCase(),
+      searchText,
+    });
 
-    if (!response.ok) {
-      console.error("Failed to fetch posts:", response.statusText);
-      setFetching(false);
-      return;
-    }
+    try {
+      const response = await fetch(`/api/posts?${params}`);
 
-    const data = await response.json();
-
-    if (clear) {
-      setPosts(data.posts);
-    } else {
-      setPosts((prevPosts) => [...prevPosts, ...data.posts]);
-    }
-
-    if (data.posts.length < limit) {
-      hitBottom = true;
-    }
-    offset += limit;
-    setFetching(false);
-  }
-
-  // Fetch posts on filter or search change with a cooldown
-  useEffect(() => {
-    console.log("Filters changed, fetching posts...");
-
-    if (searchCooldown) {
-      clearTimeout(searchCooldown);
-    }
-
-    setSearchCooldown(setTimeout(() => {
-      console.log("Fetching posts with filters:", { filterType, filterCategory, searchText });
-      hitBottom = false;
-      fetchPosts(true);
-    }, 500));
-  }, [filterCategory, filterType, searchText]);
-
-  // On scroll to bottom, load more posts
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        fetchPosts();
+      if (!response.ok) {
+        throw new Error(`Failed to fetch posts: ${response.statusText}`);
       }
-    }, { threshold: 1 });
 
-    if (loadMoreThreshold.current) {
-      observer.observe(loadMoreThreshold.current);
+      const data = await response.json();
+
+      setPosts((prevPosts) => {
+        if (clear) return data.posts;
+        const existingIds = new Set(prevPosts.map(p => p._id));
+        const newPosts = data.posts.filter(p => !existingIds.has(p._id));
+        return [...prevPosts, ...newPosts];
+      });
+
+      if (data.posts.length < limit) {
+        hitBottomRef.current = true;
+      }
+      offsetRef.current += limit;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setFetching(false);
     }
-  }, []);
+  }, [filterCategory, filterType, searchText, limit]);
+
+  // Cooldown for post fetching to prevent spam
+  useEffect(() => {
+    if (searchCooldownRef.current) {
+      clearTimeout(searchCooldownRef.current);
+    }
+
+    searchCooldownRef.current = setTimeout(() => {
+      fetchPosts(true);
+    }, 500);
+
+    return () => {
+      if (searchCooldownRef.current) {
+        clearTimeout(searchCooldownRef.current);
+      }
+    };
+  }, [fetchPosts]);
+
+  // Infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !fetching) {
+          fetchPosts();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    const currentRef = loadMoreThreshold.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [fetchPosts, fetching]);
 
   return (
     <div className="px-8">
