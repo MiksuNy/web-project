@@ -44,12 +44,13 @@ const PostCard = ({ post, onSubmit }) => {
         return "/default_thumbnails/default_food.webp";
       case "Education":
         return "/default_thumbnails/default_edu.webp";
-      case "Repair":
+      case "Home Repair":
         return "/default_thumbnails/default_repair.webp";
       case "Technology":
         return "/default_thumbnails/default_tech.webp";
       case "Companionship":
         return "/default_thumbnails/default_companion.webp";
+      case "Other":
       default:
         return "/default_thumbnails/default_other.webp";
     }
