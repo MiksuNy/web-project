@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Hero from "../components/Hero";
 import SearchBox from "../components/SearchBox/SearchBox";
 import { PostCard } from "@/components/post";
 import { AiOutlineLoading } from "react-icons/ai";
+import { createOrGetChat, getStoredToken } from "@/api/chat";
 
 export default function Home() {
   const [filterType, setFilterType] = useState("All");
@@ -17,6 +19,7 @@ export default function Home() {
   const hitBottomRef = useRef(false);
   const searchCooldownRef = useRef(null);
 
+  const navigate = useNavigate();
   const limit = 4;
 
   // Fetch posts
@@ -106,6 +109,33 @@ export default function Home() {
     };
   }, [fetchPosts, fetching]);
 
+  const submitPostRequest = async (post, form) => {
+  try {
+    const token = getStoredToken();
+
+    const myUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const myId = myUser?._id || myUser?.id || myUser?.user?._id || myUser?.user?.id;
+    const otherUserId = form.ownerId || post?.user?._id;
+
+    if (!otherUserId) return;
+    if (String(myId) === String(otherUserId)) {
+      alert("You cannot send a request to your own post.");
+      return;
+    }
+
+    const safePostId = form.postId || post?._id || null;
+    const subject = `${form.subject} [${post.title}, ${post.category}, ${post.location}]`;
+    const text = `${form.message})`;
+
+    await createOrGetChat(otherUserId, token, subject, text, safePostId);
+
+    window.dispatchEvent(new Event("chat:updated"));
+    navigate("/messages");
+  } catch (err) {
+    alert(err.message || "Failed to send request");
+  }
+};
+
   return (
     <div className="px-8">
       {/* Hero Section */}
@@ -116,7 +146,7 @@ export default function Home() {
       {/* Posts */}
       <div className="w-full max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-2 gap-8">
         {posts.map((post) => (
-          <PostCard key={post._id} post={post} />
+          <PostCard key={post._id} post={post} onSubmit={(form) => submitPostRequest(post, form)} />
         ))}
       </div>
 

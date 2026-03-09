@@ -17,14 +17,14 @@ const authHeader = (token) => ({
   Authorization: `Bearer ${cleanToken(token || getStoredToken())}`,
 });
 
-export const createOrGetChat = async (otherUserId, token, subject = "General", text) => {
+export const createOrGetChat = async (otherUserId, token, subject = "General", text, postId = null) => {
   const res = await fetch(`/api/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       ...authHeader(token),
     },
-    body: JSON.stringify({ otherUserId, subject, text }),
+    body: JSON.stringify({ otherUserId, subject, text, postId }),
   });
 
   const data = await res.json().catch(() => ({}));
