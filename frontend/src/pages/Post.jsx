@@ -49,6 +49,7 @@ export default function Post() {
       description: description.value,
       category: category.value ?? "Other",
       budget: needingHelp ? parseFloat(budget.value ?? "0") : null,
+      location: location.value
     };
 
     try {
