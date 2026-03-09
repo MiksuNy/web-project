@@ -1,21 +1,30 @@
-import { useState, useEffect } from "react";
-import { MdPerson, MdEmail, MdPhone, MdLocationOn, MdInfo } from "react-icons/md";
+import { useState } from "react";
+import {
+  MdPerson,
+  MdEmail,
+  MdPhone,
+  MdLocationOn,
+  MdInfo,
+  MdSave
+} from "react-icons/md";
 
 function Settings() {
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
-    bio: ""
+  // initialize state from localStorage
+  const [form, setForm] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem("profile"));
+    return saved || {
+      name: "",
+      email: "",
+      phone: "",
+      location: "",
+      bio: ""
+    };
   });
 
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("profile")) || {};
-    setForm(saved);
-  }, []);
+  const [error, setError] = useState("");
+  const [saved, setSaved] = useState(false);
 
+  // handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -25,15 +34,29 @@ function Settings() {
     }));
   };
 
-  const handleSave = () => {
-    localStorage.setItem("profile", JSON.stringify(form));
-    alert("Saved!");
-  };
+  // save profile
+ const handleSave = () => {
 
+  if (!form.name || !form.email) {
+    setError("Name and email are required.");
+    return;
+  }
+
+  localStorage.setItem("profile", JSON.stringify(form));
+
+  setError("");
+  setSaved(true);
+
+  setTimeout(() => {
+    setSaved(false);
+  }, 2000);
+
+  window.location.reload();
+
+};
   return (
     <div className="min-h-screen bg-muted/20 p-6">
-
-      {/* Header */}
+      {/* PAGE HEADER */}
       <div className="max-w-6xl mx-auto mb-6">
         <h1 className="text-2xl font-semibold">Settings</h1>
         <p className="text-sm text-muted-foreground">
@@ -42,12 +65,9 @@ function Settings() {
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-4 gap-6">
-
-        {/* LEFT SIDEBAR */}
+        {/* SIDEBAR */}
         <div className="bg-card border rounded-xl p-4 h-fit">
-
           <div className="space-y-2">
-
             <div className="flex items-center gap-2 p-2 rounded-lg bg-green-100 text-green-700 font-medium">
               <MdPerson />
               Account
@@ -64,14 +84,11 @@ function Settings() {
             <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent cursor-pointer">
               Accessibility
             </div>
-
           </div>
-
         </div>
 
-        {/* RIGHT CONTENT */}
+        {/* MAIN CONTENT */}
         <div className="col-span-3 bg-card border rounded-xl p-6 shadow-sm">
-
           <h2 className="text-lg font-semibold mb-1">
             Account Information
           </h2>
@@ -81,10 +98,9 @@ function Settings() {
           </p>
 
           <div className="space-y-5">
-
-            {/* Name */}
+            {/* NAME */}
             <div>
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm font-medium">
                 <MdPerson /> Full Name
               </label>
 
@@ -96,9 +112,9 @@ function Settings() {
               />
             </div>
 
-            {/* Email */}
+            {/* EMAIL */}
             <div>
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm font-medium">
                 <MdEmail /> Email Address
               </label>
 
@@ -110,9 +126,9 @@ function Settings() {
               />
             </div>
 
-            {/* Phone */}
+            {/* PHONE */}
             <div>
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm font-medium">
                 <MdPhone /> Phone Number
               </label>
 
@@ -124,9 +140,9 @@ function Settings() {
               />
             </div>
 
-            {/* Location */}
+            {/* LOCATION */}
             <div>
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm font-medium">
                 <MdLocationOn /> Location
               </label>
 
@@ -138,43 +154,60 @@ function Settings() {
               />
             </div>
 
-            {/* Bio */}
+            {/* BIO */}
             <div>
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm font-medium">
                 <MdInfo /> Bio
               </label>
 
               <textarea
                 name="bio"
                 rows="4"
+                maxLength="500"
                 value={form.bio}
                 onChange={handleChange}
                 className="mt-2 w-full p-3 border rounded-lg bg-input-background"
               />
+
+              <div className="text-xs text-muted-foreground mt-1">
+                {form.bio.length}/500 characters
+              </div>
             </div>
 
-            {/* Buttons */}
-            <div className="flex gap-3 pt-4">
+            {/* ERROR */}
+            {error && (
+              <div className="text-red-500 text-sm">
+                {error}
+              </div>
+            )}
 
+            {/* SUCCESS MESSAGE */}
+            {saved && (
+              <div className="text-green-600 text-sm font-medium">
+                Profile updated successfully!
+              </div>
+            )}
+
+            {/* BUTTONS */}
+            <div className="flex gap-3 pt-4">
               <button
                 onClick={handleSave}
-                className="button-primary px-5 py-2 rounded-lg"
+                className="button-primary flex items-center gap-2 px-5 py-2 rounded-lg"
               >
+                <MdSave />
                 Save Changes
               </button>
 
-              <button className="button-secondary px-5 py-2 rounded-lg">
+              <button
+                className="button-secondary px-5 py-2 rounded-lg"
+                onClick={() => window.location.reload()}
+              >
                 Cancel
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }
