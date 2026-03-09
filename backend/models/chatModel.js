@@ -12,7 +12,7 @@ const chatSchema = new mongoose.Schema({
   },
   requestedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   acceptedAt: { type: Date, default: null },
-
+  post: { type: mongoose.Schema.Types.ObjectId, ref: "Post", default: null },
   updatedAt: { type: Date, default: Date.now },
 });
 

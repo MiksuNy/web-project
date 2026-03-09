@@ -2,22 +2,30 @@ const mongoose = require("mongoose");
 const Chat = require("../models/chatModel");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
+const Post = require("../models/postModel");
 
 const createChat = async (req, res) => {
   try {
     const me = req.user.id;
-    const { otherUserId, subject, text } = req.body;
+    const { otherUserId, subject, text, postId } = req.body;
 
     if (!otherUserId || !mongoose.Types.ObjectId.isValid(otherUserId)) {
       return res.status(400).json({ message: "Valid otherUserId is required" });
     }
-
     if (String(otherUserId) === String(me)) {
       return res.status(400).json({ message: "Cannot create chat with yourself" });
     }
-
     if (!text || !text.trim()) {
       return res.status(400).json({ message: "First message text is required" });
+    }
+
+    let post = null;
+    if (postId) {
+      if (!mongoose.Types.ObjectId.isValid(postId)) {
+        return res.status(400).json({ message: "Invalid postId" });
+      }
+      post = await Post.findById(postId);
+      if (!post) return res.status(404).json({ message: "Post not found" });
     }
 
     const otherUserExists = await User.exists({ _id: otherUserId });
@@ -25,17 +33,17 @@ const createChat = async (req, res) => {
       return res.status(404).json({ message: "Other user not found" });
     }
 
-    let chat = await Chat.findOne({
+    const filter = {
       participants: { $all: [me, otherUserId], $size: 2 },
-    });
+      post: post ? post._id : null,
+    };
 
-    // if chat already exists -> not create another request
-    if (chat) {
-      return res.status(200).json(chat);
-    }
+    let chat = await Chat.findOne(filter);
+    if (chat) return res.status(200).json(chat);
 
     chat = await Chat.create({
       participants: [me, otherUserId],
+      post: post ? post._id : null,
       subject: subject || "General",
       requestedBy: me,
       status: "pending",
@@ -51,6 +59,21 @@ const createChat = async (req, res) => {
     chat.lastMessage = firstMessage._id;
     chat.updatedAt = new Date();
     await chat.save();
+
+    // emit unread-triggering event also for first request message
+    const io = req.app.get("io");
+    if (io) {
+      const payload = {
+        _id: firstMessage._id,
+        chatId: String(chat._id),
+        sender: String(me),
+        text: firstMessage.text,
+        createdAt: firstMessage.createdAt,
+      };
+
+      io.to(String(chat._id)).emit("receive_message", payload);
+      io.to(`user:${String(otherUserId)}`).emit("new_message", payload);
+    }
 
     return res.status(201).json(chat);
   } catch (error) {
@@ -316,6 +339,21 @@ const reopenChatRequest = async (req, res) => {
     chat.lastMessage = firstMessage._id;
     await chat.save();
 
+    // emit unread-triggering event for reopened request message
+    const io = req.app.get("io");
+    if (io && receiver) {
+      const payload = {
+        _id: firstMessage._id,
+        chatId: String(chat._id),
+        sender: String(me),
+        text: firstMessage.text,
+        createdAt: firstMessage.createdAt,
+      };
+
+      io.to(String(chat._id)).emit("receive_message", payload);
+      io.to(`user:${String(receiver)}`).emit("new_message", payload);
+    }
+    
     return res.json({ chat, message: firstMessage });
   } catch (error) {
     return res.status(500).json({ error: error.message });
