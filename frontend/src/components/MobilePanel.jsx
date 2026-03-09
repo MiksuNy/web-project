@@ -16,10 +16,10 @@ export default function MobilePanel() {
   return (
     <div className="md:hidden fixed flex justify-evenly z-100 bottom-0 w-screen bg-background select-none pb-2 border shadow-2xl">
 
-      {buttons.map((btn) => (
+      {buttons.map((btn, index) => (
         !btn.highlight ? (
           <Link
-            key={btn.name}
+            key={index}
             to={btn.path}
             className={`flex flex-col gap-1 items-center p-2 pt-4 cursor-pointer text-2xl active:text-green-600 ${currentPage === btn.path ? "text-green-600" : ""}`}
           >
@@ -32,7 +32,7 @@ export default function MobilePanel() {
             )}
           </Link>
         ) : (
-          <div className="flex flex-col p-2 cursor-pointer w-17 h-17 rounded-full -translate-y-2 border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 active:from-green-700 active:to-green-800 transition-colors text-white" onClick={() => {
+          <div key={index} className="flex flex-col p-2 cursor-pointer w-17 h-17 rounded-full -translate-y-2 border-2 border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 active:from-green-700 active:to-green-800 transition-colors text-white" onClick={() => {
             if (btn.toggleClose && currentPage === btn.path) {
               navigate("/");
             } else {

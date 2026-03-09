@@ -11,7 +11,7 @@ const validatePost = (req, res, next) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  if (type === "request" && (budget !== undefined || isNaN(budget) || parseFloat(budget) < 0)) {
+  if (type === "request" && budget !== undefined && parseFloat(budget) < 0) {
     return res.status(400).json({ message: "Invalid budget" });
   }
 
