@@ -81,6 +81,7 @@ describe("Post Routes", () => {
     );
   });
 
+  // 
   describe("GET /api/posts", () => {
     it("should return all posts as JSON with status 200", async () => {
       const response = await api
@@ -299,7 +300,6 @@ describe("PUT /api/posts/:postId", () => {
     it("should update the post and return the updated document", async () => {
       const post = await Post.findOne();
 
-      // must satisfy validatePost middleware
       const updates = {
         type: "request",
         title: "Updated Post Title",
