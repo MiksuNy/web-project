@@ -119,9 +119,18 @@ export default function Messages() {
     const requestedById =
       typeof c.requestedBy === "string" ? c.requestedBy : c.requestedBy?._id;
 
+    const postIdFromField =
+      typeof c.post === "string" ? c.post : c.post?._id || "";
+    const postIdFromSubject =
+      (c.subject || "").match(/\[post:([a-f0-9]{24}|none)\]/i)?.[1] || "";
+    const postId =
+      postIdFromField ||
+      (postIdFromSubject !== "none" ? postIdFromSubject : "");
+
     return {
       id: c._id,
       chatId: c._id,
+      postId,
       title: c.subject || "General",
       from: otherName,
       text: c.lastMessage?.text || "New request",
@@ -236,22 +245,22 @@ export default function Messages() {
       return;
     }
 
-  try {
-    const token = getStoredToken();
-    await declineChatRequest(msg.chatId || msg.id, token);
-  } catch (err) {
-    console.error(err);
-  }
+    try {
+      const token = getStoredToken();
+      await declineChatRequest(msg.chatId || msg.id, token);
+    } catch (err) {
+      console.error(err);
+    }
 
-  setSent((s) =>
-    s.map((x) =>
-      x.id === msg.id
-        ? { ...x, status: "declined", accepted: false, connected: false }
-        : x
-    )
-  );
-  window.dispatchEvent(new Event("chat:updated"));
-};
+    setSent((s) =>
+      s.map((x) =>
+        x.id === msg.id
+          ? { ...x, status: "declined", accepted: false, connected: false }
+          : x,
+      ),
+    );
+    window.dispatchEvent(new Event("chat:updated"));
+  };
 
   const resendRequest = async (msg) => {
     try {
@@ -259,7 +268,11 @@ export default function Messages() {
       const text = (resendDrafts[msg.id] || "").trim();
       if (!text) return;
 
-      const updated = await reopenChatRequest(msg.chatId || msg.id, token, text);
+      const updated = await reopenChatRequest(
+        msg.chatId || msg.id,
+        token,
+        text,
+      );
 
       setSent((s) =>
         s.map((x) =>
@@ -271,10 +284,10 @@ export default function Messages() {
                 accepted: false,
                 connected: false,
               }
-            : x
-        )
+            : x,
+        ),
       );
-      
+
       setResendDrafts((prev) => ({ ...prev, [msg.id]: "" }));
       window.dispatchEvent(new Event("chat:updated"));
     } catch (err) {
@@ -409,9 +422,13 @@ export default function Messages() {
                 <p className="text-sm text-slate-600 mt-1">
                   {isSent ? `To: ${m.from}` : `From: ${m.from}`}
                 </p>
+                
+                <p className="text-xs text-slate-400 mt-1">
+                  Post ID: {m.postId}
+                </p>
 
                 <p className="text-xs text-slate-400 mt-1">
-                  Chat ID: {m.chatId || m.id}
+                  Chat ID: {m.chatId}
                 </p>
 
                 <p
@@ -480,8 +497,8 @@ export default function Messages() {
 
                       {m.connected && (
                         <button
-                        onClick={() => openChat(m)}
-                        className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
+                          onClick={() => openChat(m)}
+                          className="button-secondary flex items-center gap-2 justify-center text-nowrap text-black"
                         >
                           <MdChatBubbleOutline />
                           Open Chat
@@ -489,14 +506,17 @@ export default function Messages() {
                       )}
                     </>
                   )}
-                  
+
                   {isSent && m.status === "declined" && (
                     <div className="grid grid-cols-5 gap-3 w-full">
                       <input
                         type="text"
                         value={resendDrafts[m.id] || ""}
                         onChange={(e) =>
-                          setResendDrafts((prev) => ({ ...prev, [m.id]: e.target.value }))
+                          setResendDrafts((prev) => ({
+                            ...prev,
+                            [m.id]: e.target.value,
+                          }))
                         }
                         placeholder="Write a new message..."
                         className="col-span-3 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"

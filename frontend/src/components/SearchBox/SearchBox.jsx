@@ -2,27 +2,32 @@ import { useState } from "react";
 
 import { IoClose } from "react-icons/io5";
 
-export default function SearchBox() {
+export default function SearchBox({ filterCategory, setFilterCategory, setFilterType, searchText, setSearchText }) {
   const [selectedTypes, setSelectedTypes] = useState([]); // 0 = all, 1 = offers, 2 = requests
 
   function setSelectedType(type) {
     if (type === 0) {
       setSelectedTypes([]);
+      setFilterType("All");
       return;
     }
 
     if (selectedTypes.find((f) => f === type)) {
       setSelectedTypes(selectedTypes.filter((f) => f !== type));
+      setFilterType(selectedTypes.length === 1 ? "All" : (selectedTypes.find((f) => f !== type) === 1 ? "Offer" : "Request"));
       return;
     }
-    setSelectedTypes([...selectedTypes, type]);
+
+    const newSelectedTypes = [...selectedTypes, type];
+    setSelectedTypes(newSelectedTypes);
+    setFilterType(newSelectedTypes.length === 2 ? "All" : (newSelectedTypes[0] === 1 ? "Offer" : "Request"));
   }
 
   return (
     <div className="block w-full max-w-5xl mx-auto mt-6 p-6 border border-gray-200 rounded-2xl shadow-sm">
 
       {/* Input field */}
-      <input type="text" placeholder="Search for help..." className="w-full mx-auto p-2 py-3 mb-4 focus:outline-0" />
+      <input type="text" placeholder="Search for help..." className="w-full mx-auto p-2 py-3 mb-4 focus:outline-0" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
 
       {/* Selected types */}
       {selectedTypes.length > 0 && <div className="flex w-full align-middle gap-2 flex-wrap mb-2">
@@ -55,7 +60,7 @@ export default function SearchBox() {
         </div>
 
         {/* Category selector */}
-        <select className="w-full min-w-50 p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <select className="w-full min-w-50 p-4 rounded-2xl border border-gray-200 shadow-sm" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
           <option>All Categories</option>
           <option>Transportation</option>
           <option>Food</option>
