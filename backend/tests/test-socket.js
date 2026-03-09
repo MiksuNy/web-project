@@ -1,49 +1,64 @@
 const { io } = require("socket.io-client");
 
-// Insert JWT token here
-const TOKEN = "USER_JWT_TOKEN_HERE";
+// Put token of user A (sender) s7@user.com
+const SENDER_TOKEN = "USER_A_TOKEN";
 
-// Test chat ID
-const CHAT_ID = "CHAT_ID_HERE";
+// Put token of user B (receiver) s6@user.com
+const RECEIVER_TOKEN = "USER_B_TOKEN_HERE";
 
-const socket = io("http://localhost:5000", {
-  auth: { token: TOKEN }
-});
+const CHAT_ID = "CHAT_ID_HERE"; // Put an existing chat ID where both users are participants
+const URL = "http://localhost:5000";
 
-socket.on("connect", () => {
-  console.log("Connected as:", socket.id);
+const mkClient = (name, token) => {
+  const socket = io(URL, {
+    auth: { token },
+    transports: ["websocket"],
+  });
 
-  // 1. Join chat
-  socket.emit("join_chat", CHAT_ID);
-  console.log("join_chat sent:", CHAT_ID);
+  socket.on("connect", () => {
+    console.log(`[${name}] connected:`, socket.id);
+    socket.emit("join_chat", CHAT_ID);
+    console.log(`[${name}] join_chat sent:`, CHAT_ID);
+  });
 
-  // 2. Send message after join
-  setTimeout(() => {
-    socket.emit("send_message", {
-      chatId: CHAT_ID,
-      text: "Hello from test!"
-    });
-    console.log("send_message sent");
-  }, 1000);
-});
+  socket.on("connect_error", (err) => {
+    console.log(`[${name}] connect_error:`, err.message);
+  });
 
-// Listen for server events
-socket.on("joined_chat", (chatId) => {
-  console.log("joined_chat:", chatId);
-});
+  socket.on("online_users", (users) => {
+    console.log(`[${name}] online_users:`, users);
+  });
 
-socket.on("message_sent", (msg) => {
-  console.log("message_sent:", msg);
-});
+  socket.on("receive_message", (msg) => {
+    console.log(`[${name}] receive_message:`, msg);
+  });
 
-socket.on("receive_message", (msg) => {
-  console.log("receive_message:", msg);
-});
+  socket.on("new_message", (msg) => {
+    console.log(`[${name}] NEW_MESSAGE_NOTIFICATION:`, msg);
+  });
 
-socket.on("online_users", (users) => {
-  console.log("online_users:", users);
-});
+  socket.on("disconnect", () => {
+    console.log(`[${name}] disconnected`);
+  });
 
-socket.on("disconnect", () => {
-  console.log("Disconnected");
-});
+  return socket;
+};
+
+const receiver = mkClient("RECEIVER", RECEIVER_TOKEN);
+const sender = mkClient("SENDER", SENDER_TOKEN);
+
+// Send after both connected/joined
+setTimeout(() => {
+  sender.emit("send_message", {
+    chatId: CHAT_ID,
+    text: "Hello from sender test",
+  });
+  console.log("[SENDER] send_message sent");
+}, 1500);
+
+// Auto close
+setTimeout(() => {
+  sender.disconnect();
+  receiver.disconnect();
+  process.exit(0);
+}, 7000);

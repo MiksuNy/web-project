@@ -13,6 +13,8 @@ const io = new Server(server, {
   cors: { origin: "*" },
 });
 
+app.set("io", io);
+
 initSocket(io);
 
 // Start server

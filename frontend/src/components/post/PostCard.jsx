@@ -1,4 +1,3 @@
-// PostCard.jsx
 import { useState } from "react";
 import {
   FaUser,
@@ -28,6 +27,7 @@ const PostCard = ({ post, onSubmit }) => {
   const send = async () => {
     await onSubmit?.({
       postId: post.id,
+      otherUserId: post?.user?._id,
       type: post.type,
       category: post.category,
       subject: subject.trim(),
