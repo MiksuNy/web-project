@@ -51,7 +51,10 @@ const registerAndLogin = async ({
     phone,
   });
 
-  const login = await api.post("/api/auth/login").send({ email, password }).expect(200);
+  const login = await api
+    .post("/api/auth/login")
+    .send({ email, password })
+    .expect(200);
   const user = await User.findOne({ email });
 
   return { token: login.body.token, userId: String(user._id) };
@@ -76,12 +79,16 @@ describe("Post Routes", () => {
     await Post.deleteMany({});
     await Promise.all(
       posts.map((post) =>
-        api.post("/api/posts").set("Authorization", "Bearer " + token).send(post).expect(201)
-      )
+        api
+          .post("/api/posts")
+          .set("Authorization", "Bearer " + token)
+          .send(post)
+          .expect(201),
+      ),
     );
   });
 
-  // 
+  // ────────────────── GET /api/posts ──────────────────
   describe("GET /api/posts", () => {
     it("should return all posts as JSON with status 200", async () => {
       const response = await api
@@ -115,6 +122,7 @@ describe("Post Routes", () => {
     });
   });
 
+  // ────────────────── GET /api/posts/user/:userId ──────────────────
   describe("GET /api/posts/user/:userId", () => {
     it("should return all posts by a specific user", async () => {
       const response = await api
@@ -132,7 +140,9 @@ describe("Post Routes", () => {
 
     it("should return an empty array for a user with no posts", async () => {
       const nonExistentUserId = new mongoose.Types.ObjectId();
-      const response = await api.get(`/api/posts/user/${nonExistentUserId}`).expect(200);
+      const response = await api
+        .get(`/api/posts/user/${nonExistentUserId}`)
+        .expect(200);
       expect(response.body.posts).toHaveLength(0);
     });
 
@@ -141,6 +151,7 @@ describe("Post Routes", () => {
     });
   });
 
+  // ────────────────── GET /api/posts/:postId ──────────────────
   describe("GET /api/posts/:postId", () => {
     it("should return one post by ID", async () => {
       const post = await Post.findOne();
@@ -164,6 +175,7 @@ describe("Post Routes", () => {
     });
   });
 
+  // ────────────────── POST /api/posts ──────────────────
   describe("POST /api/posts", () => {
     describe("when the user is authenticated", () => {
       it("should create a new post with status 201", async () => {
@@ -283,7 +295,7 @@ describe("Post Routes", () => {
         const expiredToken = jwt.sign(
           { id: user._id, email: user.email },
           process.env.SECRET || process.env.JWT_SECRET,
-          { expiresIn: "-1s" }
+          { expiresIn: "-1s" },
         );
 
         await api
@@ -295,42 +307,42 @@ describe("Post Routes", () => {
     });
   });
 
-describe("PUT /api/posts/:postId", () => {
-  describe("when the user is authenticated", () => {
-    it("should update the post and return the updated document", async () => {
-      const post = await Post.findOne();
+  // ────────────────── PUT /api/posts/:postId ──────────────────
+  describe("PUT /api/posts/:postId", () => {
+    describe("when the user is authenticated", () => {
+      it("should update the post and return the updated document", async () => {
+        const post = await Post.findOne();
 
-      const updates = {
-        type: "request",
-        title: "Updated Post Title",
-        description: "Updated description",
-        category: "Transportation",
-        location: "Helsinki",
-        budget: 100,
-      };
+        const updates = {
+          type: "request",
+          title: "Updated Post Title",
+          description: "Updated description",
+          category: "Transportation",
+          location: "Helsinki",
+          budget: 100,
+        };
 
-      const response = await api
-        .put(`/api/posts/${post._id}`)
-        .set("Authorization", "Bearer " + token)
-        .send(updates)
-        .expect(200)
-        .expect("Content-Type", /application\/json/);
+        const response = await api
+          .put(`/api/posts/${post._id}`)
+          .set("Authorization", "Bearer " + token)
+          .send(updates)
+          .expect(200)
+          .expect("Content-Type", /application\/json/);
 
-      expect(response.body.post.title).toBe(updates.title);
-      expect(response.body.post.budget).toBe(updates.budget);
-    });
+        expect(response.body.post.title).toBe(updates.title);
+        expect(response.body.post.budget).toBe(updates.budget);
+      });
 
-    it("should return 400 for partial payload (blocked by validatePost middleware)", async () => {
-      const post = await Post.findOne();
-      const updates = { description: "Only updating description" };
+      it("should return 400 for partial payload (blocked by validatePost middleware)", async () => {
+        const post = await Post.findOne();
+        const updates = { description: "Only updating description" };
 
-      await api
-        .put(`/api/posts/${post._id}`)
-        .set("Authorization", "Bearer " + token)
-        .send(updates)
-        .expect(400);
-    });
-  
+        await api
+          .put(`/api/posts/${post._id}`)
+          .set("Authorization", "Bearer " + token)
+          .send(updates)
+          .expect(400);
+      });
 
       it("should return 400 for non-existing post ID", async () => {
         const nonExistentId = new mongoose.Types.ObjectId();
@@ -345,7 +357,10 @@ describe("PUT /api/posts/:postId", () => {
     describe("when the user is not authenticated", () => {
       it("should return 401 if no token is provided", async () => {
         const post = await Post.findOne();
-        await api.put(`/api/posts/${post._id}`).send({ title: "Hacker Update" }).expect(401);
+        await api
+          .put(`/api/posts/${post._id}`)
+          .send({ title: "Hacker Update" })
+          .expect(401);
       });
     });
 
@@ -373,6 +388,7 @@ describe("PUT /api/posts/:postId", () => {
     });
   });
 
+  // ────────────────── DELETE /api/posts/:postId ──────────────────
   describe("DELETE /api/posts/:postId", () => {
     describe("when the user is authenticated", () => {
       it("should delete the post and return status 200", async () => {
