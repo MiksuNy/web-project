@@ -37,7 +37,7 @@ const register = async (firstName, lastName, email, password, dateOfBirth, locat
 };
 
 const saveUserInfo = async (user, token) => {
-  const res = await fetch(`/api/auth/edit`, {
+  const res = await fetch(`/api/auth/edit/${user._id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -50,6 +50,10 @@ const saveUserInfo = async (user, token) => {
     throw new Error(res.json().message || "Saving user info failed");
   }
 };
+
+const getAllUsers = async () => {
+  const res = await fetch("api/users", );
+}
 
 // ME
 const me = async (token) => {

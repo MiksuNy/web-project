@@ -11,7 +11,7 @@ export default function UserItem({ user, onInfoClick }) {
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full overflow-hidden border border-accent bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none">
-            {user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}
+            {user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase()}
           </div>
           <span className="font-semibold text-gray-900 text-nowrap">{user.firstName} {user.lastName}</span>
         </div>
@@ -24,7 +24,7 @@ export default function UserItem({ user, onInfoClick }) {
         </span>
       </td>
       <td className="px-4 py-3 text-sm text-gray-600">{user.location}</td>
-      <td className="px-4 py-3 text-sm text-gray-600">{formatDate(user.joinDate)}</td>
+      <td className="px-4 py-3 text-sm text-gray-600"></td>
       <td className="px-4 py-3 text-sm text-gray-600">
         <div className="flex flex-col text-nowrap">
           <span>{user.postsCount ?? 0} posts</span>

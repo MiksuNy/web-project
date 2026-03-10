@@ -154,6 +154,34 @@ const editUser = async (req, res) => {
   }
 };
 
+const editUserById = async (req, res) => {
+  try {
+    const { firstName, lastName, dateOfBirth, location, phone, role } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { firstName, lastName, dateOfBirth, location, phone, role },
+      { new: true }
+    );
+
+    res.json({
+      message: 'User information updated',
+      user: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        dateOfBirth: updatedUser.dateOfBirth,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        location: updatedUser.location,
+        phone: updatedUser.phone
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update user information', error: error.message });
+  }
+};
+
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -225,6 +253,7 @@ module.exports = {
   registerUser,
   loginUser,
   editUser,
+  editUserById,
   changePassword,
   deleteUser,
   getUserInfo

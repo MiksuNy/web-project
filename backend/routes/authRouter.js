@@ -6,6 +6,7 @@ const {
   loginUser,
   getUserInfo,
   editUser,
+  editUserById,
   changePassword,
   deleteUser,
 } = require("../controllers/authController");
@@ -17,6 +18,7 @@ router.use(auth);
 
 router.get("/userinfo", getUserInfo);
 router.put("/edit", editUser);
+router.put("/edit/:userId", editUserById);
 router.put("/change-password", changePassword);
 router.delete("/delete", deleteUser);
 

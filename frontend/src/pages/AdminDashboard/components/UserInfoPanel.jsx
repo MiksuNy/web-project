@@ -31,6 +31,7 @@ export default function UserInfoPanel({ user, onClose }) {
     const token = localStorage.getItem("token");
     const newUser = { ...user, role: role };
     await authApi.saveUserInfo(newUser, token);
+    onClose();
   }
 
   return (
