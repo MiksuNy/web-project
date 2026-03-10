@@ -24,7 +24,7 @@ export default function UserItem({ user, onInfoClick }) {
         </span>
       </td>
       <td className="px-4 py-3 text-sm text-gray-600">{user.location}</td>
-      <td className="px-4 py-3 text-sm text-gray-600"></td>
+      <td className="px-4 py-3 text-sm text-gray-600">{formatDate(user.createdAt)}</td>
       <td className="px-4 py-3 text-sm text-gray-600">
         <div className="flex flex-col text-nowrap">
           <span>{user.postsCount ?? 0} posts</span>
