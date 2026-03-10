@@ -68,7 +68,7 @@ export default function UserInfoPanel({ user, onClose }) {
 
           <div className="w-1/2">
             <strong>Join date</strong>
-            <p>{formatDate(user.joinDate)}</p>
+            <p>{formatDate(user.createdAt)}</p>
           </div>
         </div>
 
