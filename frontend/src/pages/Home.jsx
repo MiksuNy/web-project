@@ -125,7 +125,7 @@ export default function Home() {
 
     const safePostId = form.postId || post?._id || null;
     const subject = `${form.subject} [${post.title}, ${post.category}, ${post.location}]`;
-    const text = `${form.message})`;
+    const text = `${form.message}`;
 
     await createOrGetChat(otherUserId, token, subject, text, safePostId);
 

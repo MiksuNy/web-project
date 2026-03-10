@@ -10,11 +10,11 @@ const validatePost = (req, res, next) => {
   if (!title || !description || !category) {
     return res.status(400).json({ message: "Missing required fields" });
   }
-
-  if (type === "request" && budget !== undefined && parseFloat(budget) < 0) {
-    return res.status(400).json({ message: "Invalid budget" });
-  }
-
+  if (type === "request") {
+    if (budget === undefined || typeof budget !== "number" || Number.isNaN(budget) || budget < 0) {
+      return res.status(400).json({ message: "Invalid budget" });
+    }
+  } 
   next();
 };
 
