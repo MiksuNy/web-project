@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { apiRequest } from "../api/user_profile";
@@ -9,11 +9,26 @@ export default function EditProfile() {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    email: "",
-    phone: "",
-    location: "",
-    bio: "",
   });
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  const loadUser = async () => {
+    try {
+      const data = await apiRequest("/api/auth/userinfo");
+
+      if (data?.user) {
+        setForm({
+          firstName: data.user.firstName || "",
+          lastName: data.user.lastName || "",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,18 +39,16 @@ export default function EditProfile() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     try {
-      await apiRequest("/api/users", {
+      await apiRequest("/api/auth/edit", {
         method: "PUT",
         body: JSON.stringify(form),
       });
 
-      navigate(-1);
+      navigate("/profile");
     } catch (err) {
-      console.log("Backend endpoint not ready yet");
+      console.log(err);
     }
   };
 
@@ -60,7 +73,7 @@ export default function EditProfile() {
 
           <button
             onClick={handleSubmit}
-            className="button-primary px-4 py-2 rounded-md"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
           >
             Save
           </button>
@@ -68,23 +81,19 @@ export default function EditProfile() {
       </div>
 
       <div className="bg-card rounded-xl shadow-md p-6 space-y-4">
-        <Input label="First Name" name="firstName" value={form.firstName} onChange={handleChange} />
-        <Input label="Last Name" name="lastName" value={form.lastName} onChange={handleChange} />
-        <Input label="Email" name="email" value={form.email} onChange={handleChange} />
-        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
-        <Input label="Location" name="location" value={form.location} onChange={handleChange} />
+        <Input
+          label="First Name"
+          name="firstName"
+          value={form.firstName}
+          onChange={handleChange}
+        />
 
-        <div>
-          <label className="text-sm block mb-1">Bio</label>
-
-          <textarea
-            name="bio"
-            value={form.bio}
-            onChange={handleChange}
-            rows="4"
-            className="w-full border rounded-md p-2"
-          />
-        </div>
+        <Input
+          label="Last Name"
+          name="lastName"
+          value={form.lastName}
+          onChange={handleChange}
+        />
       </div>
     </div>
   );
