@@ -47,13 +47,23 @@ const saveUserInfo = async (user, token) => {
   });
 
   if (!res.ok) {
-    throw new Error(res.json().message || "Saving user info failed");
+    throw new Error(await res.json().message || "Saving user info failed");
   }
 };
 
-const getAllUsers = async () => {
-  const res = await fetch("api/users", );
-}
+const deleteUser = async (user, token) => {
+  const res = await fetch(`/api/auth/delete/${user._id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(await res.json().message || "Deleting user failed");
+  }
+};
 
 // ME
 const me = async (token) => {
@@ -78,5 +88,6 @@ export default {
   login,
   register,
   saveUserInfo,
+  deleteUser,
   me,
 };

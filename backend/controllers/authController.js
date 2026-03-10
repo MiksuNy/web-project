@@ -221,6 +221,15 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const deleteUserById = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.json({ message: 'User account deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete user account', error: error.message });
+  }
+};
+
 // =======================
 // GET USER INFO
 // =======================
@@ -256,5 +265,6 @@ module.exports = {
   editUserById,
   changePassword,
   deleteUser,
+  deleteUserById,
   getUserInfo
 };

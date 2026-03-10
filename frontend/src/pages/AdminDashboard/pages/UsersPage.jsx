@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import UserItem from "../components/UserItem";
 import UserInfoPanel from "../components/UserInfoPanel";
+import api from "../../../api/users";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   async function fetchAllUsers() {
-    const response = await fetch("/api/users");
-    if (!response.ok) {
-      console.error("Could not fetch all users");
-      return;
-    }
-    const data = await response.json();
+    const data = await api.getAllUsers();
     setUsers(data);
   }
 

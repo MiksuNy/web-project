@@ -34,6 +34,12 @@ export default function UserInfoPanel({ user, onClose }) {
     onClose();
   }
 
+  async function onClickSuspend() {
+    const token = localStorage.getItem("token");
+    await authApi.deleteUser(user, token);
+    onClose();
+  }
+
   return (
     <div className="fixed bg-black/20 top-0 left-0 w-screen h-screen z-200 overflow-y-auto" onClick={onClickOutside}>
       <div className="bg-background mx-auto my-12 w-8/12 max-w-110 p-6 rounded-2xl shadow-2xl flex flex-col gap-3">
@@ -77,7 +83,7 @@ export default function UserInfoPanel({ user, onClose }) {
             Save Changes
           </button>
 
-          <button className="w-1/2 button-red">
+          <button className="w-1/2 button-red" disabled={role === "admin"} onClick={onClickSuspend}>
             Suspend User
           </button>
         </div>

@@ -1,9 +1,15 @@
 import { FaGavel, FaInfo } from "react-icons/fa";
+import authApi from "../../../api/auth";
 
 export default function UserItem({ user, onInfoClick }) {
   function formatDate(date) {
     const dateObject = new Date(date);
     return dateObject.toLocaleDateString("fi-FI");
+  }
+
+  async function onClickSuspend() {
+    const token = localStorage.getItem("token");
+    await authApi.deleteUser(user, token);
   }
 
   return (
@@ -44,6 +50,7 @@ export default function UserItem({ user, onInfoClick }) {
             <button
               className="w-8 h-8 flex items-center justify-center bg-red-50 border border-red-600 text-red-700 rounded hover:bg-red-100 transition-all cursor-pointer"
               title="Suspend User"
+              onClick={onClickSuspend}
             >
               <FaGavel className="scale-250" />
             </button>
