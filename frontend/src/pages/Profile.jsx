@@ -9,6 +9,7 @@ import {
 } from "react-icons/fi";
 
 import { useNavigate, useParams } from "react-router-dom";
+import { apiRequest } from "../api/user_profile";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -20,15 +21,15 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("posts");
 
   useEffect(() => {
+    if (!id) return;
+
     fetchProfile();
     fetchPosts();
-    fetchChats();
   }, [id]);
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`/api/users/${id}`);
-      const data = await res.json();
+      const data = await apiRequest(`/api/users/${id}`);
 
       if (data?.userProfile) {
         setUser({
@@ -47,8 +48,7 @@ export default function Profile() {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch("/api/posts");
-      const data = await res.json();
+      const data = await apiRequest(`/api/posts/user/${id}`);
 
       if (Array.isArray(data)) {
         setPosts(data);
@@ -57,21 +57,6 @@ export default function Profile() {
       }
     } catch (err) {
       console.log("Posts endpoint not ready yet");
-    }
-  };
-
-  const fetchChats = async () => {
-    try {
-      const res = await fetch("/api/chat");
-      const data = await res.json();
-
-      if (Array.isArray(data)) {
-        setChats(data);
-      } else if (data.messages) {
-        setChats(data.messages);
-      }
-    } catch (err) {
-      console.log("Chat endpoint not ready yet");
     }
   };
 

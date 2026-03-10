@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import { apiRequest } from "../api/user_profile";
 
 export default function EditProfile() {
   const navigate = useNavigate();
@@ -27,11 +28,8 @@ export default function EditProfile() {
     e.preventDefault();
 
     try {
-      await fetch("/api/users", {
+      await apiRequest("/api/users", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(form),
       });
 
@@ -70,36 +68,11 @@ export default function EditProfile() {
       </div>
 
       <div className="bg-card rounded-xl shadow-md p-6 space-y-4">
-        <Input
-          label="First Name"
-          name="firstName"
-          value={form.firstName}
-          onChange={handleChange}
-        />
-        <Input
-          label="Last Name"
-          name="lastName"
-          value={form.lastName}
-          onChange={handleChange}
-        />
-        <Input
-          label="Email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-        />
-        <Input
-          label="Phone"
-          name="phone"
-          value={form.phone}
-          onChange={handleChange}
-        />
-        <Input
-          label="Location"
-          name="location"
-          value={form.location}
-          onChange={handleChange}
-        />
+        <Input label="First Name" name="firstName" value={form.firstName} onChange={handleChange} />
+        <Input label="Last Name" name="lastName" value={form.lastName} onChange={handleChange} />
+        <Input label="Email" name="email" value={form.email} onChange={handleChange} />
+        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
+        <Input label="Location" name="location" value={form.location} onChange={handleChange} />
 
         <div>
           <label className="text-sm block mb-1">Bio</label>

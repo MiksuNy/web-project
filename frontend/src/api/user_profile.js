@@ -6,7 +6,7 @@ export async function apiRequest(endpoint, options = {}) {
   const res = await fetch(`${API_URL}${endpoint}`, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
     ...options,
   });
