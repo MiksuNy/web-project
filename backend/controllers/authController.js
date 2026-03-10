@@ -158,6 +158,10 @@ const editUserById = async (req, res) => {
   try {
     const { firstName, lastName, dateOfBirth, location, phone, role } = req.body;
 
+    if (req.user.role !== "admin") {
+      return res.status(401).json({ message: 'Logged in user is not an administrator' });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       { firstName, lastName, dateOfBirth, location, phone, role },
@@ -223,6 +227,10 @@ const deleteUser = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(401).json({ message: 'Logged in user is not an administrator' });
+    }
+
     await User.findByIdAndDelete(req.params.userId);
     res.json({ message: 'User account deleted successfully' });
   } catch (error) {
