@@ -14,12 +14,17 @@ export default function Posts() {
     setPosts(data);
   };
 
-  function deletePost(postId) {
-    setPosts([...posts.filter(post => post._id !== postId)]);
+  async function deletePost(postId) {
+    const token = localStorage.getItem("token");
+    await api.deletePost(postId, token);
+    await fetchAllPosts();
   }
 
-  function deleteSelected() {
-    setPosts([...posts.filter(post => !toggledPosts.find(t => t === post._id))]);
+  async function deleteSelected() {
+    const token = localStorage.getItem("token");
+    for (const postIndex in toggledPosts) {
+      await deletePost(posts[postIndex]._id, token);
+    }
     setToggledPosts([]);
   }
 

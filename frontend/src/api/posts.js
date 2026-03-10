@@ -50,8 +50,8 @@ const editPost = async (postData, token) => {
   }
 };
 
-const deletePost = async (postData, token) => {
-  const res = await fetch(`/api/posts/${postData._id}`, {
+const deletePost = async (postId, token) => {
+  const res = await fetch(`/api/posts/${postId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
