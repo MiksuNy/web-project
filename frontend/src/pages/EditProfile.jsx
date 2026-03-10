@@ -1,29 +1,49 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
-import { useNavigate, useLocation } from "react-router-dom";
 
 export default function EditProfile() {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [formData, setFormData] = useState(
-    location.state?.user || {
-      name: "",
-      email: "",
-      bio: "",
-      phone: "",
-      location: "",
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    location: "",
+    bio: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await fetch("/api/users", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      navigate(-1);
+    } catch (err) {
+      console.log("Backend endpoint not ready yet");
     }
-  );
-
-  const handleChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="max-w-3xl mx-auto px-6 py-8">
+      <div className="flex items-center justify-between mb-6">
         <div
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 cursor-pointer"
@@ -32,60 +52,81 @@ export default function EditProfile() {
           <h2 className="text-xl font-semibold">Edit Profile</h2>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="px-4 py-2 rounded-md border border-border"
+            className="px-4 py-2 border rounded-md"
           >
             Cancel
           </button>
 
           <button
-            onClick={() =>
-              navigate("/profile", {
-                state: { updatedUser: formData },
-              })
-            }
-            className="button-primary w-auto px-4 py-2"
+            onClick={handleSubmit}
+            className="button-primary px-4 py-2 rounded-md"
           >
             Save
           </button>
         </div>
       </div>
 
-      {/* Form */}
       <div className="bg-card rounded-xl shadow-md p-6 space-y-4">
-        <Input label="Name" value={formData.name} onChange={(v) => handleChange("name", v)} />
-        <Input label="Email" value={formData.email} onChange={(v) => handleChange("email", v)} />
-        <Input label="Phone" value={formData.phone} onChange={(v) => handleChange("phone", v)} />
-        <Input label="Location" value={formData.location} onChange={(v) => handleChange("location", v)} />
-        <Textarea label="Bio" value={formData.bio} onChange={(v) => handleChange("bio", v)} />
+        <Input
+          label="First Name"
+          name="firstName"
+          value={form.firstName}
+          onChange={handleChange}
+        />
+        <Input
+          label="Last Name"
+          name="lastName"
+          value={form.lastName}
+          onChange={handleChange}
+        />
+        <Input
+          label="Email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+        />
+        <Input
+          label="Phone"
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+        />
+        <Input
+          label="Location"
+          name="location"
+          value={form.location}
+          onChange={handleChange}
+        />
+
+        <div>
+          <label className="text-sm block mb-1">Bio</label>
+
+          <textarea
+            name="bio"
+            value={form.bio}
+            onChange={handleChange}
+            rows="4"
+            className="w-full border rounded-md p-2"
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-function Input({ label, value, onChange }) {
+function Input({ label, name, value, onChange }) {
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium">{label}</label>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-border rounded-lg px-3 py-2"
-      />
-    </div>
-  );
-}
+    <div>
+      <label className="text-sm block mb-1">{label}</label>
 
-function Textarea({ label, value, onChange }) {
-  return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium">{label}</label>
-      <textarea
+      <input
+        name={name}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-border rounded-lg px-3 py-2 h-24 resize-none"
+        onChange={onChange}
+        className="w-full border rounded-md p-2"
       />
     </div>
   );
