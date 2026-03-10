@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { IoClose } from "react-icons/io5";
+import authApi from '../../../api/auth';
 
 export default function UserInfoPanel({ user, onClose }) {
   const [role, setRole] = useState(user.role ?? "client");
@@ -24,6 +25,19 @@ export default function UserInfoPanel({ user, onClose }) {
     if (e.target === e.currentTarget) {
       onClose();
     }
+  }
+
+  async function onClickSave() {
+    const token = localStorage.getItem("token");
+    const newUser = { ...user, role: role };
+    await authApi.saveUserInfo(newUser, token);
+    onClose();
+  }
+
+  async function onClickSuspend() {
+    const token = localStorage.getItem("token");
+    await authApi.deleteUser(user, token);
+    onClose();
   }
 
   return (
@@ -60,16 +74,16 @@ export default function UserInfoPanel({ user, onClose }) {
 
           <div className="w-1/2">
             <strong>Join date</strong>
-            <p>{formatDate(user.joinDate)}</p>
+            <p>{formatDate(user.createdAt)}</p>
           </div>
         </div>
 
         <div className="flex gap-3 justify-between">
-          <button className="w-1/2" disabled={role === user.role}>
+          <button className="w-1/2" disabled={role === user.role} onClick={onClickSave}>
             Save Changes
           </button>
 
-          <button className="w-1/2 button-red">
+          <button className="w-1/2 button-red" disabled={role === "admin"} onClick={onClickSuspend}>
             Suspend User
           </button>
         </div>

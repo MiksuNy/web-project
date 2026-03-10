@@ -36,6 +36,35 @@ const register = async (firstName, lastName, email, password, dateOfBirth, locat
   return data; // { token }
 };
 
+const saveUserInfo = async (user, token) => {
+  const res = await fetch(`/api/auth/edit/${user._id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(user)
+  });
+
+  if (!res.ok) {
+    throw new Error(await res.json().message || "Saving user info failed");
+  }
+};
+
+const deleteUser = async (user, token) => {
+  const res = await fetch(`/api/auth/delete/${user._id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(await res.json().message || "Deleting user failed");
+  }
+};
+
 // ME
 const me = async (token) => {
   const res = await fetch(`/api/auth/userinfo`, {
@@ -58,5 +87,7 @@ const me = async (token) => {
 export default {
   login,
   register,
+  saveUserInfo,
+  deleteUser,
   me,
 };

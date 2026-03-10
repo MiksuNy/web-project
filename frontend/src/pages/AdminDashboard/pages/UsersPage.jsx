@@ -1,15 +1,20 @@
-import userData from "@/data/users.json";
 import { useEffect, useState } from "react";
 import UserItem from "../components/UserItem";
 import UserInfoPanel from "../components/UserInfoPanel";
+import api from "../../../api/users";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  async function fetchAllUsers() {
+    const data = await api.getAllUsers();
+    setUsers(data);
+  }
+
   useEffect(() => {
-    setUsers(userData);
-  }, []);
+    fetchAllUsers();
+  }, [selectedUser]);
 
   return (
     <div>
@@ -31,7 +36,7 @@ export default function Users() {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {users.map((user) => (
-              <UserItem key={user.id} user={user} onInfoClick={() => setSelectedUser(user)} />
+              <UserItem key={user._id} user={user} onInfoClick={() => setSelectedUser(user)} />
             ))}
           </tbody>
         </table>

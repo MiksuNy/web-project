@@ -154,6 +154,38 @@ const editUser = async (req, res) => {
   }
 };
 
+const editUserById = async (req, res) => {
+  try {
+    const { firstName, lastName, dateOfBirth, location, phone, role } = req.body;
+
+    if (req.user.role !== "admin") {
+      return res.status(401).json({ message: 'Logged in user is not an administrator' });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { firstName, lastName, dateOfBirth, location, phone, role },
+      { new: true }
+    );
+
+    res.json({
+      message: 'User information updated',
+      user: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        dateOfBirth: updatedUser.dateOfBirth,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        location: updatedUser.location,
+        phone: updatedUser.phone
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update user information', error: error.message });
+  }
+};
+
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -193,6 +225,19 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const deleteUserById = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(401).json({ message: 'Logged in user is not an administrator' });
+    }
+
+    await User.findByIdAndDelete(req.params.userId);
+    res.json({ message: 'User account deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete user account', error: error.message });
+  }
+};
+
 // =======================
 // GET USER INFO
 // =======================
@@ -225,7 +270,9 @@ module.exports = {
   registerUser,
   loginUser,
   editUser,
+  editUserById,
   changePassword,
   deleteUser,
+  deleteUserById,
   getUserInfo
 };

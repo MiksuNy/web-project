@@ -1,4 +1,5 @@
 import { FaGavel, FaInfo } from "react-icons/fa";
+import authApi from "../../../api/auth";
 
 export default function UserItem({ user, onInfoClick }) {
   function formatDate(date) {
@@ -6,12 +7,17 @@ export default function UserItem({ user, onInfoClick }) {
     return dateObject.toLocaleDateString("fi-FI");
   }
 
+  async function onClickSuspend() {
+    const token = localStorage.getItem("token");
+    await authApi.deleteUser(user, token);
+  }
+
   return (
     <tr key={user.id} className="hover:bg-gray-50 transition-colors">
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full overflow-hidden border border-accent bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none">
-            {user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}
+            {user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase()}
           </div>
           <span className="font-semibold text-gray-900 text-nowrap">{user.firstName} {user.lastName}</span>
         </div>
@@ -24,7 +30,7 @@ export default function UserItem({ user, onInfoClick }) {
         </span>
       </td>
       <td className="px-4 py-3 text-sm text-gray-600">{user.location}</td>
-      <td className="px-4 py-3 text-sm text-gray-600">{formatDate(user.joinDate)}</td>
+      <td className="px-4 py-3 text-sm text-gray-600">{formatDate(user.createdAt)}</td>
       <td className="px-4 py-3 text-sm text-gray-600">
         <div className="flex flex-col text-nowrap">
           <span>{user.postsCount ?? 0} posts</span>
@@ -44,6 +50,7 @@ export default function UserItem({ user, onInfoClick }) {
             <button
               className="w-8 h-8 flex items-center justify-center bg-red-50 border border-red-600 text-red-700 rounded hover:bg-red-100 transition-all cursor-pointer"
               title="Suspend User"
+              onClick={onClickSuspend}
             >
               <FaGavel className="scale-250" />
             </button>
