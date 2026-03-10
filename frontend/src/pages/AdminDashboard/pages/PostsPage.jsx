@@ -1,20 +1,25 @@
-import postData from "@/data/posts.json";
 import PostItem from "../components/PostItem";
 import { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
 import EditPostForm from "../components/EditPostForm";
+import api from "../../../api/posts";
 
 export default function Posts() {
   const [posts, setPosts] = useState([]);
   const [toggledPosts, setToggledPosts] = useState([]);
   const [editingPost, setEditingPost] = useState(null);
 
+  const fetchAllPosts = async () => {
+    const data = await api.getAllPosts();
+    setPosts(data);
+  };
+
   function deletePost(postId) {
-    setPosts([...posts.filter(post => post.id !== postId)]);
+    setPosts([...posts.filter(post => post._id !== postId)]);
   }
 
   function deleteSelected() {
-    setPosts([...posts.filter(post => !toggledPosts.find(t => t === post.id))]);
+    setPosts([...posts.filter(post => !toggledPosts.find(t => t === post._id))]);
     setToggledPosts([]);
   }
 
@@ -28,14 +33,14 @@ export default function Posts() {
     const newValue = e.target.checked;
 
     if (newValue) {
-      setToggledPosts(posts.map(post => post.id));
+      setToggledPosts(posts.map(post => post._id));
     } else {
       setToggledPosts([]);
     }
   }
 
   useEffect(() => {
-    setPosts(postData);
+    fetchAllPosts();
   }, []);
 
   return (
@@ -61,17 +66,17 @@ export default function Posts() {
       <div className="flex flex-col gap-3">
         {posts.length > 0 ? posts.map((post) => (
           <PostItem
-            key={post.id}
+            key={post._id}
             post={post}
-            checked={toggledPosts.find(id => id === post.id) != undefined}
+            checked={toggledPosts.find(id => id === post._id) != undefined}
             onEditClicked={() => {
               setEditingPost(post);
             }}
             onDeleteClicked={() => {
-              deletePost(post.id);
+              deletePost(post._id);
             }}
             onChange={(checked) => {
-              postToggled(post.id, checked);
+              postToggled(post._id, checked);
             }} />
         )) :
           <center>
