@@ -16,6 +16,7 @@ import AnalyticsPage from "./pages/AdminDashboard/pages/AnalyticsPage";
 import ActivityPage from "./pages/AdminDashboard/pages/ActivityPage";
 import Post from "./pages/Post";
 import Messages from "@/pages/Messages";
+import AskAiWidget from "@/components/AskAiWidget";
 
 function App() {
   const { user } = useAuth();
@@ -40,6 +41,7 @@ function App() {
           <Route path="activity" element={<ActivityPage />} />
         </Route>
       </Routes>
+      {user ? <AskAiWidget /> : null}
     </BrowserRouter>
   );
 }
