@@ -10,6 +10,11 @@ export default function PostItem({ post, checked, onChange, onEditClicked, onDel
   const contextMenuRef = useRef(null);
   const contextMenuButtonRef = useRef(null);
 
+  function formatDate(date) {
+    const dateObject = new Date(date);
+    return dateObject.toLocaleDateString("fi-FI");
+  }
+
   function handleCheckboxChange(e) {
     onChange(e.target.checked);
   }
@@ -106,7 +111,7 @@ export default function PostItem({ post, checked, onChange, onEditClicked, onDel
         <div className="flex flex-row gap-4">
           <div className="flex flex-row gap-2 items-center">
             <IoPeople />
-            <p className="-mt-0.5">{post.user}</p>
+            <p className="-mt-0.5">{post.user.firstName}</p>
           </div>
           <div className="flex flex-row gap-2 items-center">
             <IoLocation />
@@ -114,7 +119,7 @@ export default function PostItem({ post, checked, onChange, onEditClicked, onDel
           </div>
           <div className="flex flex-row gap-2 items-center">
             <IoCalendar />
-            <p className="-mt-0.5">{post.date}</p>
+            <p className="-mt-0.5">{formatDate(post.createdAt)}</p>
           </div>
         </div>
       </div>
