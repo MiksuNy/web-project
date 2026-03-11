@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { FaCaretLeft } from "react-icons/fa";
-import { MdLogin, MdLogout, MdSettings, MdShield } from "react-icons/md";
+import { MdLogin, MdLogout, MdSettings, MdShield, MdPerson } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaInbox, FaPlus } from "react-icons/fa";
 import useUnreadCount from "@/hooks/useUnreadCount";
@@ -11,7 +11,6 @@ const Header = ({
   title = "HelpConnect",
   subtitle = "Connect with your community",
   inAdminPanel = false,
-  fixed = false,
 }) => {
   const navigate = useNavigate();
   const unreadTotal = useUnreadCount();
@@ -27,7 +26,6 @@ const Header = ({
     setShowProfileMenu((prev) => !prev);
   }
 
-  // ✅ clean & correct version from main
   useEffect(() => {
     function handleClick(e) {
       if (
@@ -47,18 +45,19 @@ const Header = ({
     <>
       <header className="top-0 fixed md:relative flex gap-3 justify-between items-center w-full h-17.5 p-4 md:px-8 border-b border-border bg-background z-99">
         {/* mobile search bar */}
-        {/* 
-        
-        TODO: this will be implemented later, but for now we leave this here because we have to finish the rest of the app
 
+        {/*
+        TODO: this will be implemented later
         <div className="md:hidden flex flex-row gap-2 py-2 px-3 items-center text-gray-500 border border-border rounded-full w-full shadow-md/5">
           <IoSearch /> Search...
-        </div> 
-
+        </div>
         */}
 
         {/* left */}
-        <div className="flex items-center gap-3 text-green-600 select-none cursor-pointer" onClick={() => navigate("/")}>
+        <div
+          className="flex items-center gap-3 text-green-600 select-none cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <img
             src="/logo.svg"
             alt="HelpConnect logo"
@@ -69,15 +68,12 @@ const Header = ({
             <h1 className="text-xl font-medium bg-linear-to-r from-green-600 to-gray-700 bg-clip-text text-transparent">
               {title}
             </h1>
-            <span className="text-sm text-muted-foreground">
-              {subtitle}
-            </span>
+            <span className="text-sm text-muted-foreground">{subtitle}</span>
           </div>
         </div>
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-3">
-          {/* LOGIN / USER AREA */}
           {!userFetching &&
             (!user ? (
               <button
@@ -90,7 +86,6 @@ const Header = ({
             ) : (
               <>
                 <div className="flex flex-row gap-3 content-center">
-                  {/* Messages Button (your feature stays) */}
                   <button
                     onClick={() => navigate("/messages")}
                     className="relative hidden md:flex items-center gap-2 px-4 py-1"
@@ -115,7 +110,6 @@ const Header = ({
                     Post
                   </button>
 
-                  {/* Profile Avatar */}
                   <div
                     className="m-auto w-10 h-10 rounded-full overflow-hidden border border-accent shadow-md bg-linear-150 from-green-600 to-gray-600 text-white font-bold flex justify-center items-center select-none cursor-pointer"
                     ref={profileIconRef}
@@ -126,7 +120,6 @@ const Header = ({
                   </div>
                 </div>
 
-                {/* Profile Menu */}
                 {showProfileMenu && (
                   <div
                     className="absolute top-16 right-8 w-48 bg-background border border-border rounded-lg shadow-lg z-50"
@@ -141,6 +134,7 @@ const Header = ({
                         Admin Panel
                       </span>
                     )}
+
                     {inAdminPanel && user.role === "admin" && (
                       <span
                         onClick={() => navigate("/")}
@@ -152,28 +146,35 @@ const Header = ({
                     )}
 
                     <span
+                      onClick={() => {
+                        navigate("/profile");
+                        setShowProfileMenu(false);
+                      }}
                       className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                     >
+                      <MdPerson />
+                      Profile
+                    </span>
+
+                    <span className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none">
                       <MdSettings />
                       Settings
                     </span>
 
                     <span
-                      className="w-full flex items-center gap-2 px-4 py-2 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                       onClick={async () => {
                         await logout();
                         navigate("/");
                       }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-accent/20 rounded-lg cursor-pointer select-none"
                     >
                       <MdLogout />
                       Log Out
                     </span>
-
                   </div>
                 )}
               </>
-            ))
-          }
+            ))}
         </div>
       </header>
     </>
