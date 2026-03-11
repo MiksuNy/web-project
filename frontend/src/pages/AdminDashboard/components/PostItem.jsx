@@ -111,7 +111,7 @@ export default function PostItem({ post, checked, onChange, onEditClicked, onDel
         <div className="flex flex-row gap-4">
           <div className="flex flex-row gap-2 items-center">
             <IoPeople />
-            <p className="-mt-0.5">{post.user.firstName}</p>
+            <p className="-mt-0.5">{post.user?.firstName}</p>
           </div>
           <div className="flex flex-row gap-2 items-center">
             <IoLocation />

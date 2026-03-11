@@ -89,7 +89,12 @@ export default function Posts() {
           </center>}
       </div>
 
-      {editingPost && <EditPostForm post={editingPost} onClose={() => setEditingPost(null)} />}
+      {editingPost && <EditPostForm post={editingPost} onClose={(changed) => {
+        setEditingPost(null);
+        if (changed) {
+          fetchAllPosts();
+        }
+      }} />}
     </div>
   );
 }
