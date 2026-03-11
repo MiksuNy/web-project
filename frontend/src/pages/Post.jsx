@@ -15,7 +15,6 @@ export default function Post() {
     navigate("/");
     return null;
   }
-  console.log(user);
 
   const title = useField("text");
   const description = useField("text");

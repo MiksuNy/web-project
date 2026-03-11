@@ -97,7 +97,7 @@ const PostCard = ({ post, onSubmit }) => {
       {/* Meta */}
       <div className="px-5 pb-4 space-y-2 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
-          <FaUser /> {post.user.firstName || "Unknown User"}
+          <FaUser /> {post.user?.firstName || "Unknown User"}
         </div>
         <div className="flex items-center gap-2">
           <FaMapMarkerAlt /> {post.location}
