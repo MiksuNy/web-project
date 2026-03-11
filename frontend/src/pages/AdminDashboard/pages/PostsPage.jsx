@@ -1,20 +1,30 @@
-import postData from "@/data/posts.json";
 import PostItem from "../components/PostItem";
 import { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
 import EditPostForm from "../components/EditPostForm";
+import api from "../../../api/posts";
 
 export default function Posts() {
   const [posts, setPosts] = useState([]);
   const [toggledPosts, setToggledPosts] = useState([]);
   const [editingPost, setEditingPost] = useState(null);
 
-  function deletePost(postId) {
-    setPosts([...posts.filter(post => post.id !== postId)]);
+  const fetchAllPosts = async () => {
+    const data = await api.getAllPosts();
+    setPosts(data);
+  };
+
+  async function deletePost(postId) {
+    const token = localStorage.getItem("token");
+    await api.deletePost(postId, token);
+    await fetchAllPosts();
   }
 
-  function deleteSelected() {
-    setPosts([...posts.filter(post => !toggledPosts.find(t => t === post.id))]);
+  async function deleteSelected() {
+    const token = localStorage.getItem("token");
+    for (const postIndex in toggledPosts) {
+      await deletePost(posts[postIndex]._id, token);
+    }
     setToggledPosts([]);
   }
 
@@ -28,14 +38,14 @@ export default function Posts() {
     const newValue = e.target.checked;
 
     if (newValue) {
-      setToggledPosts(posts.map(post => post.id));
+      setToggledPosts(posts.map(post => post._id));
     } else {
       setToggledPosts([]);
     }
   }
 
   useEffect(() => {
-    setPosts(postData);
+    fetchAllPosts();
   }, []);
 
   return (
@@ -61,17 +71,17 @@ export default function Posts() {
       <div className="flex flex-col gap-3">
         {posts.length > 0 ? posts.map((post) => (
           <PostItem
-            key={post.id}
+            key={post._id}
             post={post}
-            checked={toggledPosts.find(id => id === post.id) != undefined}
+            checked={toggledPosts.find(id => id === post._id) != undefined}
             onEditClicked={() => {
               setEditingPost(post);
             }}
             onDeleteClicked={() => {
-              deletePost(post.id);
+              deletePost(post._id);
             }}
             onChange={(checked) => {
-              postToggled(post.id, checked);
+              postToggled(post._id, checked);
             }} />
         )) :
           <center>
