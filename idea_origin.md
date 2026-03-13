@@ -30,7 +30,7 @@ The project was developed as part of a university web development course at **Me
 
 ### Team Members
 
-* Minoo 
+* Minoo
 * Markus
 * Maria
 * Mikael
