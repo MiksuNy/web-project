@@ -60,5 +60,3 @@ This repository preserves the documentation and development history of the Help 
 
 © 2026 Minoo Yaghoubi
 
-
-© 2026 Minoo Yaghoubi
