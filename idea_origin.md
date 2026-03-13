@@ -35,7 +35,7 @@ The project was developed as part of a university web development course at **Me
 * Maria
 * Mikael
 
-The concept and idea for the project were proposed by **Minoo Yaghoubi**, while the technical implementation was developed collaboratively by the team as part of the course work.
+The concept and idea for the project were proposed by **Minoo Yaghoubi**, while the technical implementation was developed collaboratively by the team as part of the coursework.
 
 ---
 
